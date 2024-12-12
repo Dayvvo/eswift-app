@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Antic+Didone&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --soft200: #E1E4EA;
+    --soft400: #99A0AE;
+    --sub600: #525866;
+    --strong950: #0E121B;
+    --primaryBase: #335CFF;
+    --weak50: #F5F7FA;
+    --errorBase: #FB3748;
+    --TextCol: #18191F;
+}
+.width{
+  width:100% !important;
+}
+.urbanist{
+  font-family: "Urbanist", sans-serif;
+  font-style: normal;
+}
+.robotoF {
+  font-family: "Roboto Flex", sans-serif;
+  font-style: normal;
+}
+.antic{
+  font-family: "Antic Didone", serif;
+  font-style: normal;
+}
+.inter {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+}
+
+.roboto {
+  font-family: "Roboto", sans-serif;
+  font-style: normal;
+}
+
+.montserrat {
+    font-family: "Montserrat", system-ui;
+    font-style: normal;
+}
+
+.icon {
+    font-size: 14px;
+}
+
+.iconM {
+  margin-top: 9px;
+}
+
+.formicon {
+  font-size: 16px;
+  margin-top: 6px;
+}
+.imageFull{
+  width: 100%;
+  height: 100%;
+}
+
+.imageFull > .image {
+  width: 100%;
+  height: 50%;
+}
+
+
+.mulish {
+  font-family: "Mulish", sans-serif;
+  font-style: normal;
+}
+.arrow {
+  color: #99A0AE;
+  font-size: 20px;
+}
+
+.quill-style .ql-container {
+  height: 250px;
+  border-radius: 7px;
+  background-color: #F5F7FA;
+  border: none !important;
+}
+
+.ql-toolbar {
+  border-radius: 7px;
+  background-color: #F5F7FA;
+  position: absolute;
+  bottom: 0;
+  z-index: 99;
+  width: 700px;
+  border: none !important;
+}
+
+.rotate {
+  transform: rotate(-90deg);
+}
+.upside {
+  transform: rotate(180deg);
+}
+
+.pulse {
+  animation: bounce 2s infinite !important;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gradient {
+  background-image: linear-gradient(to bottom right, #703BF780, #FFFFFF, #FFFFFF, #FFFFFF);
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+background: var(--primaryBase);
+border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+

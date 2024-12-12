@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+      "lib": ["dom", "dom.iterable", "esnext", "ES2020"],
+      "allowJs": true,
+      "skipLibCheck": true,
+      "strict": true,
+      "noEmit": false,
+      "esModuleInterop": true,
+      "module": "CommonJS",  // Use CommonJS for cPanel compatibility
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "outDir": "dist",  // Output the compiled code into dist
+      "isolatedModules": true,
+      "jsx": "preserve",
+      "incremental": true,
+      "paths": {
+        "@/*": ["./*"]
+      },
+      "target": "ES2020",  // ES2020 is fine if the Node version supports it
+      "forceConsistentCasingInFileNames": true
+    },
+    "include": ["server/**/*"],
+    "exclude": ["node_modules"]
+  }
+  

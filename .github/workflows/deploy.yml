@@ -1,0 +1,43 @@
+name: CI/CD TO DIGITAL OCEAN
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          node-version: 16
+          token: ${{ secrets.GH_PAT }}
+
+      # - name: Install dependencies
+      #   run: npm install
+
+      # - name: Build
+      #   run: npm run build
+
+      - name: Add directory to PATH
+        run: echo "/root/.nvm/versions/node/v18.20.3/bin/" >> $GITHUB_PATH
+
+      - name: Deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: ${{ secrets.DROPLET_USER }}
+          password: ${{ secrets.DROPLET_PASSWORD }}
+          script: |
+            echo "running build now"
+            cd /var/www/eswift
+            git restore package-lock.json
+            git stash
+            git pull origin main
+            npm install
+            npm run build:prod
+            pm2 restart eswift

@@ -1,0 +1,1740 @@
+{
+	"info": {
+		"_postman_id": "1cce2aa3-e560-4f58-81c4-7d6c272fb191",
+		"name": "Eswift",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14601321",
+		"_collection_link": "https://interstellar-comet-668950.postman.co/workspace/Team-Workspace~3d749df0-e0a4-4fa9-8eb0-b7ef755e6288/collection/20812049-1cce2aa3-e560-4f58-81c4-7d6c272fb191?action=share&source=collection_link&creator=14601321"
+	},
+	"item": [
+		{
+			"name": "Blog",
+			"item": [
+				{
+					"name": "All blog posts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkOWI1Nzg0OWNmZTBkYTQyYmMyZjcyIn0sImlhdCI6MTcyNTY5OTY4MywiZXhwIjoxNzI1ODQzNjgzfQ.3sn0vjKZsTv1ve-tBeHrlbFwU7qW5zX2ZJeG71HSe5s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "file",
+							"file": {}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/blog/post?keyword=dev",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"blog",
+								"post"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "dev"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "file",
+									"file": {}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/blog/post?keyword=dev",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"blog",
+										"post"
+									],
+									"query": [
+										{
+											"key": "keyword",
+											"value": "dev"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"575-lDM37ZvGfs2JHEORxazaiYLcKos\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 17 Oct 2024 07:37:41 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 200,\n    \"message\": \"fetched successfully\",\n    \"data\": [\n        {\n            \"_id\": \"670899e061edfdcb02ff2334\",\n            \"title\": \"Development\",\n            \"header_image\": \"https://res.cloudinary.com/dk8ielbpn/image/upload/v1728370233/shopify/nsokzb9lxciy9pr0ejf7.png.png\",\n            \"introduction\": \"<p><u>Myths and fact about development</u></p>\",\n            \"body\": \"<p>Using our algorithm we carry out a preliminary assessment to understand the state of you health and determine how best to serve you</p>\",\n            \"body_image\": \"https://res.cloudinary.com/dk8ielbpn/image/upload/v1728368487/shopify/pexels-divinetechygirl-1181263.jpg.jpg\",\n            \"author\": \"66e865361fa388467aa70373\",\n            \"createdAt\": \"2024-10-11T03:22:08.397Z\",\n            \"updatedAt\": \"2024-10-11T03:22:08.397Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"670e82512c4e7607022de7e7\",\n            \"title\": \"Facts about development\",\n            \"header_image\": \"https://res.cloudinary.com/dk8ielbpn/image/upload/v1728370233/shopify/nsokzb9lxciy9pr0ejf7.png.png\",\n            \"introduction\": \"<p>Adding a new property is hard work. you have to create a lot, connect a lot</p>\",\n            \"body\": \"<p>Let us atalk about the details of creating properties</p>\",\n            \"body_image\": \"https://res.cloudinary.com/dk8ielbpn/image/upload/v1728368487/shopify/pexels-divinetechygirl-1181263.jpg.jpg\",\n            \"author\": \"66e86407711dcfbcd349d585\",\n            \"createdAt\": \"2024-10-15T14:55:13.862Z\",\n            \"updatedAt\": \"2024-10-15T14:55:13.862Z\",\n            \"__v\": 0\n        }\n    ],\n    \"totalBlogPost\": 2,\n    \"hasNextPage\": false,\n    \"hasPreviousPage\": false,\n    \"nextPage\": 2,\n    \"previousPage\": 0,\n    \"lastPage\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "get a single post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/blog/post/:blogPostId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"blog",
+								"post",
+								":blogPostId"
+							],
+							"variable": [
+								{
+									"key": "blogPostId",
+									"value": "66d9fd6945fbaf90974d28ab",
+									"description": "post id"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create blog post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkOWI1Nzg0OWNmZTBkYTQyYmMyZjcyIn0sImlhdCI6MTcyNTY5OTY4MywiZXhwIjoxNzI1ODQzNjgzfQ.3sn0vjKZsTv1ve-tBeHrlbFwU7qW5zX2ZJeG71HSe5s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n    \"title\": \"postman\",\r\n    \"content\": \"testing postman documentations for blog post for frontend developers\",\r\n    \"tags\": [\"mail\", \"good\"]\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/blog/post",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"blog",
+								"post"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a blog post by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkOWI1Nzg0OWNmZTBkYTQyYmMyZjcyIn0sImlhdCI6MTcyNTY5OTY4MywiZXhwIjoxNzI1ODQzNjgzfQ.3sn0vjKZsTv1ve-tBeHrlbFwU7qW5zX2ZJeG71HSe5s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n    \"title\": \"yea\",\r\n    \"content\": \"documentations for blog post for frontend developers\",\r\n    \"tags\": [\"mail\", \"book\"]\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/blog/post/:blogPostId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"blog",
+								"post",
+								":blogPostId"
+							],
+							"variable": [
+								{
+									"key": "blogPostId",
+									"value": "66dc27a67d40aa03014eb190"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete blog post by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkOWI1Nzg0OWNmZTBkYTQyYmMyZjcyIn0sImlhdCI6MTcyNTY5OTY4MywiZXhwIjoxNzI1ODQzNjgzfQ.3sn0vjKZsTv1ve-tBeHrlbFwU7qW5zX2ZJeG71HSe5s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/blog/delete-post/:blogPostId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"blog",
+								"delete-post",
+								":blogPostId"
+							],
+							"variable": [
+								{
+									"key": "blogPostId",
+									"value": "66dc27a67d40aa03014eb190"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Inspections",
+			"item": [
+				{
+					"name": "Get All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/inspection/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"inspection",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Single",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":\"string\",\n    \"first_name\": \"david\",\n    \"last_name\": \"string\",\n    \"email\": \"string\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/inspection",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"inspection"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Profile",
+			"item": [
+				{
+					"name": "get user profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkOWI1Nzg0OWNmZTBkYTQyYmMyZjcyIn0sImlhdCI6MTcyNTY5OTY4MywiZXhwIjoxNzI1ODQzNjgzfQ.3sn0vjKZsTv1ve-tBeHrlbFwU7qW5zX2ZJeG71HSe5s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user-detail/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user-detail",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkOWI1Nzg0OWNmZTBkYTQyYmMyZjcyIn0sImlhdCI6MTcyNTY5OTY4MywiZXhwIjoxNzI1ODQzNjgzfQ.3sn0vjKZsTv1ve-tBeHrlbFwU7qW5zX2ZJeG71HSe5s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  // userId: string\r\n  \"firstName\": \"Meesy\",\r\n  \"lastName\": \"Weezy\",\r\n  \"phoneNumber\": \"08069605169\",\r\n  \"residentialAddress\": \"Eko\",\r\n  \"officeAddress\": \"Leki\",\r\n  \"city\": \"Lasgidi\",\r\n  \"state\": \"Lagoes\",\r\n  \"country\": \"Nigeria\",\r\n  \"areYouAnExistingCustomer\": true,\r\n  \"howDidYouHearAboutUs\": \"Facebook\",\r\n  \"modeOfIdentification\": \"Nin\",\r\n  \"idDocument\": \"soft copy\",\r\n  \"passport\": \"soft copy\",\r\n  \"agentIdProof\": \"soft copy\",\r\n  \"currentOccupation\": \"SE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user-detail/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user-detail",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkOWI1Nzg0OWNmZTBkYTQyYmMyZjcyIn0sImlhdCI6MTcyNTY5OTY4MywiZXhwIjoxNzI1ODQzNjgzfQ.3sn0vjKZsTv1ve-tBeHrlbFwU7qW5zX2ZJeG71HSe5s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  // userId: string\r\n  \"firstName\": \"Meesy\",\r\n  \"lastName\": \"Weezy\",\r\n  \"phoneNumber\": \"08069605169\",\r\n  \"residentialAddress\": \"Eko\",\r\n  \"officeAddress\": \"Leki\",\r\n  \"city\": \"Lasgidi\",\r\n  \"state\": \"Lagoes\",\r\n  \"country\": \"Nigeria\",\r\n  \"areYouAnExistingCustomer\": true,\r\n  \"howDidYouHearAboutUs\": \"Facebook\",\r\n  \"modeOfIdentification\": \"Nin\",\r\n  \"idDocument\": \"soft copy\",\r\n  \"passport\": \"soft copy\",\r\n  \"agentIdProof\": \"soft copy\",\r\n  \"currentOccupation\": \"SE\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/profile",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Upload",
+			"item": [
+				{
+					"name": "Upload single",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "alI33zI_B/access_flow.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/upload/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"upload",
+								"image"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "file",
+											"type": "file",
+											"src": "alI33zI_B/access_flow.png"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/upload/image",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"upload",
+										"image"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "134"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"86-e0Fz4qWyWEUFxYR+24g90RJKCP8\""
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "connect.sid=s%3ACnBiYq3SAZ5M4olswPJjwOkfjRjGfY9F.HWUP9YGKhjNk%2BbIv18hcoa7qmj4UjrdhzVIMhUXhKUw; Path=/; HttpOnly"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 07 Sep 2024 00:21:39 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 200,\n    \"message\": \"Success\",\n    \"data\": \"https://res.cloudinary.com/dnpvndlmy/image/upload/v1725668499/qsnerbtmbwqggjaz5l3c.png\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Upload Multiple Files",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"type": "file",
+									"src": [
+										"k80iyORNV/query_flow.png",
+										"k80iyORNV/network_management.png",
+										"k80iyORNV/audit.png"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/upload/images",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"upload",
+								"images"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "files",
+											"type": "file",
+											"src": [
+												"k80iyORNV/query_flow.png",
+												"k80iyORNV/network_management.png",
+												"k80iyORNV/audit.png"
+											]
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/upload/images",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"upload",
+										"images"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "314"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"13a-pnu75w+M9m2JyrxqgepiFRBagTM\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 07 Sep 2024 00:38:25 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 200,\n    \"message\": \"Success\",\n    \"data\": [\n        \"https://res.cloudinary.com/dnpvndlmy/image/upload/v1725669501/anvavbfnpm13op9ljaip.png\",\n        \"https://res.cloudinary.com/dnpvndlmy/image/upload/v1725669502/gwjtkqabd5bhcuzxfgoa.png\",\n        \"https://res.cloudinary.com/dnpvndlmy/image/upload/v1725669504/gsbu9ypc03bje99vcqib.png\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete FIle",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"url\": \"https://eswift-space-bucket.lon1.digitaloceanspaces.com/eswift-space-bucket/uploads/1730845641142_5c934c21.png\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/upload/image",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"upload",
+								"image"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"url\": \"https://eswift-space-bucket.lon1.digitaloceanspaces.com/eswift-space-bucket/uploads/1730838453732_686c4630.png\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/upload/delete",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"upload",
+										"delete"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "57"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"39-tPZBs2WfFddE6Bk3DOGX2o6HhS4\""
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "connect.sid=s%3AwCfhnOOT7-XphMUlG-0fYk6xztU_y-aR.ZG42pHx4NIg2PE%2BwSzautkieHmar50SVpdAKciiVFW4; Path=/; HttpOnly"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 05 Nov 2024 20:30:55 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 200,\n    \"message\": \"Image deleted Successfully\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Contact us",
+			"item": [
+				{
+					"name": "contact us",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"alt.x7-9ou4l1ii@yopmail.com\",\r\n  \"name\": \"testing this stuff if it will work for us all \",\r\n  \"message\": \"jUST \",\r\n  \"subject\": \"CONGRATULATIONS\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/email/contact-us",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"email",
+								"contact-us"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get all users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkOWI1Nzg0OWNmZTBkYTQyYmMyZjcyIn0sImlhdCI6MTcyNTY5OTY4MywiZXhwIjoxNzI1ODQzNjgzfQ.3sn0vjKZsTv1ve-tBeHrlbFwU7qW5zX2ZJeG71HSe5s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"krispamb@gmail.com\",\r\n  \"firstName\": \"Christopher\",\r\n  \"lastName\": \"Pam \",\r\n  \"role\": \"CLIENT\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user/add-user",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"add-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add user Prod",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"krispamb@gmail.com\",\r\n  \"firstName\": \"Christopher\",\r\n  \"lastName\": \"Pam \",\r\n  \"role\": \"CLIENT\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/user/add-user",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"user",
+								"add-user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get single user by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkOWI1Nzg0OWNmZTBkYTQyYmMyZjcyIn0sImlhdCI6MTcyNTY5OTY4MywiZXhwIjoxNzI1ODQzNjgzfQ.3sn0vjKZsTv1ve-tBeHrlbFwU7qW5zX2ZJeG71HSe5s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/user/users/:userId",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"users",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "66d9b57849cfe0da42bc2f72"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjZkOWI1Nzg0OWNmZTBkYTQyYmMyZjcyIn0sImlhdCI6MTcyNTY5OTY4MywiZXhwIjoxNzI1ODQzNjgzfQ.3sn0vjKZsTv1ve-tBeHrlbFwU7qW5zX2ZJeG71HSe5s",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"verification\": \"pending\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/user/users/:userId/verification",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"user",
+								"users",
+								":userId",
+								"verification"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "66d9b57849cfe0da42bc2f72"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Properties",
+			"item": [
+				{
+					"name": "Get all Properties",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/property?keyword=dev",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"property"
+							],
+							"query": [
+								{
+									"key": "keyword",
+									"value": "dev"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/property",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"property"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"173f-cn4+kCcqmHKOX9Lmzo8vtp+8hlo\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 17 Oct 2024 07:31:50 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 200,\n    \"message\": \"Property List\",\n    \"data\": [\n        {\n            \"_id\": \"66f699a6a550b7134feaf1bf\",\n            \"title\": \"Nice house2\",\n            \"description\": \"Very NIce House\",\n            \"type\": \"Bungalow\",\n            \"category\": \"Sample\",\n            \"address\": \"12 Main St\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"120000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-09-27T11:40:22.645Z\",\n            \"updatedAt\": \"2024-09-27T11:40:22.645Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66f69a76a550b7134feaf1c3\",\n            \"title\": \"Nice house2\",\n            \"description\": \"Very NIce House\",\n            \"type\": \"Bungalow\",\n            \"category\": \"Sample\",\n            \"address\": \"12 Main St\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"120000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-09-27T11:43:50.424Z\",\n            \"updatedAt\": \"2024-09-27T11:43:50.424Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66f69a94a550b7134feaf1c7\",\n            \"title\": \"Nice house2\",\n            \"description\": \"Very NIce House\",\n            \"type\": \"Bungalow\",\n            \"category\": \"Sample\",\n            \"address\": \"12 Main St\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"120000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-09-27T11:44:20.033Z\",\n            \"updatedAt\": \"2024-09-27T11:44:20.033Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66f9971e4d954f99222a488c\",\n            \"title\": \"Aso villa\",\n            \"description\": \"presidential suit for all\",\n            \"type\": \"Weekly\",\n            \"category\": \"Option 1\",\n            \"address\": \"24a,KAYODE STREET MAGODO PHASE II\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"500000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-09-29T18:06:22.668Z\",\n            \"updatedAt\": \"2024-10-13T13:06:15.657Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66f99f3a96037b9a90b745d2\",\n            \"title\": \"vP\",\n            \"description\": \"VP suite\",\n            \"type\": \"Weekly\",\n            \"category\": \"Option 1\",\n            \"address\": \"kubwa, abuja. Nigeria\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"299000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"creatorID\": \"66e865361fa388467aa70373\",\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-09-29T18:40:58.237Z\",\n            \"updatedAt\": \"2024-09-29T18:40:58.237Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66fa705efac0a5ffbf2f4451\",\n            \"title\": \"David\",\n            \"description\": \"Adeyemi\",\n            \"type\": \"Weekly\",\n            \"category\": \"Option 2\",\n            \"address\": \"Ajegunle road\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"500\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"creatorID\": \"66e865361fa388467aa70373\",\n            \"isActive\": true,\n            \"verificationState\": \"Verified\",\n            \"createdAt\": \"2024-09-30T09:33:18.491Z\",\n            \"updatedAt\": \"2024-09-30T09:33:18.491Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66fea87a703155f9f09c3e56\",\n            \"title\": \"Test 2\",\n            \"description\": \"Test the land description\",\n            \"type\": \"Land\",\n            \"category\": \"100 X 150\",\n            \"address\": \"Victoria Island, Lagos Nigeria\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"300000000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"duration\": \"Annually\",\n            \"creatorID\": \"66e865361fa388467aa70373\",\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-10-03T14:21:46.753Z\",\n            \"updatedAt\": \"2024-10-03T14:21:46.753Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66feb3f3cf4817fba4d6200c\",\n            \"title\": \"test 3\",\n            \"description\": \"test 3 description\",\n            \"type\": \"House\",\n            \"category\": \"Duplex\",\n            \"address\": \"kubwa, abuja. Nigeria\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"12000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"duration\": \"Weekly\",\n            \"creatorID\": \"66e865361fa388467aa70373\",\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-10-03T15:10:44.633Z\",\n            \"updatedAt\": \"2024-10-03T15:10:44.633Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66fff8a60c30a6084cc180ee\",\n            \"title\": \"Apo spot\",\n            \"description\": \"Farm land for growing natural fruit and eco friendly for birds and other animals\",\n            \"type\": \"Land\",\n            \"category\": \"200 X 200\",\n            \"address\": \"Abuja\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"1000000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"duration\": \"Annually\",\n            \"creatorID\": \"66e865361fa388467aa70373\",\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-10-04T14:16:06.257Z\",\n            \"updatedAt\": \"2024-10-04T14:16:06.257Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"6700161074e106bd8d8c8d09\",\n            \"title\": \"test far\",\n            \"description\": \"yea\",\n            \"type\": \"House\",\n            \"category\": \"Duplex\",\n            \"address\": \"24a,KAYODE STREET MAGODO PHASE II\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"23000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"duration\": \"Weekly\",\n            \"creatorID\": \"66e865361fa388467aa70373\",\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-10-04T16:21:36.703Z\",\n            \"updatedAt\": \"2024-10-04T16:21:36.703Z\",\n            \"__v\": 0\n        }\n    ],\n    \"pagination\": {\n        \"page\": 1,\n        \"pages\": 1\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Freeze Property",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/property/:id/freeze",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"property",
+								":id",
+								"freeze"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "66f5703b3801322633b0bb0f"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/property/:id/freeze",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"property",
+										":id",
+										"freeze"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "66f5703b3801322633b0bb0f"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "74"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"4a-n2tYuFFJsVfCXM1eEnxniDYRpmQ\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 17 Oct 2024 07:31:14 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 200,\n    \"message\": \"Property active switched from true to false\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Verify Property",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"verificationState\":\"Verified\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/property/:id/verify",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"property",
+								":id",
+								"verify"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Property by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/property/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"property",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Property",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/property/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"property",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Property",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Luxury Apartment\",\n    \"address\": \"123 Ocean Drive, Miami, FL\",\n    \"price\": {\n        \"mode\": \"daily\",\n        \"amount\": \"50000\"\n    },\n    \"category\": \"Residential\",\n    \"description\": \"A beautiful beachfront apartment with modern amenities and stunning ocean views.\",\n    \"features\": [\n        \"Balcony\",\n        \"Ocean View\",\n        \"Swimming Pool\",\n        \"Gym\"\n    ],\n    \"images\": [\n        \"https://example.com/images/apartment1.jpg\",\n        \"https://example.com/images/apartment2.jpg\"\n    ],\n    \"documents\": [\n        {\n            \"type\": \"FamilyReceipt\",\n            \"document\": \"https://example.com/documents/family_receipt.pdf\"\n        },\n        {\n            \"type\": \"SurveyPlan\",\n            \"document\": \"https://example.com/documents/survey_plan.pdf\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/property/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"property",
+								""
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successfu Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Luxury Apartment\",\n    \"address\": \"123 Ocean Drive, Miami, FL\",\n    \"price\": {\n        \"mode\": \"daily\",\n        \"amount\": \"50000\"\n    },\n    \"category\": \"Residential\",\n    \"description\": \"A beautiful beachfront apartment with modern amenities and stunning ocean views.\",\n    \"features\": [\n        \"Balcony\",\n        \"Ocean View\",\n        \"Swimming Pool\",\n        \"Gym\"\n    ],\n    \"images\": [\n        \"https://example.com/images/apartment1.jpg\",\n        \"https://example.com/images/apartment2.jpg\"\n    ],\n    \"documents\": [\n        {\n            \"type\": \"FamilyReceipt\",\n            \"document\": \"https://example.com/documents/family_receipt.pdf\"\n        },\n        {\n            \"type\": \"SurveyPlan\",\n            \"document\": \"https://example.com/documents/survey_plan.pdf\"\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/property/",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"property",
+										""
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "907"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"38b-LeHVJKQg5o4/6Ct+suFJv44q8as\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 02 Nov 2024 07:31:55 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 200,\n    \"message\": \"Property created\",\n    \"data\": {\n        \"title\": \"Luxury Apartment\",\n        \"description\": \"A beautiful beachfront apartment with modern amenities and stunning ocean views.\",\n        \"category\": \"Residential\",\n        \"address\": \"123 Ocean Drive, Miami, FL\",\n        \"features\": [\n            \"Balcony\",\n            \"Ocean View\",\n            \"Swimming Pool\",\n            \"Gym\"\n        ],\n        \"owner\": \"ESWIFT\",\n        \"price\": {\n            \"mode\": \"daily\",\n            \"amount\": \"50000\"\n        },\n        \"images\": [\n            \"https://example.com/images/apartment1.jpg\",\n            \"https://example.com/images/apartment2.jpg\"\n        ],\n        \"creatorID\": \"66e865361fa388467aa70373\",\n        \"documents\": [\n            {\n                \"type\": \"FamilyReceipt\",\n                \"document\": \"https://example.com/documents/family_receipt.pdf\",\n                \"_id\": \"6725d56b5398700e9ebcee33\"\n            },\n            {\n                \"type\": \"SurveyPlan\",\n                \"document\": \"https://example.com/documents/survey_plan.pdf\",\n                \"_id\": \"6725d56b5398700e9ebcee34\"\n            }\n        ],\n        \"isActive\": true,\n        \"verification\": \"Pending\",\n        \"_id\": \"6725d56a5398700e9ebcee32\",\n        \"createdAt\": \"2024-11-02T07:31:55.031Z\",\n        \"updatedAt\": \"2024-11-02T07:31:55.031Z\",\n        \"__v\": 0\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get All Properties(Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/property/admin",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"property",
+								"admin"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/property/admin",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"property",
+										"admin"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1960-+MdbUDgNiOtrCJmGzziYA6wFbTk\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 17 Oct 2024 07:32:19 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 200,\n    \"message\": \"Property List\",\n    \"data\": [\n        {\n            \"_id\": \"66f5703b3801322633b0bb0f\",\n            \"title\": \"Nice house2\",\n            \"description\": \"Very NIce House\",\n            \"type\": \"Bungalow\",\n            \"category\": \"Sample\",\n            \"address\": \"12 Main St\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"120000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"isActive\": false,\n            \"createdAt\": \"2024-09-26T14:31:23.878Z\",\n            \"updatedAt\": \"2024-10-17T07:31:14.526Z\",\n            \"__v\": 0,\n            \"verificationState\": \"Pending\"\n        },\n        {\n            \"_id\": \"66f699a6a550b7134feaf1bf\",\n            \"title\": \"Nice house2\",\n            \"description\": \"Very NIce House\",\n            \"type\": \"Bungalow\",\n            \"category\": \"Sample\",\n            \"address\": \"12 Main St\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"120000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-09-27T11:40:22.645Z\",\n            \"updatedAt\": \"2024-09-27T11:40:22.645Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66f69a76a550b7134feaf1c3\",\n            \"title\": \"Nice house2\",\n            \"description\": \"Very NIce House\",\n            \"type\": \"Bungalow\",\n            \"category\": \"Sample\",\n            \"address\": \"12 Main St\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"120000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-09-27T11:43:50.424Z\",\n            \"updatedAt\": \"2024-09-27T11:43:50.424Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66f69a94a550b7134feaf1c7\",\n            \"title\": \"Nice house2\",\n            \"description\": \"Very NIce House\",\n            \"type\": \"Bungalow\",\n            \"category\": \"Sample\",\n            \"address\": \"12 Main St\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"120000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-09-27T11:44:20.033Z\",\n            \"updatedAt\": \"2024-09-27T11:44:20.033Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66f9971e4d954f99222a488c\",\n            \"title\": \"Aso villa\",\n            \"description\": \"presidential suit for all\",\n            \"type\": \"Weekly\",\n            \"category\": \"Option 1\",\n            \"address\": \"24a,KAYODE STREET MAGODO PHASE II\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"500000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-09-29T18:06:22.668Z\",\n            \"updatedAt\": \"2024-10-13T13:06:15.657Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66f99f3a96037b9a90b745d2\",\n            \"title\": \"vP\",\n            \"description\": \"VP suite\",\n            \"type\": \"Weekly\",\n            \"category\": \"Option 1\",\n            \"address\": \"kubwa, abuja. Nigeria\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"299000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"creatorID\": \"66e865361fa388467aa70373\",\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-09-29T18:40:58.237Z\",\n            \"updatedAt\": \"2024-09-29T18:40:58.237Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66fa705efac0a5ffbf2f4451\",\n            \"title\": \"David\",\n            \"description\": \"Adeyemi\",\n            \"type\": \"Weekly\",\n            \"category\": \"Option 2\",\n            \"address\": \"Ajegunle road\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"500\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"creatorID\": \"66e865361fa388467aa70373\",\n            \"isActive\": true,\n            \"verificationState\": \"Verified\",\n            \"createdAt\": \"2024-09-30T09:33:18.491Z\",\n            \"updatedAt\": \"2024-09-30T09:33:18.491Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66fea87a703155f9f09c3e56\",\n            \"title\": \"Test 2\",\n            \"description\": \"Test the land description\",\n            \"type\": \"Land\",\n            \"category\": \"100 X 150\",\n            \"address\": \"Victoria Island, Lagos Nigeria\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"300000000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"duration\": \"Annually\",\n            \"creatorID\": \"66e865361fa388467aa70373\",\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-10-03T14:21:46.753Z\",\n            \"updatedAt\": \"2024-10-03T14:21:46.753Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66feb3f3cf4817fba4d6200c\",\n            \"title\": \"test 3\",\n            \"description\": \"test 3 description\",\n            \"type\": \"House\",\n            \"category\": \"Duplex\",\n            \"address\": \"kubwa, abuja. Nigeria\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"12000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"duration\": \"Weekly\",\n            \"creatorID\": \"66e865361fa388467aa70373\",\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-10-03T15:10:44.633Z\",\n            \"updatedAt\": \"2024-10-03T15:10:44.633Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"66fff8a60c30a6084cc180ee\",\n            \"title\": \"Apo spot\",\n            \"description\": \"Farm land for growing natural fruit and eco friendly for birds and other animals\",\n            \"type\": \"Land\",\n            \"category\": \"200 X 200\",\n            \"address\": \"Abuja\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"1000000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"duration\": \"Annually\",\n            \"creatorID\": \"66e865361fa388467aa70373\",\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-10-04T14:16:06.257Z\",\n            \"updatedAt\": \"2024-10-04T14:16:06.257Z\",\n            \"__v\": 0\n        },\n        {\n            \"_id\": \"6700161074e106bd8d8c8d09\",\n            \"title\": \"test far\",\n            \"description\": \"yea\",\n            \"type\": \"House\",\n            \"category\": \"Duplex\",\n            \"address\": \"24a,KAYODE STREET MAGODO PHASE II\",\n            \"features\": [\n                \"nice\",\n                \"cheap\",\n                \"open spaces\"\n            ],\n            \"owner\": \"ESWIFT\",\n            \"price\": \"23000\",\n            \"images\": [\n                \"https://plus.unsplash.com/premium_photo-1676823553207-758c7a66e9bb?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D\"\n            ],\n            \"duration\": \"Weekly\",\n            \"creatorID\": \"66e865361fa388467aa70373\",\n            \"isActive\": true,\n            \"verificationState\": \"Pending\",\n            \"createdAt\": \"2024-10-04T16:21:36.703Z\",\n            \"updatedAt\": \"2024-10-04T16:21:36.703Z\",\n            \"__v\": 0\n        }\n    ],\n    \"pagination\": {\n        \"page\": 1,\n        \"pages\": 1\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Edit Property",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Home on the hills 3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/property/:id",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"property",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "67288f79e6162f6db3d90456"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Home on the hills 3\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/property/:id",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"property",
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "67288f79e6162f6db3d90456"
+										}
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "814"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"32e-lJ19mEn1D0wp3BZwg2qq2mYDZJY\""
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "connect.sid=s%3AcdHpTeqssPq0o4DLSIIWCpdzmUaLYXhV.Ac5v9aXyoTXM1%2FGqXusgVyb2FGWubCZ%2F2GnJtpg07jA; Path=/; HttpOnly"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 05 Nov 2024 22:51:51 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 200,\n    \"message\": \"Property created\",\n    \"data\": {\n        \"_id\": \"67288f79e6162f6db3d90456\",\n        \"title\": \"Home on the hills 3\",\n        \"description\": \"New property, two story terrace\",\n        \"category\": \"House\",\n        \"address\": \"Millenium city, new horizon\",\n        \"features\": [\n            \"nice\",\n            \"cheap\",\n            \"open spaces\"\n        ],\n        \"owner\": \"ESWIFT\",\n        \"price\": {\n            \"mode\": \"one_off\",\n            \"amount\": \"6000\"\n        },\n        \"images\": [\n            \"https://eswift-space-bucket.lon1.digitaloceanspaces.com/eswift-space-bucket/uploads/1730711414208_bec56da2.png\"\n        ],\n        \"creatorID\": \"66e86407711dcfbcd349d585\",\n        \"documents\": [\n            {\n                \"type\": \"FamilyReceipt\",\n                \"document\": \"https://eswift-space-bucket.lon1.digitaloceanspaces.com/eswift-space-bucket/uploads/1730711416066_b81d0b12.pdf\",\n                \"_id\": \"67288f79e6162f6db3d90457\"\n            }\n        ],\n        \"isActive\": true,\n        \"verification\": \"Pending\",\n        \"createdAt\": \"2024-11-04T09:10:17.040Z\",\n        \"updatedAt\": \"2024-11-05T22:51:51.395Z\",\n        \"__v\": 0\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"console.log(pm.response.json().data.token)",
+									"pm.collectionVariables.set(\"TOKEN\", pm.response.json().data.token)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@eswift.com\",\n    \"password\": \"bl4ckA$$\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Successful Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"admin@eswift.com\",\n    \"password\": \"bl4ckA$$\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/auth/login",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "344"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"158-MJ5mm1ImmLn3jzRSIHHSZsYDtRo\""
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 17 Oct 2024 07:28:28 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"statusCode\": 200,\n    \"message\": \"Successful\",\n    \"data\": {\n        \"_id\": \"66e865361fa388467aa70373\",\n        \"firstName\": \"admin\",\n        \"lastName\": \"key\",\n        \"email\": \"admin@eswift.com\",\n        \"role\": \"ADMIN\",\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2ZTg2NTM2MWZhMzg4NDY3YWE3MDM3MyIsImlhdCI6MTcyOTE1MDEwOCwiZXhwIjoxNzMxNzQyMTA4fQ.JpC9aMQlHpOhWbGYlksa8QlWX8RFhYyv3ppkn7gKycE\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "test",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "google auth",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/auth/google",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"google"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "localhost:5500/api",
+			"type": "string"
+		},
+		{
+			"key": "TOKEN",
+			"value": ""
+		},
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5500/api"
+		}
+	]
+}
