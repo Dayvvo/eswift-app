@@ -5,13 +5,13 @@ import useProperty from "@/hooks/useProperty";
 import { useImage } from "@/hooks/useInput";
 import { useApiUrl } from "@/hooks/useApi";
 import useToast from "@/hooks/useToast";
-import { AddPropertyScreenOne } from "./Title_Description";
-import { AddPropertyScreenTwo } from "./Location_Pricing";
-import { AddPropertyScreenThree } from "./Images";
-import { AddPropertyScreenFour } from "./Documents";
 import { DocumentTypes, R } from "@/utils/types";
 import useUpload from "@/hooks/useUpload";
 import { PropertyCardProps } from "../propertyCard";
+import { AddPropertyScreenOne } from "./Title_Description";
+import { AddPropertyScreenTwo } from "./Location_Pricing";
+import { AddPropertyScreenFour } from "./Documents";
+import { AddPropertyScreenThree } from "./Images";
 
 interface User {
   _id: any;
@@ -55,7 +55,8 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
     address: address || "",
     price: price?.amount ||  "",
     category: category || "",
-    documents: initialDocValues 
+    documents: initialDocValues ,
+    owner :'eSwift',
   }
 
   const initialTouchedValues = {
@@ -66,6 +67,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
     address: false,
     price: false,
     category: false,
+    owner:false,
   }
 
   const [inputs, setInput] = useState(initialValues);
@@ -153,10 +155,11 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
     category: inputs.category,
     description: inputs.description,
     features: features,
+    ownerID: inputs.owner,
     images,
     documents:inputs.documents,
   };
- 
+
   const toggleModal = () => {
     setShowModal((prevState) => !prevState);
   };
@@ -304,6 +307,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
               setTouched={setTouched}
               features={features}
               setFeatures={setFeatures}
+              
               onClick={() => setShowScreen(2)}
             />
           ) : showScreen === 2 ? (

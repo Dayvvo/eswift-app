@@ -252,6 +252,7 @@ const Wrapper = ({
                   className="inter"
                   fontSize={"0.875rem"}
                   fontWeight={500}
+                  whiteSpace={'nowrap'}
                 >
                   {`${user?.firstName} ${user?.lastName}`}
                 </Text>

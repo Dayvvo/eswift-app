@@ -154,7 +154,7 @@ const NavBar = () => {
           <Box
             display={'flex'} gap={{lg:'14px',xl:'24px'}}
             w={'fit-content'} h={'fit-content'}
-            ml={{xl:'24em'}} className="urbanist" 
+            ml={{xl:'14em'}} className="urbanist" 
           >
             {
               token?

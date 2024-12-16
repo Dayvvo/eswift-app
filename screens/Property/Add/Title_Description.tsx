@@ -21,6 +21,7 @@ import useToast from "@/hooks/useToast";
 import { BsPlus } from "react-icons/bs";
 import { IoCloseOutline } from "react-icons/io5";
 import { validateRequired } from "@/utils/modules";
+import { useAppContext } from "@/context";
 
 interface AddPropertyScreenOneProps {
   onClick: () => void;
@@ -34,8 +35,10 @@ interface AddPropertyScreenOneProps {
     title: string;
     description: string;
     category: string;
+    owner:string;
   };
   touched: {
+    owner: boolean;
     title: boolean;
     description: boolean;
     category: boolean;
@@ -111,6 +114,7 @@ export const AddPropertyScreenOne = ({
     title: input.title,
     description: input.description,
     category: input.category,
+    owner:input.owner,
   });
 
   const nextFn = () => {
@@ -141,6 +145,18 @@ export const AddPropertyScreenOne = ({
     }
     onClick();
   };
+
+  const { globalContext } = useAppContext();
+  const getUser = globalContext.getUser;
+  console.log(getUser)
+  const arrName = getUser?.map((entry: { firstName: string; lastName: string; _id: string; })=> {
+    return({
+        userName: entry?.firstName + " " + entry?.lastName,
+        ID: entry?._id
+      }
+    )
+  })
+
   return (
     <>
       <Box w={"100%"} px={"20px"} className="inter">
@@ -251,7 +267,7 @@ export const AddPropertyScreenOne = ({
 
             >
               {["Land", "House"].map((entry) => (
-                <option value={`${entry}`} key={entry}>
+                <option value={`${entry}`} key={entry} color="var(--soft400)">
                   {entry}
                 </option>
               ))}
@@ -259,6 +275,45 @@ export const AddPropertyScreenOne = ({
             {touched.category && !validation.category && (
               <FormHelperText color={"var(--errorBase)"} fontSize={"12px"}>
                 {"Select valid property type"}
+              </FormHelperText>
+            )}
+          </FormControl>
+          <FormControl w={"100%"}>
+            <FormLabel
+              fontWeight={500}
+              fontSize={"14px"}
+              textColor={"var(--strong950)"}
+            >
+              Property Owner
+            </FormLabel>
+            <Select
+              w="100%"
+              h="40px"
+              borderRadius={"10px"}
+              fontSize={14}
+              textColor={"var--(sub600)"}
+              _placeholder={{ textColor: "var--(soft400)" }}
+              placeholder="eSwift"
+              name="owner"
+              border={
+                touched.owner && !validation.owner
+                  ? "1px solid var(--errorBase)"
+                  : "1px solid var(--soft200)"
+              }
+              onChange={handleOnchange}
+              onBlur={handleOnblur}
+              value={input.owner}
+
+            >
+              {arrName.map((entry:{ID:string, userName:string},index:number) => (
+                <option value={`${entry?.ID}`} key={index} color="var(--soft400)">
+                  {entry?.userName}
+                </option>
+              ))}
+            </Select>
+            {touched.category && !validation.category && (
+              <FormHelperText color={"var(--errorBase)"} fontSize={"12px"}>
+                {"select property owner"}
               </FormHelperText>
             )}
           </FormControl>
@@ -305,50 +360,40 @@ export const AddPropertyScreenOne = ({
               h={"fit-content"}
               alignItems={"center"}
               justifyContent={"space-between"}
-              border={"1px solid var(--soft200)"}
-              gap={"8px"}
               borderRadius={"10px"}
             >
+          
+              <Input
+                type={"text"}
+                height={"40px"}
+                cursor={"text"}
+                fontSize={14}
+                textColor={"var--(sub600)"}
+                _placeholder={{ textColor: "var--(soft400)" }}
+                _focusWithin={{border:'0px solid transparent'}}
+                border={"1px solid var(--soft200)"}
+                borderLeftRadius={'8px'}
+                borderRightRadius={'0px'}
+                value={inputValue}
+                onChange={handleTagInput}
+                onKeyDown={handleKeyPress}
+              />
+
               <Flex
-                gap={"8px"}
-                w={"100%"}
-                h={"fit-content"}
-                flexDir={"column"}
-                alignItems={"start"}
-              >
-                <InputGroup
-                  cursor={"text"}
-                  fontSize={14}
-                  textColor={"var--(sub600)"}
-                  h={"40px"}
-                >
-                  <Input
-                    type={"text"}
-                    height={"100%"}
-                    _placeholder={{ textColor: "var--(soft400)" }}
-                    border={"1px solid transparent"}
-                    borderRadius={"4px"}
-                    value={inputValue}
-                    onChange={handleTagInput}
-                    onKeyDown={handleKeyPress}
-                  />
-                </InputGroup>
-              </Flex>
-              <Flex
-                w={"42px"}
-                h={"42px"}
+                w={"40px"}
+                h={"40px"}
                 fontSize={"36px"}
                 px={"4px"}
-                borderRadius={"10"}
                 justifyContent={"center"}
                 alignItems={"center"}
                 onClick={handleAddTag}
-                background={'#3170A6'}
+                bg={'var(--primaryBase)'}
+                borderRightRadius={'8px'}
               >
                 <BsPlus color='white' fontSize={'25px'} />
               </Flex>
             </Flex>
-            <Flex flexWrap={"wrap"} gap={"8px"} mt={"2px"}>
+            <Flex flexWrap={"wrap"} gap={"8px"} mt={"6px"}>
               {features.map((feature, index) => (
                 <Flex
                   gap="8px"

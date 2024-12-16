@@ -22,6 +22,8 @@ import { PropertyCard, PropertyCardProps } from "./propertyCard";
 import { DocumentTypes, } from "@/utils/types";
 import { IoFilter } from "react-icons/io5";
 import { AddProperties } from "./Add";
+import useUser from "@/hooks/useUser";
+import { useAppContext } from "@/context";
 
 interface User {
   _id: any;
@@ -30,6 +32,7 @@ interface User {
   email: string;
   phoneNumber: number;
   avatar: any;
+  role:string
 }
 
 export type Documents = {
@@ -46,8 +49,6 @@ export const PropertyScreen = () => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
 
-
-  const client = useApiUrl();
 
   const {  getAdminProperty } = useProperty();
 
@@ -83,20 +84,35 @@ export const PropertyScreen = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response: AxiosResponse<{ data: User[] }> = await client.get(
-          `/user/users`
-        );
-        setUsers(response.data.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const { getUser, getUserById } = useUser();
+  const { setGlobalContext } = useAppContext();
+  const getUserFn = async () => {
+    const res: any = await getUser();
+    setGlobalContext?.((prevContext: any) => ({
+        ...prevContext,
+        getUser: res?.data?.data,
+    }));
+    
+  };
 
-    fetchData();
+  useEffect(() => {
+    getUserFn();
   }, []);
+
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const response: AxiosResponse<{ data: User[] }> = await client.get(
+  //         `/user/users`
+  //       );
+  //       setUsers(response.data.data);
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     getPropertyFunction();
