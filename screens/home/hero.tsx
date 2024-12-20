@@ -59,6 +59,7 @@ const Hero = ({click}:{click:()=> void}) => {
           <Flex
               w={{base:"100%", xl:"50%"}} className="robotoF"
               bg={'transparent'} alignItems={'end'} justifyContent={'flex-end'}
+              zIndex={60}
             >
               <Image width={'100%'} height={'100%'} src="/Hero.png" alt="hero"/> 
           </Flex>
@@ -68,8 +69,8 @@ const Hero = ({click}:{click:()=> void}) => {
         <Box position={'absolute'} bottom={40} display={'flex'} w={'100%'} justifyContent={'center'} fontSize={'30px'}
           opacity={0.4}
         >
-          <Box zIndex={50}>
-            <Image onClick={click} src="/HeroPulsing.gif" alt="pulsing" w={78} h={78} className="upside"/>
+          <Box onClick={click}>
+            <Image  src="/HeroPulsing.gif" alt="pulsing" w={78} h={78} className="upside"/>
           </Box>
         </Box>
         <Image src="/Underlay.png" alt="" 

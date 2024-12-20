@@ -322,7 +322,7 @@ const ContactScreen = () => {
             sub="We`re excited to connect with you and learn more about your real estate goals. Use the form below to get in touch with e-Swift. Whether you`re a prospetive client, partner, or simply curious about our services, we`re here to answer your questions and provide the assistance you need."
           />
 
-          <FormControl
+          <FormControl 
             w={"100%"}
             p={{ base: "20px", md: "40px", lg: "80px" }}
             border={"1px solid #262626"}

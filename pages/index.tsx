@@ -298,8 +298,9 @@ export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const navigate = useRouter();
 
-  const { user,isWindow } = useAuth();
-
+  const { user, isWindow, statusCode, token } = useAuth();
+  console.log(statusCode)
+  
   useEffect(() => {
     if (user && !user?.isOnboarded) {
       console.log('user',user)

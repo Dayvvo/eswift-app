@@ -28,7 +28,9 @@ const Preloader = () => {
         setIsOpen(false);
         sessionStorage.setItem("isOpen", "false");
       }, 4500);
+      return () => clearTimeout(timer);
     }
+    
   }, [])
 
 
@@ -44,7 +46,7 @@ const Preloader = () => {
         w={"100%"}
         h="100%"
         borderRadius={"8px"}
-        bgImage="url('/Loader.png')"
+        bgImage="url('/Preloader.png')"
         bgSize="cover"
         bgPosition="center"
         className="robotoF"

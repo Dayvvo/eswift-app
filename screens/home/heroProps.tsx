@@ -15,7 +15,7 @@ interface HeroProps {
 }
 
 export const HeroProps:React.FC<HeroProps> =({
-    bg, bgImage,Nav, header, details, buttonPos,h,w
+    bg, bgImage,Nav, header, details, buttonPos,h,w,
 }) => (
     <Box
         bgImage={bgImage}
@@ -48,7 +48,7 @@ export const HeroProps:React.FC<HeroProps> =({
             >
                 {details}
             </Text>
-            <Link href={`${Nav}`} className={`${buttonPos}`}>
+            <Link href={`${Nav}`} target={'_blank'} className={`${buttonPos}`}>
                 <Image src={'/Arrow.gif'} alt="/" width={150} height={150}/>
             </Link>
         </Flex>
