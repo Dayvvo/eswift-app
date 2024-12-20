@@ -56,6 +56,8 @@ const useAuth = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [token, setToken] = useState("");
+  const [statusCode, setStatusCode] = useState<number | null>();
+
 
   const isWindow = typeof window !== "undefined";
 
@@ -76,10 +78,14 @@ const useAuth = () => {
     try {
       const response = await axios.post("/api/auth/login", credentials);
       const token = response?.data?.token;
+      const status = response?.status;
+      console.log(statusCode)
       const userData = response?.data?.data;
       console.log("token", token);
       localStorage.setItem("token", token);
       setUser(userData);
+      setStatusCode(status);
+    
     } catch (err) {
       if (err) {
         console.log(err);
@@ -128,7 +134,8 @@ const useAuth = () => {
     logout,
     reset,
     authProtectedFn,
-    setUser
+    setUser,
+    statusCode,
   };
 };
 

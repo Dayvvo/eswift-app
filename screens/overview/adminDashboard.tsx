@@ -120,7 +120,6 @@ interface User {
   }
 
   const { getUser, getUserById } = useUser();
-  console.log("userEl", userEl);
 
   const getUserFn = async () => {
     const res: any = await getUser();

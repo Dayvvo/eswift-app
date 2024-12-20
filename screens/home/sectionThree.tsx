@@ -8,15 +8,15 @@ export const SectionThree = () => {
       id: 1,
       title: "Exceptional Service!",
       review:
-        "Our experience with e-Swift was outstanding. Their team`s dedication and professionalism made finding our dream home a breeze. Higly recommended!",
-      user: "Wade Warren",
+        "I recently used e-Swift to find my dream home, and I couldn't be happier! The app is so user-friendly and intuitive. I loved how I could filter search results by location, price, and amenities. The virtual tours were incredibly helpful in getting a feel for each property. The eSwift team was responsive and knowledgeable, answering all my questions promptly. Highly recommend",
+      user: "Opeyemi Adeyemi",
       location: "Lagos, Nigeria",
     },
     {
       id: 1,
       title: "Efficient and Reliable",
       review:
-        "e-Swift provided us with top-notch service. They helped us sell our property quickly and at a great price. We couldn`t be happier with the results.",
+        "e-Swift made buying my first home a breeze! The app's interface is sleek and modern, making it easy to navigate. I appreciated the personalized recommendations based on my preferences. The real-time updates on new listings and price changes kept me ahead of the game. Excellent customer service, too! Thanks, eSwift, for making homeownership a reality!",
       user: "Emilie Thompson",
       location: "Lagos, Nigeria",
     },
@@ -24,7 +24,7 @@ export const SectionThree = () => {
       id: 1,
       title: "Trusted Advisors",
       review:
-        "The e-Swift team guided us through the entire buying process. Their knowledge and commitment to our needs were impressive. Thank you for your support!",
+        "e-Swift exceeded my expectations in every way! The app's advanced search features and high-quality photos made it easy to find the perfect property. The team's expertise and guidance were invaluable during the buying process. I've already recommended e-Swift to friends and family. If you're looking for a seamless real estate experience, look no further than e-Swift!",
       user: "John Mans",
       location: "Lagos, Nigeria",
     },
@@ -133,13 +133,13 @@ const FAQ = () => {
       id: 2,
       title: "What documents do I need to sell my property throught e-Swift?",
       response:
-        "Find out about the necessary documenttation for listing your property with us.",
+        "To list your property on e-Swift, you need to provide your property deed, ID proof, ownership documents, and high-quality photos.",
     },
     {
       id: 3,
       title: "How can I contact an e-Swift agent?",
       response:
-        "Discover the different ways you can get in touch with our experienced agents.",
+        "You can reach us through email, by phone, or connect with us on our social media platforms, including Facebook, Twitter, and Instagram. Alternatively, simply fill out the contact form on our Contact Us page. Our dedicated team is available to provide support and answer your questions. We look forward to hearing from you!",
     },
   ];
   return (

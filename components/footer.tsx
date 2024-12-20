@@ -27,11 +27,11 @@ export const Footer = () => {
       Navigator: "Properties",
       Link: "/properties",
     },
-    {
-      id: 2,
-      Navigator: "Gallery",
-      Link: "/gallery",
-    },
+    // {
+    //   id: 2,
+    //   Navigator: "Gallery",
+    //   Link: "/gallery",
+    // },
     {
       id: 3,
       Navigator: "About Us",
@@ -71,6 +71,9 @@ export const Footer = () => {
       Link: "",
     },
   ];
+
+  const phone = 'O8066895363' as string;
+  const whatsappContact = '08059112878' as string;
   return (
     <>
       <Box
@@ -153,9 +156,9 @@ export const Footer = () => {
                 fontSize={"16px"}
                 textColor={"var(--TextCol)"}
               >
-                Call O8066895363 <br />
+                Call <Text as='span'><Link href={`tel:${phone}`}>{phone}</Link></Text> <br />
                 Whatsapp <br />
-                08059112878
+                {whatsappContact}
               </Text>
             </Box>
           </Box>

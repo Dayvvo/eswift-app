@@ -75,7 +75,7 @@ const PropertiesScreen =()=> {
                         _focusWithin={{border:'1.5px solid #3170A6'}}
                         cursor={'search'}
                         fontSize={{base:12,lg:14}} textColor={'var--(sub600)'}
-                        maxW='1020px' h={{base:'52px',lg:'80pxf'}}
+                        maxW='1020px' h={{base:'52px',lg:'80px'}}
                         className="urbanist" overflow={'hidden'}
                     >
                         <Input 

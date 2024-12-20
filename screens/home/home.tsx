@@ -18,10 +18,11 @@ const HomePage =()=> {
         if (section) {
           section.scrollIntoView({ behavior: 'smooth' });
         } else {
-          console.error('Element #main not found');
+          console.error('Element not found');
         }      
     }
 
+    const partnerShip = 'https://chat.whatsapp.com/LKEvFkD49n35CtSXke60gz' as string;
     return (
         <>
             <Box>
@@ -36,11 +37,11 @@ const HomePage =()=> {
                     px={{base:'1rem',lg:'4rem'}}
                     display={'flex'} flexDir={'column'} gap={'120px'}
                 >
-                    <HeroProps bgImage={"url('/Become-partner.jpg')"} bg={"#00000080"} 
-                        Nav={"/contact"} header={"Become Our Partner"} 
-                        details={"Join our thriving network of real estate professionals and earn competitive commissions."} 
+                    <HeroProps bgImage={"url('/Become-partner.jpg')"} bg={"#00000080"}
+                        Nav={partnerShip} header={"Become Our Partner"}
+                        details={"Join our thriving network of real estate professionals and earn competitive commissions."}
                         buttonPos={'rotate'} w={'100%'} h={'100vh'}
-                    />
+                     />
                     <SectionThree/>
                 </Box>
                 <Footer/>

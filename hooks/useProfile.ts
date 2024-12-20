@@ -12,6 +12,7 @@ const useProfile = () => {
     }
     catch (err) {
       console.log('err', err);
+      
     }
   }, [])
   

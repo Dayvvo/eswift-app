@@ -104,7 +104,7 @@ export const SignUpcreen = () => {
           console.error("Error verifying Google auth code:", err);
         } finally {
           authWindow.close();
-          navigate.push("/properties");
+          navigate.push("/dashboard");
         }
       }
     });

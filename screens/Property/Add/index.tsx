@@ -34,6 +34,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
 
   const { title, description, state, lga, address, price, category, documents, features:existingFeatures } = property || { documents:[] };
 
+
   
   const initialDocValues = useMemo<R | Documents>(()=> ({
     FamilyReceipt: documents? documents.find(doc=>doc.type ==='FamilyReceipt'): null,

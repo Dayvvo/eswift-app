@@ -10,7 +10,7 @@ export const AboutSection = () => {
       id: 1,
       icon: <HiMiniBuildingStorefront />,
       title: "Find Your Dream Home",
-      navigate: "/login",
+      navigate: "",
     },
     {
       id: 2,
@@ -66,15 +66,16 @@ export const AboutSection = () => {
                 className="robotoF"
                 flexDir={"column"}
                 alignItems={"center"}
+                justifyContent={'center'}
                 // _hover={{ bg: "#3170A690" }}
               >
-                <Flex w={"100%"} justifyContent={"end"}>
+                {/* <Flex w={"100%"} justifyContent={"end"}>
                   <Link href={item?.navigate}>
                     <Box fontSize={"26px"}>
                       <MdArrowOutward />
                     </Box>
                   </Link>
-                </Flex>
+                </Flex> */}
                 <Flex
                   position={"relative"}
                   w={"60px"}
