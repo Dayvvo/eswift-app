@@ -8,9 +8,9 @@ import { mailGenMails } from "../utils/mails/mailgen.mail";
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
-    user: process.env.USER,
+    user: process.env.SENDING_MAIL,
     pass: process.env.PASS,
   },
   tls: { rejectUnauthorized: false },
@@ -25,33 +25,33 @@ const sendEmailFunction = async ({
   inquiryType,
   howDidYouHear,
 }: MailType) => {
-  // const mailOptions = {
-  //   from: `${firstName} ${lastName} <${email}>`,
-  //   to: process.env.CLIENT_EMAIL,
-  //   subject: inquiryType,
-  //   name: `${firstName} ${lastName}`,
-  //   text: `
-  //     Name: ${firstName} ${lastName}
-  //     Email: ${email}
-  //     Phone Number: ${phoneNumber}
-  //     Inquiry Type: ${inquiryType}
-  //     How did you hear about us: ${howDidYouHear}    
-  //     Message: ${message}
-  //   `,
-  //   replyTo: email,
-  // };
+  const mailOptions = {
+    from: `${firstName} ${lastName}<${email}>`,
+    to: process.env.SENDING_MAIL,
+    subject: inquiryType,
+    name: `${firstName} ${lastName}`,
+    text: `
+      Name: ${firstName} ${lastName}
+      Email: ${email}
+      Phone Number: ${phoneNumber}
+      Inquiry Type: ${inquiryType}
+      How did you hear about us: ${howDidYouHear}    
+      Message: ${message}
+    `,
+    replyTo: email,
+  };
 
   try {
-    // const send = await transporter.sendMail(mailOptions);
+    const send = await transporter.sendMail(mailOptions);
 
-    const send = await mailGenMails.contactEswiftTemplate(
-      `${firstName} ${lastName}`,
-      email,
-      phoneNumber,
-      inquiryType,
-      howDidYouHear,
-      message
-    );
+    // const send = await mailGenMails.contactEswiftTemplate(
+    //   `${firstName} ${lastName}`,
+    //   email,
+    //   phoneNumber,
+    //   inquiryType,
+    //   howDidYouHear,
+    //   message
+    // );
     return send;
   } catch (error: any) {
     throw new Error(`Failed to send email: ${error.message}`);
@@ -71,6 +71,7 @@ class ContactUsController {
         data: mailSent,
       });
     } catch (error) {
+      console.log(error)
       res.status(500).send("Failed to send email");
     }
   };

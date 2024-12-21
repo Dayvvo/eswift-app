@@ -32,8 +32,8 @@ class UserController {
       if (!user) {
         return res.status(404).json({ message: 'User not found' })
       }
-      res.status(201).json({
-        statusCode: 201,
+      res.status(200).json({
+        statusCode: 200,
         message: 'Verification status updated successfully',
         data: user,
       })
