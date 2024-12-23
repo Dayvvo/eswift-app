@@ -26,7 +26,8 @@ const Header = ({ casedPath }: { casedPath: string }) => {
       // padding={"40px 30px 40px 60px"}
       px={{ base: "12px", lg: "40px" }}
       py={{ base: "20px", lg: "40px" }}
-      pos="relative"
+      pos="absolute"
+      top={'20px'}
       left={{ base: "2px", lg: "256px" }}
       maxW={{ base: "full", lg: "80vw" }}
       zIndex={99}
@@ -63,10 +64,10 @@ const Header = ({ casedPath }: { casedPath: string }) => {
           </Text>
         </Flex>
       </Grid>
-      <Flex gap={"20px"} alignItems={"center"}>
+      {/* <Flex gap={"20px"} alignItems={"center"}> */}
         {/* <SearchIcon />
         <NotifIcon /> */}
-      </Flex>
+      {/* </Flex> */}
     </Flex>
   );
 };
@@ -80,6 +81,7 @@ const Wrapper = ({
 }) => {
   const [route, setRoute] = useState("");
   const [path, setPath] = useState("");
+  const isUser = "An overview of activities, verify users and properties.";
 
   const { isWindow, user } = useAuth();
   const { getProfile } = useProfile();
@@ -279,7 +281,58 @@ const Wrapper = ({
             </Grid>
           </Box>
         </Box>
-        <Header casedPath={casedPath} />
+        <Box>
+        <Flex
+      justifyContent={"space-between"}
+      alignItems={"center"}
+      borderBottom={"1px solid #E1E4EA"}
+      // padding={"40px 30px 40px 60px"}
+      px={{ base: "12px", lg: "40px" }}
+      py={{ base: "20px", lg: "40px" }}
+      pos="relative"
+      top={'20px'}
+      left={{ base: "2px", lg: "256px" }}
+      maxW={{ base: "full", lg: "80vw" }}
+      zIndex={99}
+    >
+      <Grid gridTemplateColumns={"40px 2fr"} gap={0}>
+        <Flex
+          border={"1px solid #E1E4EA"}
+          borderRadius={"50%"}
+          maxW={"30px"}
+          h="30px"
+          alignItems={"center"}
+          justifyContent={"center"}
+          mt="4%"
+        >
+          <DashboardIcon />
+        </Flex>
+        <Flex direction={"column"}>
+          <Text
+            className="robotoF"
+            color="#0E121B"
+            fontSize={".875rem"}
+            fontWeight={500}
+          >
+            {casedPath || "Dashboard"}
+          </Text>
+          <Text
+            className="robotoF"
+            color="#525866"
+            fontSize={".75rem"}
+            fontWeight={400}
+          >
+            {isUser &&
+              "Overview of your favourite properties and profile settings"}
+          </Text>
+        </Flex>
+      </Grid>
+      {/* <Flex gap={"20px"} alignItems={"center"}> */}
+        {/* <SearchIcon />
+        <NotifIcon /> */}
+      {/* </Flex> */}
+    </Flex>
+        </Box>
         <Box
           position={"relative"}
           top={"20px"}
