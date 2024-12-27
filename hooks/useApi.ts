@@ -41,7 +41,7 @@ const client = ({
   return axios.create({
     baseURL,
     headers: {
-      ...(token && { Authorization: `${token}` }),
+      ...(token && { Authorization: `Bearer ${token}` }),
       "Content-Type": "application/json",
     },
     withCredentials,
@@ -86,7 +86,9 @@ function httpClient({ token }: { token?: string }) {
       data: D,
       headers?: AxiosRequestConfig
     ) => {
+
       try {
+      
         const resp = client({ token }).put(q, data, headers);
         const result: AxiosResponse<T, any> = await Promise.resolve(resp);
         return result.data;
