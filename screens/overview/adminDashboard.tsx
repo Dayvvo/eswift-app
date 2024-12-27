@@ -152,9 +152,11 @@ const DashboardScreen = () => {
     try {
       setLoading(false);
       const getAllProperties = await getAdminProperty(inputValue);
-      setGetProperty(getAllProperties?.data?.data);
-      console.log(getAllProperties?.data?.data);
-      setTotalPages(getAllProperties.data?.pagination.pages);
+      if (getAllProperties?.data?.data) {
+        setGetProperty(getAllProperties?.data?.data);
+        console.log(getAllProperties?.data?.data);
+        setTotalPages(getAllProperties.data?.pagination.pages);
+      }
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -165,9 +167,11 @@ const DashboardScreen = () => {
     getPropertyFunction();
   }, [showModal, loading]);
 
-  let PropertiesCount = getProperty.length || 0;
-  let UsersCount = table.length || 0;
+  let PropertiesCount = getProperty?.length || 0;
+  let UsersCount = table?.length || 0;
   let AffiliatesCount = 3000;
+
+ 
 
   return (
     <Box w={"100%"}>
