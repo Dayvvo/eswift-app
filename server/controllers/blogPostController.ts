@@ -37,8 +37,8 @@ class BlogPostController {
         { ...value },
         { new: true }
       )
-      return res.status(201).json({
-        statusCode: 201,
+      return res.status(200).json({
+        statusCode: 200,
         message: 'updated successfully',
         data: blogPost,
       })
