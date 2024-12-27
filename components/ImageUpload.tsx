@@ -22,9 +22,6 @@ const ImageUpload = ({
   const [image, setImage] = useState<ImageData | null>(null);
   const { uploadSingle } = useUpload();
 
-  console.log('initialImageUrl', initialImageUrl);
-  console.log('image', image);
-
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -52,7 +49,6 @@ const ImageUpload = ({
         const uploadImage = async () => {
           try {
             const req = await uploadSingle(formData);
-            console.log('image req', req);
             setImageFile(req?.data?.data);
       
             // Check if setImageUrl is defined before calling it
