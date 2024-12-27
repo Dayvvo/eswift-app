@@ -55,8 +55,6 @@ const EditBlog = () => {
 
   const newBlogId = blogId as string;
 
-  console.log("blogDetails", blogDetails);
-
   useEffect(() => {
     const getBlogByIdFn = async () => {
       try {
