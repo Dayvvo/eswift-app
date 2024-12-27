@@ -13,12 +13,10 @@ export const isAuth = async (
     try {
       //You keep changing this I don't know why. Bearer token is a best practice.
       token = req.headers.authorization.split(' ')[1];
-      console.log("auth token in middleware", token);
       const decoded = jwt.verify(
         token,
         process.env["JWT_SECRET"] as string
       ) as any;
-      console.log("decoded id", decoded);
       const userFound = await User.findById(decoded?.id).select("-hash");
       req.user = userFound ? userFound : undefined;
       if (!req.user) {
