@@ -142,18 +142,6 @@ const Wrapper = ({
     }
   }, [route]);
 
-  useEffect(() => {
-    const getProfileFn = async () => {
-      try {
-        const res = await getProfile();
-        console.log("res", res);
-      } catch (err) {
-        console.log("err", err);
-      }
-    };
-
-    getProfileFn();
-  }, []);
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("userData");

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import httpClient from "./useApi";
 import { R } from "@/utils/types";
 
@@ -40,8 +40,8 @@ const useBlog = () => {
     query,
     post,
     delete: deleteRequest,
-    putMutation: put,
-  } = httpClient({ token });
+    putMutation: putRequest,
+  } = useMemo(() => httpClient({ token }), [token]);
 
   const addBlog = useCallback(
     async (data: BlogObj) => {
@@ -60,8 +60,9 @@ const useBlog = () => {
 
   const updateBlog = useCallback(
     async (blogPostId: string, data: any) => {
+     
       try {
-        const res = await put(`${baseUrl}/blog/post/${blogPostId}`, data);
+        const res = await putRequest(`${baseUrl}/blog/post/${blogPostId}`, data);
         return res;
       } catch (err: any) {
         throw new err();

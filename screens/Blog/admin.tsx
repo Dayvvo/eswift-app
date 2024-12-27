@@ -80,7 +80,6 @@ const BlogScreen = () => {
     }
   };
 
-  console.log(isAdmin);
   useEffect(() => {
     const userData = localStorage.getItem("userData") || null;
 
@@ -93,7 +92,7 @@ const BlogScreen = () => {
   const deleteBlogFn = async (blogPostId: any) => {
     try {
       const req = (await deleteBlog(blogPostId)) as any;
-      console.log("req", req);
+    
       // if(req.statusCode)
       // const req = (await addBlog(data)) as any;
       if (req.data?.statusCode === 200) {

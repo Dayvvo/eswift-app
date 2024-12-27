@@ -370,6 +370,7 @@ export default function Home() {
             onClose={() => setShowModal(false)}
           />
           {building ? <Resdesign /> : <HomePage />}
+          {/* {building ? <Resdesign /> : <Box>HOme</Box>} */}
         </>
       )}
     </>
