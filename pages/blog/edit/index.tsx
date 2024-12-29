@@ -83,7 +83,7 @@ const EditBlog = () => {
       // console.log("err", err);
       toast({
         status: "error",
-        title: "Edit bog post failed",
+        title: "Edit blog post failed",
       });
     } finally {
       setLoading(false);
@@ -219,7 +219,7 @@ const EditBlog = () => {
             onClick={EditBlog}
             isLoading={loading}
           >
-            Edit
+            Make Changes
           </Btn>
         </Flex>
       </Flex>
