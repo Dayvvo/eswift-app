@@ -343,7 +343,7 @@ export default function Home() {
       // Hide the preloader after a timeout (e.g., 3 seconds)
       const timer = setTimeout(() => {
         setShowLoadingScreen(false);
-      }, 100);
+      }, 3000);
 
       return () => clearTimeout(timer);
     }
