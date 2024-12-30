@@ -10,67 +10,7 @@ import { NextRouter, useRouter } from "next/router";
 // import axios from "axios";
 import useAuth from "@/hooks/useAuth";
 import useProfile from "@/hooks/useProfile";
-import { token } from "morgan";
-
-const Header = ({ casedPath }: { casedPath: string }) => {
-  const isUser = "An overview of activities, verify users and properties.";
-  const { isWindow, user } = useAuth();
-  if (user?.role === "ADMIN") {
-    return isUser;
-  }
-  return (
-    <Flex
-      justifyContent={"space-between"}
-      alignItems={"center"}
-      borderBottom={"1px solid #E1E4EA"}
-      // padding={"40px 30px 40px 60px"}
-      px={{ base: "12px", lg: "40px" }}
-      py={{ base: "20px", lg: "40px" }}
-      pos="absolute"
-      top={'20px'}
-      left={{ base: "2px", lg: "256px" }}
-      maxW={{ base: "full", lg: "80vw" }}
-      zIndex={99}
-    >
-      <Grid gridTemplateColumns={"40px 2fr"} gap={0}>
-        <Flex
-          border={"1px solid #E1E4EA"}
-          borderRadius={"50%"}
-          maxW={"30px"}
-          h="30px"
-          alignItems={"center"}
-          justifyContent={"center"}
-          mt="4%"
-        >
-          <DashboardIcon />
-        </Flex>
-        <Flex direction={"column"}>
-          <Text
-            className="robotoF"
-            color="#0E121B"
-            fontSize={".875rem"}
-            fontWeight={500}
-          >
-            {casedPath || "Dashboard"}
-          </Text>
-          <Text
-            className="robotoF"
-            color="#525866"
-            fontSize={".75rem"}
-            fontWeight={400}
-          >
-            {isUser &&
-              "Overview of your favourite properties and profile settings"}
-          </Text>
-        </Flex>
-      </Grid>
-      {/* <Flex gap={"20px"} alignItems={"center"}> */}
-        {/* <SearchIcon />
-        <NotifIcon /> */}
-      {/* </Flex> */}
-    </Flex>
-  );
-};
+// import { token } from "morgan";
 
 const Wrapper = ({
   children,
@@ -86,6 +26,7 @@ const Wrapper = ({
   const { isWindow, user } = useAuth();
   const { getProfile } = useProfile();
   const navigate = useRouter() as NextRouter;
+  const router = useRouter()
 
   const navData = [
     {
@@ -152,9 +93,17 @@ const Wrapper = ({
 
   const casedPath = `${path.slice(0, 1).toUpperCase()}${path.slice(1)}`;
 
-  if (!token) {
-    return <></>;
-  }
+  const userFromLocalStorage = typeof window !=='undefined'? window?.localStorage.getItem("userData"):null;
+
+  const token = userFromLocalStorage? JSON.parse(userFromLocalStorage)?.token: "";
+
+  useEffect(() => {
+    if (!token && router) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+      router.push("/auth");
+    }
+  }, [token, router]);
   return (
     <Box
       w={"100%"}
