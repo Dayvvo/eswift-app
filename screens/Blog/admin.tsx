@@ -3,6 +3,7 @@ import {
   Card,
   CardBody,
   Flex,
+  HStack,
   Img,
   Input,
   InputGroup,
@@ -22,6 +23,7 @@ import DOMPurify from "dompurify";
 import useToast from "@/hooks/useToast";
 import { useDebounce } from "@/hooks/useDebounce";
 import Pagination from "@/components/Pagination";
+import { Modal } from "@/components/modal";
 // import { useAppContext } from "@/context";
 
 interface BlogPostProps {
@@ -40,7 +42,11 @@ const BlogScreen = () => {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState<string>("");
   const { toast } = useToast();
+  const [showModal, setShowModal] = useState(false);
 
+  const toggleModal = () => {
+    setShowModal((prevState) => !prevState);
+  };
   // const { check } = useAppContext();
 
   // console.log('check', check);
@@ -103,6 +109,7 @@ const BlogScreen = () => {
           position: "top",
           duration: 5000,
         });
+        setShowModal(false)
         setBlogPost((prevBlogPost) =>
           prevBlogPost.filter((post) => post._id !== blogPostId)
         );
@@ -159,6 +166,7 @@ const BlogScreen = () => {
         </Stack>
       )}
       {!loading && blogPost.length > 0 && (
+        <>
         <SimpleGrid columns={3} spacing={5} mt="20px">
           {currentBlogsInView.map((item, index) => {
             const dateString = new Date(item.createdAt);
@@ -169,6 +177,31 @@ const BlogScreen = () => {
               year: "numeric",
             });
             return (
+              <>
+              <Modal onClose={toggleModal} isVisible={showModal} label="Suspend user">
+                  <Box className="robotoF">
+                    <Text>Are you sure you want to delete <strong>{item.title}</strong> blog post?</Text>
+                    <HStack justify={'center'} mt='15px'>
+                      <Btn bgColor="#FF5764"       
+                       borderRadius={"50px"}
+                        className="robotoF"
+                        fontWeight={400}
+                        fontSize={".937rem"}
+                        w="144px"
+                        h="28px"
+                      onClick={() => deleteBlogFn(item._id)}
+                        >Delete</Btn>
+                      <Btn bgColor="#6AFFB0"      
+                       borderRadius={"50px"}
+                        className="robotoF"
+                        fontWeight={400}
+                        fontSize={".937rem"}
+                        w="144px"
+                        h="28px" onClick={toggleModal}>Close</Btn>
+                    </HStack>
+                  </Box>
+                </Modal>
+           
               <Box
                 key={index}
                 bgColor={"#fff"}
@@ -248,17 +281,19 @@ const BlogScreen = () => {
                         fontSize={".937rem"}
                         w="144px"
                         h="28px"
-                        onClick={() => deleteBlogFn(item._id)}
+                        // onClick={() => deleteBlogFn(item._id)}
+                        onClick={() => setShowModal(true)}
                       >
                         Delete
                       </Btn>
                     </Flex>
                   )}
                 </Box>
-              </Box>
+              </Box>   </>
             );
           })}
         </SimpleGrid>
+        </>
       )}
       {blogPost.length > totalCount && (
         <VStack align={"start"} gap="15px" mt="10px">
