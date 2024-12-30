@@ -137,7 +137,6 @@ const DashboardScreen = () => {
   const openDrawer = async (userId: string) => {
     onOpen();
     const res: any = await getUserById(userId);
-    console.log("res", res);
     setUserEl(res?.data?.data);
   };
 
@@ -154,7 +153,6 @@ const DashboardScreen = () => {
       const getAllProperties = await getAdminProperty(inputValue);
       if (getAllProperties?.data?.data) {
         setGetProperty(getAllProperties?.data?.data);
-        console.log(getAllProperties?.data?.data);
         setTotalPages(getAllProperties.data?.pagination.pages);
       }
     } catch (error) {
@@ -167,11 +165,11 @@ const DashboardScreen = () => {
     getPropertyFunction();
   }, [showModal, loading]);
 
-  let PropertiesCount = getProperty?.length || 0;
-  let UsersCount = table?.length || 0;
-  let AffiliatesCount = 3000;
-
- 
+    const Affiliates = table?.filter((item:{role:string;}) => item?.role === 'GUEST');
+  
+  let PropertiesCount = getProperty?.length as number;
+  let UsersCount = table?.length as number;
+  let AffiliatesCount = Affiliates?.length as number;
 
   return (
     <Box w={"100%"}>

@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useApiUrl } from './useApi'
 
 const useProfile = () => {
-
   const client = useApiUrl();
+
 
   const getProfile = useCallback(() => {
     try {
@@ -11,13 +11,13 @@ const useProfile = () => {
       return req;
     }
     catch (err) {
-      console.log('err', err);
-      
+      console.log('err', err); 
     }
   }, [])
   
   return {
     getProfile,
+    
   }
 }
 
