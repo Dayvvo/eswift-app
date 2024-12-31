@@ -6,10 +6,12 @@ import Divider from "./Divider";
 import Btn from "./Btn";
 import { BlogIcon, DashboardIcon, SettingsIcon, UserIcon } from "./svg";
 import { FiHome } from "react-icons/fi";
+import { IoClose } from "react-icons/io5";
 import { NextRouter, useRouter } from "next/router";
 // import axios from "axios";
 import useAuth from "@/hooks/useAuth";
 import useProfile from "@/hooks/useProfile";
+import { GiHamburgerMenu } from "react-icons/gi";
 // import { token } from "morgan";
 
 const Wrapper = ({
@@ -104,28 +106,41 @@ const Wrapper = ({
       router.push("/auth");
     }
   }, [token, router]);
+
+  const [ isOpen , setIsOpen] = useState<boolean>(false);
+
+  const openDrawer =()=> {
+    setIsOpen(prevState => !prevState)
+  }
+
   return (
     <Box
       w={"100%"}
-      py={{ base: "40px", lg: "10px" }}
+      py={{ base: "6px", lg: "10px" }}
       minH={"100vh"}
       overflowX={"hidden"}
     >
       <Box w={"100%"}>
         <Box
+          className={`${isOpen ? 'slideOpen' : 'slideClose'}`}
           borderRight={"1px solid #E1E4EA"}
-          w={"244px"}
+          w={"244px"} 
           bg={"white"}
-          pos={"fixed"}
+          pos={{base:'absolute', lg:'fixed'}}
           // top={0}
           // left={0}
           h={"100vh"}
           px="24px"
           py="40px"
           overflowY={"auto"}
-          display={{ base: "none", lg: "flex" }}
+          display={{ base: "flex", lg: "flex" }}
           flexDir={"column"}
+          zIndex={80}
         >
+          <Box onClick={openDrawer}
+            display={{base:'flex',lg:'none'}} fontSize={'20px'} alignSelf={'end'} my={'8px'}>
+            <IoClose />
+          </Box>
           <Link href={"/"}>
             <Image src="/logo.svg" width="226px" height="40px" alt="logo" />
           </Link>
@@ -145,7 +160,7 @@ const Wrapper = ({
 
               return (
                 <Link href={item.url} key={item.url}>
-                  <Box
+                  <Box onClick={openDrawer}
                     className="robotoF"
                     cursor={"pointer"}
                     display={"flex"}
@@ -231,9 +246,10 @@ const Wrapper = ({
       top={'20px'}
       left={{ base: "2px", lg: "256px" }}
       maxW={{ base: "full", lg: "80vw" }}
-      zIndex={99}
+      zIndex={70}
     >
       <Grid gridTemplateColumns={"40px 2fr"} gap={0}>
+
         <Flex
           border={"1px solid #E1E4EA"}
           borderRadius={"50%"}
@@ -242,8 +258,21 @@ const Wrapper = ({
           alignItems={"center"}
           justifyContent={"center"}
           mt="4%"
+          display={{base:'none', lg:'flex'}}
         >
           <DashboardIcon />
+        </Flex>
+        <Flex onClick={openDrawer}
+          border={"1px solid #E1E4EA"}
+          borderRadius={"50%"}
+          maxW={"30px"}
+          h="30px"
+          alignItems={"center"}
+          justifyContent={"center"}
+          mt="4%"
+          display={{base:'flex', lg:'none'}}
+        >
+          <GiHamburgerMenu />
         </Flex>
         <Flex direction={"column"}>
           <Text

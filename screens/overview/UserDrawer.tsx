@@ -150,7 +150,7 @@ const UserDrawer = ({ isOpen, onClose, btnRef, userEl }: any) => {
               fontWeight={500}
               boxShadow={"0px 1px 2px 0px rgba(10, 13, 20, 0.03)"}
             >
-              Suspend
+              {'Suspend'}
             </Btn>
             <Btn
               bgColor="transparent"
