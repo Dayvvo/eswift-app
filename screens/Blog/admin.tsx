@@ -130,7 +130,7 @@ const BlogScreen = () => {
 
   return (
     <>
-      <Flex gap={"20px"}>
+      <Flex gap={"20px"} mt={'20px'}>
         <InputGroup>
           <InputLeftElement onClick={getBlogFn}>
             <SearchIcon />
