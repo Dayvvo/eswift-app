@@ -24,6 +24,7 @@ export enum UserVerification {
   Rejected = "Rejected",
   Suspend = "Suspend",
   Resume = "Resume",
+  Unsuspend = "Unsuspend"
 }
 
 export interface GoogleAuthResponse {
