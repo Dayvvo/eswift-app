@@ -18,6 +18,7 @@ class UserController {
       "Rejected",
       "Suspend",
       "Resume",
+      "Unsuspend"
     ];
     if (!allowedVerificationStatuses.includes(verification)) {
       return res.status(400).json({ message: 'Invalid verification status' })
