@@ -10,7 +10,7 @@ router.put("/profile", isAuth, profileController.updateProfile);
 router.get("/profile", isAuth, profileController.getProfileByUserId);
 router.get("/users", hasAuth, userController.getAllUsers);
 router.get("/users/:userId", userController.getUserById);
-router.patch(
+router.put(
   "/users/verify/:userId",
   isAuth,
   isAdmin,
