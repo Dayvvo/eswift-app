@@ -64,7 +64,7 @@ export const VerifyState = ({
               fontWeight={400}
               fontSize={"13px"}
             >
-              Don't show it again
+              Don`t show it again
             </Text>
           </Box>
           <Flex gap={"10px"}>
@@ -165,7 +165,7 @@ export const DeclineState = ({
             fontWeight={400}
             fontSize={"13px"}
           >
-            Don't show it again
+            Don`t show it again
           </Text>
         </Box>
         <Flex gap={"10px"}>
@@ -264,7 +264,7 @@ export const SuspendState = ({
             fontWeight={400}
             fontSize={"13px"}
           >
-            Don't show it again
+            Don`t show it again
           </Text>
         </Box>
         <Flex gap={"10px"}>
@@ -364,7 +364,7 @@ export const DeleteProperty = ({
             fontWeight={400}
             fontSize={"13px"}
           >
-            Don't show it again
+            Don`t show it again
           </Text>
         </Box>
         <Flex gap={"10px"}>

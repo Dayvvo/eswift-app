@@ -358,7 +358,7 @@ const UserScreen = () => {
             >
               Filter
             </MenuButton>
-            <MenuList>
+            <MenuList width="0" height="0">
               {/* <MenuItem>Download</MenuItem>
               <MenuItem>Create a Copy</MenuItem>
               <MenuItem>Mark as Draft</MenuItem>
@@ -367,7 +367,10 @@ const UserScreen = () => {
             </MenuList>
           </Menu>
         </Flex>
-        <Btn className="robotoF" onClick={() => setShowModal(true)}>
+        <Btn className="robotoF" onClick={() => setShowModal(true)}
+          fontSize={'.875rem'}
+          fontWeight={500}
+        >
           Add User
         </Btn>
         <Modal onClose={toggleModal} isVisible={showModal} label="Add User">

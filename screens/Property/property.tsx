@@ -231,8 +231,8 @@ export const PropertyScreen = () => {
 
         {/* Scrollable Property Cards Container */}
         <Box
-          overflowY={{ xl: "scroll" }}
-          height={{ xl: "500px" }}
+          overflowY={{ xl: "auto" }}
+          height={{ xl: "520px" }}
           // mt={4}
         >
           {loading && (
@@ -294,6 +294,7 @@ export const PropertyScreen = () => {
           justifyContent={{ base: "center", md: "space-between" }}
           mt={{ base: "14px", md: "10px" }}
           gap={{ base: "1rem", md: "0rem" }}
+          px={'20px'}
         >
           <Text
             fontSize={"14px"}

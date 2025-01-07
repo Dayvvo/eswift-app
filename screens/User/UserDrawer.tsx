@@ -16,6 +16,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useApiUrl } from "@/hooks/useApi";
 
 const UserDrawer = ({
   isOpen,
@@ -27,7 +28,7 @@ const UserDrawer = ({
 }: any) => {
   // const [table, setTable] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-
+  const [ status, setStatus ] = useState(false);
   // const { getUser } = useUser();
 
   // const getUserFn = async () => {
@@ -60,9 +61,11 @@ const UserDrawer = ({
 
     try {
       const res: any = await verifyUser(userEl._id, {
-        verification: status,
+        verification: status === "suspend" ? "Suspended" : "Resume",
       });
       setVerify(res.data.data.verification);
+      console.log(res.data.data.verification)
+      setStatus(status === "suspend" ? false : true);
       toast({
         status: "success",
         description: `${userEl.firstName} ${status}`,
@@ -82,6 +85,7 @@ const UserDrawer = ({
       setLoading(false);
     }
   };
+
 
   const fullName = `${userEl?.firstName
     ?.slice(0, 1)
@@ -215,8 +219,9 @@ const UserDrawer = ({
               fontWeight={500}
               boxShadow={"0px 1px 2px 0px rgba(10, 13, 20, 0.03)"}
               onClick={() => setShowModal(true)}
+              isLoading = {loading}
             >
-              Suspend
+              { status ? 'Resume' : 'Suspend'}
             </Btn>
             {/* <Btn
               bgColor="transparent"
@@ -232,11 +237,16 @@ const UserDrawer = ({
               Delete
             </Btn> */}
           </Flex>
-          <Modal onClose={toggleModal} isVisible={showModal} label="Suspend user">
+          <Modal onClose={toggleModal} isVisible={showModal} label={`${status ? 'Resume' : 'Suspend'} User`}>
             <Box className="robotoF">
-              <Text>Are you sure you want to suspend <strong>{fullName || "John Doe"}</strong>?</Text>
+              <Text>Are you sure you want to {status ? 'Resume': 'suspend'} <strong>{fullName || "John Doe"}</strong>?</Text>
               <HStack justify={'center'} mt='15px'>
-                <Btn bg={"#335CFF"}>Suspend</Btn>
+                <Btn onClick={() => suspendFn(status ? "Resume" : "suspend")}
+                  bg={"#335CFF"}
+                  isLoading = {loading}
+                  loadingText = {status ? 'Resuming...' : 'Suspending...'}
+                >
+                    { status ? 'Resume' : 'Suspend'}</Btn>
                 <Btn bg={"red"} onClick={toggleModal}>Close</Btn>
               </HStack>
             </Box>
