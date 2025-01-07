@@ -22,6 +22,7 @@ import DOMPurify from "dompurify";
 import useToast from "@/hooks/useToast";
 import { useDebounce } from "@/hooks/useDebounce";
 import Pagination from "@/components/Pagination";
+import { Modal } from "@/components/modal";
 // import { useAppContext } from "@/context";
 
 interface BlogPostProps {
@@ -38,6 +39,7 @@ const BlogScreen = () => {
   const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
   const [isAdmin, setIsAdmin] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState<string>("");
   const { toast } = useToast();
 
@@ -90,6 +92,8 @@ const BlogScreen = () => {
     }
   }, []);
 
+  const deleteBlogModal = () => {};
+
   const deleteBlogFn = async (blogPostId: any) => {
     try {
       const req = (await deleteBlog(blogPostId)) as any;
@@ -118,6 +122,10 @@ const BlogScreen = () => {
         duration: 5000,
       });
     }
+  };
+
+  const toggleModal = () => {
+    setShowModal((prevState) => !prevState);
   };
 
   const route = useRouter();
@@ -249,10 +257,46 @@ const BlogScreen = () => {
                         fontSize={".937rem"}
                         w="144px"
                         h="28px"
-                        onClick={() => deleteBlogFn(item._id)}
+                        onClick={toggleModal}
                       >
                         Delete
                       </Btn>
+                      <Modal
+                        onClose={toggleModal}
+                        isVisible={showModal}
+                        label="Delete blog"
+                      >
+                        <Text className="robotoF">
+                          Are you sure you want to delete this blog?
+                        </Text>
+                        <Flex justify={"space-between"} my='20px'>
+                          <Btn
+                            bgColor="#FF5764"
+                            borderRadius={"50px"}
+                            className="robotoF"
+                            fontWeight={400}
+                            fontSize={".937rem"}
+                            w="144px"
+                            h="28px"
+                            onClick={() => deleteBlogFn(item._id)}
+                          >
+                            Delete
+                          </Btn>
+                          <Btn
+                            bgColor="#000"
+                            borderRadius={"50px"}
+                            className="robotoF"
+                            cursor={"pointer"}
+                            fontWeight={400}
+                            fontSize={".937rem"}
+                            w="144px"
+                            h="28px"
+                            onClick={toggleModal}
+                        >
+                            Cancel
+                          </Btn>
+                        </Flex>
+                      </Modal>
                     </Flex>
                   )}
                 </Box>
