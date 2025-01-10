@@ -15,7 +15,7 @@ import {
   Img,
   Text,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useApiUrl } from "@/hooks/useApi";
 
 const UserDrawer = ({
@@ -26,9 +26,16 @@ const UserDrawer = ({
   verify,
   setVerify,
 }: any) => {
-  // const [table, setTable] = useState<any>(null);
+  const { toast } = useToast();
+  const { verifyUser } = useUser();
   const [loading, setLoading] = useState(false);
-  const [ status, setStatus ] = useState(false);
+  // let status = verify === 'Suspended' ? 'Resume' : 'Suspend'
+  // console.log(status)
+
+  const status = useMemo(() => {
+    return userEl?.verification === "Suspended" ? "Suspended" : "Resume";
+  }, [userEl?.verification])
+  
   // const { getUser } = useUser();
 
   // const getUserFn = async () => {
@@ -36,9 +43,6 @@ const UserDrawer = ({
   //   console.log(res);
   //   setTable(res?.data?.data);
   // }
-  const { toast } = useToast();
-  const { verifyUser } = useUser();
-
   //  toast({
   //    status: "success",
   //    description: "profile updated",
@@ -46,6 +50,7 @@ const UserDrawer = ({
   //    position: "top",
   //    duration: 1000,
   //  });
+
   const suspendFn = async (status: string) => {
     if (!userEl._id) {
       toast({
@@ -60,12 +65,10 @@ const UserDrawer = ({
     setLoading(true);
 
     try {
+      const verificationStatus = status === 'Suspended' ? 'Resume' : 'Suspended'
       const res: any = await verifyUser(userEl._id, {
-        verification: status === "suspend" ? "Suspended" : "Resume",
+        verification: verificationStatus,
       });
-      setVerify(res.data.data.verification);
-      console.log(res.data.data.verification)
-      setStatus(status === "suspend" ? false : true);
       toast({
         status: "success",
         description: `${userEl.firstName} ${status}`,
@@ -83,6 +86,10 @@ const UserDrawer = ({
         duration: 1000,
       });
       setLoading(false);
+    }
+    finally{
+      setShowModal(false);
+      onClose()
     }
   };
 
@@ -168,7 +175,7 @@ const UserDrawer = ({
                 fontSize={".875rem"}
                 fontWeight={500}
               >
-                08139473373
+                {'+234 000 000 0000'}
               </Text>
             </Box>
             <Box mt="10px">
@@ -221,7 +228,7 @@ const UserDrawer = ({
               onClick={() => setShowModal(true)}
               isLoading = {loading}
             >
-              { status ? 'Resume' : 'Suspend'}
+              { status === 'Suspended' ? 'Resume' : 'Suspend'}
             </Btn>
             {/* <Btn
               bgColor="transparent"
@@ -237,16 +244,16 @@ const UserDrawer = ({
               Delete
             </Btn> */}
           </Flex>
-          <Modal onClose={toggleModal} isVisible={showModal} label={`${status ? 'Resume' : 'Suspend'} User`}>
+          <Modal onClose={toggleModal} isVisible={showModal} label={`${status === 'Suspended' ? 'Resume' : 'Suspend'} User`}>
             <Box className="robotoF">
-              <Text>Are you sure you want to {status ? 'Resume': 'suspend'} <strong>{fullName || "John Doe"}</strong>?</Text>
+              <Text>Are you sure you want to {status === 'Suspended' ? 'Resume': 'suspend'} <strong>{fullName || "John Doe"}</strong>?</Text>
               <HStack justify={'center'} mt='15px'>
-                <Btn onClick={() => suspendFn(status ? "Resume" : "suspend")}
+                <Btn onClick={() => suspendFn(status === 'Suspended' ? "Resume" : "Suspended")}
                   bg={"#335CFF"}
                   isLoading = {loading}
-                  loadingText = {status ? 'Resuming...' : 'Suspending...'}
+                  loadingText = {status === 'Suspended' ? 'Resuming...' : 'Suspending...'}
                 >
-                    { status ? 'Resume' : 'Suspend'}</Btn>
+                    { status === 'Suspended' ? 'Resume' : 'Suspend'}</Btn>
                 <Btn bg={"red"} onClick={toggleModal}>Close</Btn>
               </HStack>
             </Box>

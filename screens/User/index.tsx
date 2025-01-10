@@ -289,6 +289,7 @@ const UserScreen = () => {
   const [search, setSearch] = useState<string>("");
   const [verify, setVerify] = useState("Pending");
 
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { getUser, getUserById } = useUser();

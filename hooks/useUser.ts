@@ -57,7 +57,7 @@ const useUser = () => {
   const verifyUser = useCallback(
     async (id: string, data: VerificationProps) => {
       try {
-        const res = await client.put(`user/users/:${id}/verification`, data);
+        const res = await client.put(`user/users/verify/${id}`, data);
         return res as any;
       } catch (err: any) {
         throw new err();
