@@ -26,7 +26,7 @@ class AuthController {
     });
     //set user information to cookie
     res.cookie("auth-cookie", payloadStringified);
-    res.redirect("/");
+    res.redirect("/dashboard");
   };
 
   googleAuthController = async (req: Request, res: Response) => {
