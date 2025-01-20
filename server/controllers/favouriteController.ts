@@ -6,7 +6,8 @@ import { isValidObjectId } from "mongoose";
 class FavouritePropertyController {
   addToFavourites = async (req: Request, res: Response) => {
     try {
-      const userId = req.user as any;
+      const userId = req?.user as any;
+
       const propertyId = req.params.propertyId;
       if (!propertyId)
         return res.status(404).json({
@@ -53,7 +54,7 @@ class FavouritePropertyController {
 
   getAllFavouriteProperty = async (req: Request, res: Response) => {
     try {
-      console.log("matching user", req?.user);
+  
       const properties = await FavouriteProperty.find({
         user: req.user,
       }).populate("property");

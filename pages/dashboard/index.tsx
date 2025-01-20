@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 
 const Dashboard =()=> {
-    const { user } = useAuth();
+    const { user, isWindow } = useAuth();
     const navigate = useRouter();
 
     // const logout = () => {
@@ -23,6 +23,30 @@ const Dashboard =()=> {
     //     logout()
     //   }
     // })
+    useEffect(() => {
+      if (isWindow) {
+        const getCookie = (name: string) => {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) {
+            return decodeURIComponent(parts.pop()?.split(";").shift() || "");
+          }
+        };
+  
+        const myCookie = getCookie("auth-cookie");
+        if (myCookie) {
+          const userData = localStorage.getItem('userData');
+          !userData && localStorage.setItem("userData", myCookie);
+          const authRoute = sessionStorage.getItem("authRoute");
+          if (authRoute) {
+            navigate.push(authRoute);
+          }
+        }
+      }
+  
+      return () => localStorage.removeItem("authRoute");
+    }, [isWindow]);
+  
 
     return (
         <Wrapper>
