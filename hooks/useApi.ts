@@ -3,6 +3,7 @@
 import type { AxiosRequestConfig, AxiosResponse, CancelToken } from "axios";
 import axios from "axios";
 import { useCallback, useEffect, useState } from "react";
+import useAuth from "./useAuth";
 
 export type ApiClient = {
   query: <T extends any>(
@@ -50,6 +51,8 @@ const client = ({
 };
 
 function httpClient({ token }: { token?: string }) {
+
+  const { logout } = useAuth();
   
   return {
     query: async <T extends any>(q: string, headers?: AxiosRequestConfig) => {
@@ -57,14 +60,22 @@ function httpClient({ token }: { token?: string }) {
         const resp = client({ token }).get(q, headers);
         const result: AxiosResponse<T, any> = await Promise.resolve(resp);
         return result;
-      } catch (err) {
+      } catch (err:any) {
+        console.log('error check', err?.response?.status);
+        if (err?.response?.status === 401) {
+          logout();
+        }
         return Promise.reject(err);
       }
     },
     delete: async (q: string, headers?: AxiosRequestConfig) => {
       try {
         return await Promise.resolve(client({ token }).delete(q, headers));
-      } catch (err) {
+      } catch (err:any) {
+        console.log('error check', err?.response?.status);
+        if (err?.response?.status === 401) {
+          logout();
+        }
         return Promise.reject(err);
       }
     },
@@ -77,7 +88,11 @@ function httpClient({ token }: { token?: string }) {
         const resp = client({ token }).post(q, data, headers);
         const result: AxiosResponse<T, any> = await Promise.resolve(resp);
         return result.data;
-      } catch (err) {
+      } catch (err:any) {
+        console.log('error check', err?.response?.status);
+        if (err?.response?.status === 401) {
+          logout();
+        }
         return Promise.reject(err);
       }
     },
@@ -90,7 +105,11 @@ function httpClient({ token }: { token?: string }) {
         const resp = client({ token }).put(q, data, headers);
         const result: AxiosResponse<T, any> = await Promise.resolve(resp);
         return result.data;
-      } catch (err) {
+      } catch (err:any) {
+        console.log('error check', err?.response?.status);
+        if (err?.response?.status === 401) {
+          logout();
+        }
         return Promise.reject(err);
       }
     },
@@ -103,7 +122,11 @@ function httpClient({ token }: { token?: string }) {
         const resp = client({ token }).patch(q, data, headers);
         const result: AxiosResponse<T, any> = await Promise.resolve(resp);
         return result.data;
-      } catch (err) {
+      } catch (err:any) {
+        console.log('error check', err?.response?.status);
+        if (err?.response?.status === 401) {
+          logout();
+        }
         return Promise.reject(err);
       }
     },
