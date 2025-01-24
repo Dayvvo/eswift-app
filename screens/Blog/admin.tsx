@@ -178,7 +178,7 @@ const BlogScreen = () => {
             });
             return (
               <>
-              <Modal onClose={toggleModal} isVisible={showModal} label="Edit Blog">
+              <Modal onClose={toggleModal} isVisible={showModal} label={`Delete ${item.title}`}>
                   <Box className="robotoF">
                     <Text>Are you sure you want to delete <strong>{item.title}</strong> blog post?</Text>
                     <HStack justify={'center'} mt='15px'>

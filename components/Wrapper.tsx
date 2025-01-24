@@ -30,6 +30,7 @@ const Wrapper = ({
   const navigate = useRouter() as NextRouter;
   const router = useRouter()
 
+
   const navData = [
     {
       label: "Dashboard",
@@ -99,13 +100,31 @@ const Wrapper = ({
 
   const token = userFromLocalStorage? JSON.parse(userFromLocalStorage)?.token: "";
 
+  const userData = userFromLocalStorage ? JSON.parse(userFromLocalStorage)?.user:null;
+
   useEffect(() => {
-    if (!token && router) {
+    const restrictedPaths = ["/property", "/users", "/blog"];
+    
+    const isRestrictedPath = restrictedPaths.some((path) =>
+      router.pathname.startsWith(path)
+    );
+  
+    if (isRestrictedPath && userData?.role !== "ADMIN") {
+      console.log(`Unauthorized access to ${router.pathname}. Logging out...`);
       localStorage.removeItem("token");
       localStorage.removeItem("userData");
       router.push("/auth");
     }
-  }, [token, router]);
+  
+    // Ensure token presence to keep the user logged in
+    if (!token) {
+      console.log("No token found. Redirecting to /auth...");
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+      router.push("/auth");
+    }
+  }, [router.pathname, userData?.role, token, router]);
+  
 
   const [ isOpen , setIsOpen] = useState<boolean>(false);
 
