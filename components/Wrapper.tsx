@@ -324,7 +324,7 @@ const Wrapper = ({
           top={"20px"}
           left={{ base: "0px", lg: "250px" }}
           w={{ base: "full", lg: "80vw" }}
-          {...(noPadding ? {} : { px: "20px" })}
+          {...(noPadding ? {} : { px: "20px", pt:'20px',pb:'40px' })}
         >
           {route ? children : <></>}
         </Box>

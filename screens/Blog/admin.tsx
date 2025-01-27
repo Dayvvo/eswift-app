@@ -174,7 +174,7 @@ const BlogScreen = () => {
       )}
       {!loading && blogPost.length > 0 && (
         <>
-        <SimpleGrid columns={3} spacing={5} mt="20px">
+        <SimpleGrid columns={{base:1, md:2, lg:3}} spacing={5} mt="20px">
           {currentBlogsInView.map((item, index) => {
             const dateString = new Date(item.createdAt);
 
@@ -185,26 +185,26 @@ const BlogScreen = () => {
             });
             return (
               <>
-              <Modal onClose={toggleModal} isVisible={showModal} label={`Delete ${item.title}`}>
+              <Modal onClose={toggleModal} isVisible={showModal} label="Edit Blog">
                   <Box className="robotoF">
                     <Text>Are you sure you want to delete <strong>{item.title}</strong> blog post?</Text>
                     <HStack justify={'center'} mt='15px'>
-                      <Btn bgColor="#FF5764"       
+                      <Btn bgColor="#6AFFB0"       
                        borderRadius={"50px"}
-                        className="robotoF"
+                        className="urbanist"
                         fontWeight={400}
                         fontSize={".937rem"}
                         w="144px"
                         h="28px"
                       onClick={() => deleteBlogFn(item._id)}
-                        >Delete</Btn>
-                      <Btn bgColor="#6AFFB0"      
+                        >Yes</Btn>
+                      <Btn bgColor="#FF5764"      
                        borderRadius={"50px"}
-                        className="robotoF"
+                        className="urbanist"
                         fontWeight={400}
                         fontSize={".937rem"}
                         w="144px"
-                        h="28px" onClick={toggleModal}>Close</Btn>
+                        h="28px" onClick={toggleModal}>No</Btn>
                     </HStack>
                   </Box>
                 </Modal>
@@ -212,12 +212,13 @@ const BlogScreen = () => {
               <Box
                 key={index}
                 bgColor={"#fff"}
-                maxW={"340px"}
+                maxW={{base:'100%',sm:"340px"}}
                 boxShadow={
                   "0px 17.579px 52.738px 0px rgba(133, 133, 133, 0.10)"
                 }
                 display="flex"
                 flexDirection="column" // Ensure the content stacks vertically
+                flexBasis={1}
               >
                 <Box w="100%" borderRadius={"7px 7px 0 0"}>
                   <Img src={item.header_image} alt={item.title} w="100%" />

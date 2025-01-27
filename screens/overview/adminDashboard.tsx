@@ -165,7 +165,7 @@ const DashboardScreen = () => {
     getPropertyFunction();
   }, [showModal, loading]);
 
-    const Affiliates = table?.filter((item:{role:string;}) => item?.role === 'GUEST');
+    const Affiliates = table?.filter((item:{role:string;}) => item?.role !== 'AFFILIATE');
   
   let PropertiesCount = getProperty?.length as number;
   let UsersCount = table?.length as number;
