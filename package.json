@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "NODE_ENV=production node dist/server",
+    "start": "NODE_ENV=production && node dist/server",
     "frontend": "next dev",
     "backend": "node dist/server/server.js",
     "dev": "tsx watch server/server.ts",
