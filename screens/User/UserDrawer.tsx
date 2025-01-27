@@ -32,9 +32,7 @@ const UserDrawer = ({
   // let status = verify === 'Suspended' ? 'Resume' : 'Suspend'
   // console.log(status)
 
-  const status = useMemo(() => {
-    return userEl?.verification === "Suspended" ? "Suspended" : "Resume";
-  }, [userEl?.verification])
+  const status = userEl?.verification === "Rejected" ? "Rejected" : "Resume"
   
   // const { getUser } = useUser();
 
@@ -65,13 +63,13 @@ const UserDrawer = ({
     setLoading(true);
 
     try {
-      const verificationStatus = status === 'Suspended' ? 'Resume' : 'Suspended'
+      const verificationStatus = status === 'Rejected' ? 'Resume' : 'Rejected'
       const res: any = await verifyUser(userEl._id, {
         verification: verificationStatus,
       });
       toast({
         status: "success",
-        description: `${userEl.firstName} ${status}`,
+        description: `${userEl.firstName} ${status === 'Rejected' ? 'Resumed' : 'Suspended'}`,
         title: "Success",
         position: "top",
         duration: 1000,
@@ -86,6 +84,7 @@ const UserDrawer = ({
         duration: 1000,
       });
       setLoading(false);
+      console.log(error)
     }
     finally{
       setShowModal(false);
@@ -228,7 +227,7 @@ const UserDrawer = ({
               onClick={() => setShowModal(true)}
               isLoading = {loading}
             >
-              { status === 'Suspended' ? 'Resume' : 'Suspend'}
+              { status === 'Rejected' ? 'Resume' : 'Suspend'}
             </Btn>
             {/* <Btn
               bgColor="transparent"
@@ -244,16 +243,16 @@ const UserDrawer = ({
               Delete
             </Btn> */}
           </Flex>
-          <Modal onClose={toggleModal} isVisible={showModal} label={`${status === 'Suspended' ? 'Resume' : 'Suspend'} User`}>
+          <Modal onClose={toggleModal} isVisible={showModal} label={`${status === 'Rejected' ? 'Resume' : 'Suspend'} User`}>
             <Box className="robotoF">
-              <Text>Are you sure you want to {status === 'Suspended' ? 'Resume': 'suspend'} <strong>{fullName || "John Doe"}</strong>?</Text>
+              <Text>Are you sure you want to {status === 'Rejected' ? 'Resume': 'suspend'} <strong>{fullName || "John Doe"}</strong>?</Text>
               <HStack justify={'center'} mt='15px'>
-                <Btn onClick={() => suspendFn(status === 'Suspended' ? "Resume" : "Suspended")}
+                <Btn onClick={() => suspendFn(status === 'Rejected' ? "Rejected" : "Resume")}
                   bg={"#335CFF"}
                   isLoading = {loading}
-                  loadingText = {status === 'Suspended' ? 'Resuming...' : 'Suspending...'}
+                  loadingText = {status === 'Rejected' ? 'Resuming...' : 'Suspending...'}
                 >
-                    { status === 'Suspended' ? 'Resume' : 'Suspend'}</Btn>
+                    { status === 'Rejected' ? 'Resume' : 'Suspend'}</Btn>
                 <Btn bg={"red"} onClick={toggleModal}>Close</Btn>
               </HStack>
             </Box>
