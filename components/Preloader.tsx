@@ -30,7 +30,7 @@ const Preloader = () => {
   //     }, 500);
   //     return () => clearTimeout(timer);
   //   }
-    
+  
   // }, [])
 
 
