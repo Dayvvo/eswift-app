@@ -43,7 +43,6 @@ const BlogScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState<string>("");
   const { toast } = useToast();
-  const [showModal, setShowModal] = useState(false);
 
   const toggleModal = () => {
     setShowModal((prevState) => !prevState);
