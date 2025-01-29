@@ -49,7 +49,8 @@ const useBlog = () => {
         const res = await post(`${baseUrl}/blog/post`, data);
         // console.log("res", res);
         return res;
-      } catch (err: any) {
+      } 
+      catch (err: any) {
         // console.log("error calling addblog", err);
         throw new err();
       }
