@@ -44,9 +44,6 @@ const BlogScreen = () => {
   const [search, setSearch] = useState<string>("");
   const { toast } = useToast();
 
-  const toggleModal = () => {
-    setShowModal((prevState) => !prevState);
-  };
   // const { check } = useAppContext();
 
   // console.log('check', check);
