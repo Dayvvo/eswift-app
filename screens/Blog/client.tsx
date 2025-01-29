@@ -32,7 +32,8 @@ export interface BlogPostProps {
 
 const BlogspotScreen = () => {
   const navigate = useRouter();
-  const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
+const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
+
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState<number>(1);
   const { getBlog } = useBlog();
@@ -42,12 +43,11 @@ const BlogspotScreen = () => {
     section.scrollIntoView({ behavior: "smooth" });
   }
 
-  console.log("blogPost", blogPost);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    if (blogPost.length === 0) {
+    if (blogPost && blogPost?.length === 0) {
       onOpen();
     }
   }, [blogPost, onOpen]);
@@ -92,7 +92,7 @@ const BlogspotScreen = () => {
         gap={"20px"}
         mb={"120px"}
       >
-        {blogPost.length > 0 ? (
+        {blogPost && blogPost?.length > 0 ? (
           <Grid
             templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(3, 1fr)" }}
             gap={{ base: "24px", lg: "60px" }}
