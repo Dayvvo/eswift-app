@@ -44,17 +44,15 @@ const useBlog = () => {
   } = useMemo(() => httpClient({ token }), [token]);
 
   const addBlog = useCallback(
-    async (data: BlogObj) => {
+    async (data:BlogObj) => {
       try {
         const res = await post(`${baseUrl}/blog/post`, data);
-        // console.log("res", res);
         return res;
       } 
       catch (err: any) {
-        // console.log("error calling addblog", err);
-        throw new err();
+        console.log("error calling addblog", err);
+        throw err();
       }
-      // return res
     },
     [token]
   );
