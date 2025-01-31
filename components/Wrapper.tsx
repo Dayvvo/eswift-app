@@ -135,11 +135,19 @@ const Wrapper = ({
   return (
     <Box
       w={"100%"}
-      py={{ base: "6px", lg: "10px" }}
-      minH={"100vh"}
+      py={{ base: "0", lg: "10px" }}
+      h={isOpen ? '100vh' : 'auto'}
       overflowX={"hidden"}
-      overflowY={`${isOpen ? 'hidden' : 'auto'}`}
+      overflowY={`${isOpen ? 'clip' : 'auto'}`}
     >
+      <Box onClick={openDrawer}
+        w={"100%"} h={"100%"}
+        display={{base:`${ isOpen ? 'block' : 'none'}`, lg: "none" }}
+        position={'absolute'}
+        bg={'#00000080'}
+        backdropFilter={'blur(6px)'}
+        zIndex={80}
+      />
       <Box w={"100%"}>
         <Box
           className={`${isOpen ? 'slideOpen' : 'slideClose'}`}
@@ -156,6 +164,7 @@ const Wrapper = ({
           display={{ base: "flex", lg: "flex" }}
           flexDir={"column"}
           zIndex={80}
+          backdropFilter={"blur(4px)"}
         >
           <Box onClick={openDrawer}
             display={{base:'flex',lg:'none'}} fontSize={'20px'} alignSelf={'end'} my={'8px'}>
@@ -326,7 +335,6 @@ const Wrapper = ({
           left={{ base: "0px", lg: "250px" }}
           w={{ base: "full", lg: "80vw" }}
           {...(noPadding ? {} : { px: "20px", pt:'20px',pb:'40px' })}
-          
         >
           {route ? children : <></>}
         </Box>

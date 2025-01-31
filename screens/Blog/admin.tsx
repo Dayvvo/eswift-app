@@ -168,7 +168,7 @@ const BlogScreen = () => {
           <Skeleton height="40px" />
         </Stack>
       )}
-      {!loading && blogPost.length > 0 && (
+      {!loading && blogPost?.length > 0 && (
         <>
         <SimpleGrid columns={{base:1, md:2, lg:3}} spacing={5} mt="20px">
           {currentBlogsInView.map((item, index) => {
@@ -334,7 +334,7 @@ const BlogScreen = () => {
         </SimpleGrid>
         </>
       )}
-      {blogPost.length > totalCount && (
+      {blogPost?.length > totalCount && (
         <VStack align={"start"} gap="15px" mt="10px">
           <div className="">
             Showing {firstRowsIndex + 1} to {lastRowsIndex}
@@ -348,7 +348,7 @@ const BlogScreen = () => {
           />
         </VStack>
       )}
-      {!loading && blogPost.length === 0 && (
+      {!loading && blogPost?.length === 0 && (
         <Card mt="1em">
           <CardBody>
             <Text>No blog post available please wait</Text>
