@@ -8,8 +8,8 @@
     "backend": "node dist/server/server.js",
     "dev": "tsx watch server/server.ts",
     "lint": "next lint",
-    "build": "tsc && next build",
-    "build:prod": "tsc --project tsconfig.prod.json && next build",
+    "build:normal": "tsc && next build",
+    "build": "tsc --project tsconfig.prod.json && next build",
     "go": "nodemon dist/server.js",
     "clear": "tsc --clearCache"
   },
