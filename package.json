@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node ./dist/server/server.js",
+    "start": "NODE_ENV=production && echo 'Root:' && ls -la /app && echo 'Dist:' && ls -la /app/dist && node /app/dist/server/server.js",
     "frontend": "next dev",
     "backend": "node dist/server/server.js",
     "dev": "tsx watch server/server.ts",
