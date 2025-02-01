@@ -1,4 +1,4 @@
 build:
   cwd: /
 start:
-  cmd: node ./dist/server.js
+  cmd: node ./dist/server/server.js

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node dist/server",
+    "start": "node ./dist/server/server.js",
     "frontend": "next dev",
     "backend": "node dist/server/server.js",
     "dev": "tsx watch server/server.ts",
