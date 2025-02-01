@@ -1,4 +1,0 @@
-build:
-  cwd: /
-start:
-  cmd: node ./dist/server/server.js
