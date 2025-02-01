@@ -20,18 +20,18 @@ const Preloader = () => {
 
   const { setGlobalContext } = useAppContext();
 
-  useEffect(() => {
-    const storedValue = sessionStorage.getItem("isOpen");
+  // useEffect(() => {
+  //   const storedValue = sessionStorage.getItem("isOpen");
 
-    if (storedValue === "true" && pathname === "/") {
-      const timer = setTimeout(() => {
-        setIsOpen(false);
-        sessionStorage.setItem("isOpen", "false");
-      }, 4500);
-      return () => clearTimeout(timer);
-    }
-    
-  }, [])
+  //   if (storedValue === "true" && pathname === "/") {
+  //     const timer = setTimeout(() => {
+  //       setIsOpen(false);
+  //       sessionStorage.setItem("isOpen", "false");
+  //     }, 500);
+  //     return () => clearTimeout(timer);
+  //   }
+  
+  // }, [])
 
 
   return (
