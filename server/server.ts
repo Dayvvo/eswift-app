@@ -18,7 +18,7 @@ import indexRoutes from './routes/indexRoutes';
 const app = express();
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = process.env.HOSTName || 'localhost';
-const port = (process.env.PORT || 3000) as number;
+const port = (3000) as number;
 
 console.log('dev mode',process.env['NODE_ENV'])
 
