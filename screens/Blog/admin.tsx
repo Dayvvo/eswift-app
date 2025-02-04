@@ -128,10 +128,6 @@ const BlogScreen = () => {
     }
   };
 
-  const toggleModal = () => {
-    setShowModal((prevState) => !prevState);
-  };
-
   const route = useRouter();
 
   return (
