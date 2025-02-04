@@ -135,17 +135,26 @@ const Wrapper = ({
   return (
     <Box
       w={"100%"}
-      py={{ base: "6px", lg: "10px" }}
-      minH={"100vh"}
+      py={{ base: "0", lg: "10px" }}
+      h={isOpen ? '100vh' : 'auto'}
       overflowX={"hidden"}
+      overflowY={`${isOpen ? 'clip' : 'auto'}`}
     >
+      <Box onClick={openDrawer}
+        w={"100%"} h={"100%"}
+        display={{base:`${ isOpen ? 'block' : 'none'}`, lg: "none" }}
+        position={'absolute'}
+        bg={'#00000080'}
+        backdropFilter={'blur(6px)'}
+        zIndex={80}
+      />
       <Box w={"100%"}>
         <Box
           className={`${isOpen ? 'slideOpen' : 'slideClose'}`}
           borderRight={"1px solid #E1E4EA"}
           w={"244px"} 
           bg={"white"}
-          pos={{base:'absolute', lg:'fixed'}}
+          pos={'fixed'}
           // top={0}
           // left={0}
           h={"100vh"}
@@ -155,6 +164,7 @@ const Wrapper = ({
           display={{ base: "flex", lg: "flex" }}
           flexDir={"column"}
           zIndex={80}
+          backdropFilter={"blur(4px)"}
         >
           <Box onClick={openDrawer}
             display={{base:'flex',lg:'none'}} fontSize={'20px'} alignSelf={'end'} my={'8px'}>
@@ -255,69 +265,69 @@ const Wrapper = ({
         </Box>
         <Box>
         <Flex
-      justifyContent={"space-between"}
-      alignItems={"center"}
-      borderBottom={"1px solid #E1E4EA"}
-      // padding={"40px 30px 40px 60px"}
-      px={{ base: "12px", lg: "40px" }}
-      py={{ base: "20px", lg: "40px" }}
-      pos="relative"
-      top={'20px'}
-      left={{ base: "2px", lg: "256px" }}
-      maxW={{ base: "full", lg: "80vw" }}
-      zIndex={70}
-    >
-      <Grid gridTemplateColumns={"40px 2fr"} gap={0}>
+          justifyContent={"space-between"}
+          alignItems={"center"}
+          borderBottom={"1px solid #E1E4EA"}
+          // padding={"40px 30px 40px 60px"}
+          px={{ base: "12px", lg: "40px" }}
+          py={{ base: "20px", lg: "40px" }}
+          pos="relative"
+          top={'20px'}
+          left={{ base: "2px", lg: "256px" }}
+          maxW={{ base: "full", lg: "80vw" }}
+          zIndex={70}
+        >
+          <Grid gridTemplateColumns={"40px 2fr"} gap={0}>
 
-        <Flex
-          border={"1px solid #E1E4EA"}
-          borderRadius={"50%"}
-          maxW={"30px"}
-          h="30px"
-          alignItems={"center"}
-          justifyContent={"center"}
-          mt="4%"
-          display={{base:'none', lg:'flex'}}
-        >
-          <DashboardIcon />
-        </Flex>
-        <Flex onClick={openDrawer}
-          border={"1px solid #E1E4EA"}
-          borderRadius={"50%"}
-          maxW={"30px"}
-          h="30px"
-          alignItems={"center"}
-          justifyContent={"center"}
-          mt="4%"
-          display={{base:'flex', lg:'none'}}
-        >
-          <GiHamburgerMenu />
-        </Flex>
-        <Flex direction={"column"}>
-          <Text
-            className="robotoF"
-            color="#0E121B"
-            fontSize={".875rem"}
-            fontWeight={500}
-          >
-            {casedPath || "Dashboard"}
-          </Text>
-          <Text
-            className="robotoF"
-            color="#525866"
-            fontSize={".75rem"}
-            fontWeight={400}
-          >
-            {isUser &&
-              "Overview of your favourite properties and profile settings"}
-          </Text>
-        </Flex>
-      </Grid>
-      {/* <Flex gap={"20px"} alignItems={"center"}> */}
-        {/* <SearchIcon />
-        <NotifIcon /> */}
-      {/* </Flex> */}
-    </Flex>
+            <Flex
+              border={"1px solid #E1E4EA"}
+              borderRadius={"50%"}
+              maxW={"30px"}
+              h="30px"
+              alignItems={"center"}
+              justifyContent={"center"}
+              mt="4%"
+              display={{base:'none', lg:'flex'}}
+            >
+              <DashboardIcon />
+            </Flex>
+            <Flex onClick={openDrawer}
+              border={"1px solid #E1E4EA"}
+              borderRadius={"50%"}
+              maxW={"30px"}
+              h="30px"
+              alignItems={"center"}
+              justifyContent={"center"}
+              mt="4%"
+              display={{base:'flex', lg:'none'}}
+            >
+              <GiHamburgerMenu />
+            </Flex>
+            <Flex direction={"column"}>
+                <Text
+                  className="robotoF"
+                  color="#0E121B"
+                  fontSize={".875rem"}
+                  fontWeight={500}
+                >
+                  {casedPath || "Dashboard"}
+                </Text>
+                <Text
+                  className="robotoF"
+                  color="#525866"
+                  fontSize={".75rem"}
+                  fontWeight={400}
+                >
+                  {isUser &&
+                    "Overview of your favourite properties and profile settings"}
+              </Text>
+              </Flex>
+            </Grid>
+            {/* <Flex gap={"20px"} alignItems={"center"}> */}
+              {/* <SearchIcon />
+              <NotifIcon /> */}
+            {/* </Flex> */}
+          </Flex>
         </Box>
         <Box
           position={"relative"}

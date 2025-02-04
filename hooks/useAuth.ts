@@ -3,6 +3,8 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { UserRole, AuthProvider } from "@/server/utils/interfaces";
 import { R } from "@/utils/types";
+import useToast from "./useToast";
+
 
 interface AuthContextType {
   user: IUser | null;
@@ -63,6 +65,9 @@ const useAuth = () => {
 
   const { push } = useRouter();
 
+  const toast = useToast();
+
+
   useEffect(() => {
     if (isWindow) {
       const userFromLocalStorage = localStorage.getItem("userData");
@@ -70,8 +75,19 @@ const useAuth = () => {
         const { token, user } = JSON.parse(userFromLocalStorage);
         setToken(token);
         setUser(user);
+        if (user?.verification === 'Suspend'){
+          logout()
+          toast.toast({
+            status: "error",
+            description: `Your account has been suspended, contact the Admin to resolve this`,
+            title: "Failed",
+            position: "top",
+            duration: 5000,
+          });
+        }
       }
     }
+    
   }, [isWindow]);
 
   const login = async (credentials: { email: string; password: string }) => {
@@ -140,3 +156,5 @@ const useAuth = () => {
 };
 
 export default useAuth;
+
+
