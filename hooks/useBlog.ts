@@ -35,13 +35,13 @@ const useBlog = () => {
 
     // console.log("storedToken", userData);
   }, []);
-
+// 8134423326
   const {
     query,
     post,
     delete: deleteRequest,
     putMutation: putRequest,
-  } = useMemo(() => httpClient({ token }), [token]);
+  } = httpClient({ token });
 
   const addBlog = useCallback(
     async (data:BlogObj) => {

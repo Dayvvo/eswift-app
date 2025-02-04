@@ -45,7 +45,9 @@ const BlogScreen = () => {
   const { toast } = useToast();
 
   // const { check } = useAppContext();
-
+  const toggleModal = () => {
+    setShowModal((prevState) => !prevState);
+  };
   // console.log('check', check);
 
   const { deleteBlog, getBlog } = useBlog();
@@ -123,10 +125,6 @@ const BlogScreen = () => {
         duration: 5000,
       });
     }
-  };
-
-  const toggleModal = () => {
-    setShowModal((prevState) => !prevState);
   };
 
   const route = useRouter();
