@@ -129,6 +129,41 @@ border-radius: 8px;
   background: transparent;
 }
 
+.paginationBtn {
+  width: 80%;
+  margin-inline: auto;
+  height: 40px;
+  list-style: none;
+  display: flex;
+  gap: 7px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.paginationBtn a {
+  font-size: 0.875rem;
+  font-family: 'Fira Code', monospace;
+  font-weight: 400;
+  padding: 4px 8px;
+  /* margin: 8px; */
+  border-radius: 100px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  color: #000;
+  cursor: pointer;
+  transition: all .3s ease-in;
+  
+}
+
+.paginationBtn a:hover {
+  background-color: rgba(152, 150, 150, 0.128);
+}
+
+.paginationActive a {
+  color: rgb(75, 68, 178);
+  background-color: rgba(219, 217, 253, 0.534);
+}
+
 @media (max-width:994px) {
   .slideClose {
     transform: translateX(-100%);
