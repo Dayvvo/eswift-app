@@ -30,6 +30,8 @@ import useUser from "@/hooks/useUser";
 import Btn from "@/components/Btn";
 import { Modal } from "@/components/modal";
 import useToast from "@/hooks/useToast";
+import { GrFormPrevious, GrFormNext } from "react-icons/gr";
+import ReactPaginate from "react-paginate";
 
 const AddUser = ({ close }: { close: () => void }) => {
   const toast = useToast();
@@ -289,7 +291,6 @@ const UserScreen = () => {
   const [search, setSearch] = useState<string>("");
   const [verify, setVerify] = useState("Pending");
 
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { getUser, getUserById } = useUser();
@@ -322,6 +323,24 @@ const UserScreen = () => {
   const toggleModal = () => {
     setShowModal((prevState) => !prevState);
   };
+
+  const [pageNumber, setPageNumber] = useState(0);
+  const usersPerPage = 10;
+  const pagesVisited = pageNumber * usersPerPage;
+  const userPageCount = Math.ceil(table.length / usersPerPage);
+  const changePage = ({ selected }: any) => {
+    setPageNumber(selected);
+  };
+  const previous = (
+    <button>
+      <GrFormPrevious />
+    </button>
+  );
+  const next = (
+    <button>
+      <GrFormNext />
+    </button>
+  );
 
   return (
     <Box>
@@ -368,8 +387,10 @@ const UserScreen = () => {
             </MenuList>
           </Menu>
         </Flex>
-        <Btn className="robotoF" onClick={() => setShowModal(true)}
-          fontSize={'.875rem'}
+        <Btn
+          className="robotoF"
+          onClick={() => setShowModal(true)}
+          fontSize={".875rem"}
           fontWeight={500}
         >
           Add User
@@ -406,7 +427,9 @@ const UserScreen = () => {
           </Thead>
           <Tbody fontSize={".875rem"} fontWeight={400} className="robotoF">
             {table &&
-              table.map((item: any) => (
+              table
+              .slice(pagesVisited, pagesVisited + usersPerPage)
+              .map((item: any) => (
                 <Tr key={item._id} cursor={"pointer"}>
                   <Td color={"#0E121B"} py="12px">{`${item.firstName
                     .slice(0, 1)
@@ -462,6 +485,17 @@ const UserScreen = () => {
           />
         </Table>
       </TableContainer>
+      <ReactPaginate
+        previousLabel={previous}
+        nextLabel={next}
+        pageCount={userPageCount}
+        onPageChange={changePage}
+        containerClassName={"paginationBtn"}
+        previousLinkClassName="previousBtn"
+        nextLinkClassName="nextBtn"
+        disabledClassName="paginationDisabled"
+        activeClassName="paginationActive"
+      />
     </Box>
   );
 };

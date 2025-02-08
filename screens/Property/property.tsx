@@ -24,6 +24,8 @@ import { IoFilter } from "react-icons/io5";
 import { AddProperties } from "./Add";
 import useUser from "@/hooks/useUser";
 import { useAppContext } from "@/context";
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import ReactPaginate from "react-paginate";
 
 interface User {
   _id: any;
@@ -99,24 +101,28 @@ export const PropertyScreen = () => {
     getUserFn();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response: AxiosResponse<{ data: User[] }> = await client.get(
-  //         `/user/users`
-  //       );
-  //       setUsers(response.data.data);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   useEffect(() => {
     getPropertyFunction();
   }, [showModal, loading, inputValue, page]);
+
+  const [pageNumber, setPageNumber] = useState(0);
+      const usersPerPage = 8;
+      const pagesVisited = pageNumber * usersPerPage;
+      const userPageCount = Math.ceil(propertyEl.length / usersPerPage);
+      const changePage = ({ selected }: any) => {
+        setPageNumber(selected);
+      };
+      const previous = (
+        <button>
+          <GrFormPrevious />
+        </button>
+      );
+      const next = (
+        <button>
+          <GrFormNext />
+        </button>
+      );
 
   return (
     <>
@@ -256,7 +262,9 @@ export const PropertyScreen = () => {
               gap={{ base: "24px", lg: "28px" }}
               paddingBottom={{ base: "20rem", lg: "3rem", xl: "6rem" }}
             >
-              {propertyEl.map((property, index) => {
+              {propertyEl
+              .slice(pagesVisited, pagesVisited + usersPerPage)
+              .map((property, index) => {
                 const user = users.find((u) => u._id === property?.creatorID);
 
                 return (
@@ -285,26 +293,22 @@ export const PropertyScreen = () => {
             </Card>
           )}
         </Box>
+        {
+        propertyEl?.length > 7 && (
+          <ReactPaginate
+            previousLabel={previous}
+            nextLabel={next}
+            pageCount={userPageCount}
+            onPageChange={changePage}
+            containerClassName={"paginationBtn"}
+            previousLinkClassName="previousBtn"
+            nextLinkClassName="nextBtn"
+            disabledClassName="paginationDisabled"
+            activeClassName="paginationActive"
+          />
+        )
+      }
       </Box>
-      {!loading && propertyEl?.length > 0 && (
-        <Box
-          display={"flex"}
-          alignItems={"center"}
-          flexDir={{ base: "column", md: "row" }}
-          justifyContent={{ base: "center", md: "space-between" }}
-          mt={{ base: "14px", md: "10px" }}
-          gap={{ base: "1rem", md: "0rem" }}
-          px={'20px'}
-        >
-          <Text
-            fontSize={"14px"}
-            color={"#525866"}
-            className="inter"
-          >{`page ${page} of ${totalPages}`}</Text>
-
-          <Box></Box>
-        </Box>
-      )}
     </>
   );
 };

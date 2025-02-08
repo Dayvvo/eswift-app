@@ -24,6 +24,8 @@ import useToast from "@/hooks/useToast";
 import { useDebounce } from "@/hooks/useDebounce";
 import Pagination from "@/components/Pagination";
 import { Modal } from "@/components/modal";
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import ReactPaginate from "react-paginate";
 // import { useAppContext } from "@/context";
 
 interface BlogPostProps {
@@ -72,12 +74,6 @@ const BlogScreen = () => {
     getBlogFn();
   }, [search]);
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalCount = 9;
-  const lastRowsIndex = currentPage * totalCount;
-  const firstRowsIndex = lastRowsIndex - totalCount;
-  const currentBlogsInView =
-    blogPost && blogPost?.slice(firstRowsIndex, lastRowsIndex);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -129,6 +125,24 @@ const BlogScreen = () => {
 
   const route = useRouter();
 
+  const [pageNumber, setPageNumber] = useState(0);
+    const usersPerPage = 10;
+    const pagesVisited = pageNumber * usersPerPage;
+    const userPageCount = Math.ceil(blogPost.length / usersPerPage);
+    const changePage = ({ selected }: any) => {
+      setPageNumber(selected);
+    };
+    const previous = (
+      <button>
+        <GrFormPrevious />
+      </button>
+    );
+    const next = (
+      <button>
+        <GrFormNext />
+      </button>
+    );
+
   return (
     <>
       <Flex gap={"20px"} mt={'20px'}>
@@ -169,7 +183,9 @@ const BlogScreen = () => {
       {!loading && blogPost?.length > 0 && (
         <>
         <SimpleGrid columns={{base:1, md:2, lg:3}} spacing={5} mt="20px">
-          {currentBlogsInView.map((item, index) => {
+          {blogPost && blogPost
+          .slice(pagesVisited, pagesVisited + usersPerPage)
+          .map((item, index) => {
             const dateString = new Date(item.createdAt);
 
             const formattedDate = dateString.toLocaleDateString("en-US", {
@@ -332,7 +348,7 @@ const BlogScreen = () => {
         </SimpleGrid>
         </>
       )}
-      {blogPost?.length > totalCount && (
+      {/* {blogPost?.length > totalCount && (
         <VStack align={"start"} gap="15px" mt="10px">
           <div className="">
             Showing {firstRowsIndex + 1} to {lastRowsIndex}
@@ -345,7 +361,22 @@ const BlogScreen = () => {
             currentPage={currentPage}
           />
         </VStack>
-      )}
+      )} */}
+      {
+        blogPost?.length > 9 && (
+          <ReactPaginate
+            previousLabel={previous}
+            nextLabel={next}
+            pageCount={userPageCount}
+            onPageChange={changePage}
+            containerClassName={"paginationBtn"}
+            previousLinkClassName="previousBtn"
+            nextLinkClassName="nextBtn"
+            disabledClassName="paginationDisabled"
+            activeClassName="paginationActive"
+          />
+        )
+      }
       {!loading && blogPost?.length === 0 && (
         <Card mt="1em">
           <CardBody>

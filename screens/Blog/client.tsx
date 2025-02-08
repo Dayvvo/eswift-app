@@ -46,6 +46,8 @@ const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  
+
   useEffect(() => {
     if (blogPost && blogPost?.length === 0) {
       onOpen();
