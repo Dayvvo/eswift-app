@@ -24,7 +24,12 @@ export const isAuth = async (
           .status(401)
           .json({ message: "Not authorized, user not found" });
       }
-
+      if(userFound?.verification === "Rejected" || userFound?.verification === "Suspend") {
+        return res.status(403).json({
+          statusCode: 403,
+          message: 'Please reach out to admin on why you suspendend or rejected'
+        })
+      }
       next();
     } catch (error: any) {
       // console.error(error["message"]);
@@ -59,6 +64,12 @@ export const hasAuth = async (
       const decoded = jwt.verify(token, process.env['JWT_SECRET'] as string) as any;
       const user = await User.findById(decoded.id).select("-hash");
       req.user = user ? user : undefined;
+      if(user?.verification === "Rejected" || user?.verification === "Suspend") {
+        return res.status(403).json({
+          statusCode: 403,
+          message: 'Please reach out to admin on why you suspendend or rejected'
+        })
+      }
     }
   } catch (error) {
     req.user = undefined;
