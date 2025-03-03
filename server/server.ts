@@ -14,7 +14,6 @@ import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 
 import indexRoutes from './routes/indexRoutes';
 
-
 const app = express();
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = process.env.HOSTName || 'localhost';
@@ -107,7 +106,6 @@ nextApp.prepare().then(() => {
     await nextApp.render(req, res, '/settings', req.query as NextParsedUrlQuery);
   });
 
-  
   app.use(
     express.json({
       limit: '5mb',
