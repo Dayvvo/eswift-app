@@ -10,6 +10,7 @@ import session from 'express-session';
 import { appConfig } from './utils/config';
 import passport from 'passport';
 import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
+import path from 'path'
 
 
 import indexRoutes from './routes/indexRoutes';
@@ -55,6 +56,9 @@ nextApp.prepare().then(() => {
   app.use(cors());
 
   app.use(express.urlencoded({ extended: false }));
+  // Serve static files from the "uploads" folder
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+ 
 
   app.use(cookieParser());
 
