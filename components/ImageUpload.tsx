@@ -42,9 +42,6 @@ const ImageUpload = ({
 
         const formData = new FormData();
         formData.append("file", file);
-        formData.append("filename", file.name);
-        formData.append("filesize", file.size.toString());
-        formData.append("filetype", file.type);
 
         const uploadImage = async () => {
           try {
