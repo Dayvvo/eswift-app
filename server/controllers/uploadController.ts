@@ -10,6 +10,8 @@ import {
   DeleteObjectRequest,
 } from '@aws-sdk/client-s3'
 import { validateDeleteFIle } from '../utils/validation'
+import fs from 'fs'
+import path from 'path'
 class UploadController {
   async uploadFile(file: Express.Multer.File): Promise<string> {
     try {
@@ -48,6 +50,30 @@ class UploadController {
     }
   }
 
+  async uploadToRailway(file: Express.Multer.File): Promise<string> {
+    try {
+      const folderRoute = process.env.NODE_ENV === "production" ? "prod" : "uploads";
+
+      const storagePath = path.join(__dirname, "..", folderRoute); 
+  
+      const baseUrl = process.env.BASE_URL || "http://localhost:5500";
+  
+      if (!fs.existsSync(storagePath)) {
+        fs.mkdirSync(storagePath, { recursive: true });
+      }
+  
+      const fileName = `${Date.now()}_${file.originalname.replace(/\s+/g, "_")}`;
+      const filePath = path.join(storagePath, fileName);
+  
+      fs.writeFileSync(filePath, file.buffer as any);
+  
+      const fileUrl = `/${fileName}`.replace(/\\/g, "/");
+
+      return fileUrl;
+    } catch (error: any) {
+      throw new Error("Failed to upload file");
+    }
+  }
   async deleteFromDigitalOcean(publicUrl: string): Promise<void> {
     console.log('deleteCalled')
     try {
@@ -89,29 +115,49 @@ class UploadController {
     }
   }
 
+  // async uploadSingle(req: Request, res: Response) {
+  //   try {
+  //     const file: Express.Multer.File | null = req.file ? req.file : null;
+  //     if (!file) {
+  //       return res
+  //         .status(400)
+  //         .json({ statusCode: 400, message: `Bad Request, No file selected` })
+  //     };
+
+  //     const secureUrl = await uploadController.uploadToRailway(file);
+
+  //     return res.json({
+  //       statusCode: 200,
+  //       message: `Success`,
+  //       data: secureUrl,
+  //     })
+  //   } catch (error: any) {
+  //     return res.status(500).json({
+  //       statusCode: 500,
+  //       message: `Internal Server Error: ${error.message}`,
+  //     })
+  //   }
+  // }
+
   async uploadSingle(req: Request, res: Response) {
     try {
-      const file: Express.Multer.File | null = req.file ? req.file : null;
+      const file: Express.Multer.File | null = req.file ? req.file : null
+      console.log('FILE', file)
       if (!file) {
         return res
           .status(400)
           .json({ statusCode: 400, message: `Bad Request, No file selected` })
       };
 
-      const secureUrl = await uploadController.uploadToDigitalOcean(file);
-
+      const secureUrl = await uploadController.uploadToRailway(file)
       return res.json({
-        statusCode: 200,
-        message: `Success`,
-        data: secureUrl,
+        statusCode: 200, message: 'Success', data: secureUrl
       })
     } catch (error: any) {
-      return res.status(500).json({
-        statusCode: 500,
-        message: `Internal Server Error: ${error.message}`,
-      })
+      console.log('ERROR', error)
+      return res.status(500).json({statusCode: 500, message: `Internal server error: ${error.message}`})
     }
-  }
+  } 
 
   async uploadMultiple(req: Request, res: Response) {
     try {
@@ -119,7 +165,7 @@ class UploadController {
         const files = req.files as Express.Multer.File[]
         let urls: Array<string> = []
         for (const file of files) {
-          urls.push(await uploadController.uploadToDigitalOcean(file))
+          urls.push(await uploadController.uploadToRailway(file))
         }
 
         return res.json({ statusCode: 200, message: `Success`, data: urls })
