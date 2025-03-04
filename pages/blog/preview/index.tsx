@@ -66,6 +66,7 @@ const PreviewBlog = () => {
     introduction: introValue,
     body: bodyValue,
     body_image: bodyImageFile,
+    conclusion: conclusionValue
   };
 
   const addBlogFn = async () => {
