@@ -16,7 +16,6 @@ import { BsDot } from "react-icons/bs";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { FaRegImages } from "react-icons/fa";
-// import { PropertyCard } from "./propertyCard";
 import useProperty from "@/hooks/useProperty";
 import { useEffect, useState } from "react";
 import { useAppContext } from "@/context";
