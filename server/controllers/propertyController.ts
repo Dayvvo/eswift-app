@@ -14,6 +14,8 @@ import mongoose from "mongoose";
 import { HttpStatusCode } from "axios";
 import User from "../models/User";
 import { mailGenMails } from "../utils/mails/mailgen.mail";
+import path from 'path'
+import fs from 'fs'
 
 class PropertyController {
   //TODO: finish function
@@ -88,10 +90,13 @@ class PropertyController {
     const { value, error } = validate;
 
     if (error) {
+      console.log('error', error)
       return res.status(400).json(error.details[0]);
     }
 
     try {
+      const user = req.user as any
+      const ownerID = user._id
       const property = await Property.findById(id);
       if (!property)
         return res.status(404).json({
@@ -101,7 +106,7 @@ class PropertyController {
 
       const updatedProperty = await Property.findByIdAndUpdate(
         id,
-        { ...value },
+        { ...value, ownerID: ownerID },
         { new: true }
       );
 
@@ -214,7 +219,7 @@ class PropertyController {
     try {
       const property = await Property.findById(id).lean();
       // Check if the property is in the user's favorites
-
+     
       const existInFavourite = await Favourite.exists({
         user: userId,
         property: id,
@@ -228,6 +233,28 @@ class PropertyController {
       if (existInFavourite) {
         isInFavorites = true;
       }
+
+      if (property.images && Array.isArray(property.images)) {
+        property.images = property.images.map(image => {
+          if (!image.startsWith('http')) {
+            return `${process.env.BACKEND_URL}/uploads/${image}`
+          }
+          return image; 
+        });
+      }
+
+      if (property.documents && Array.isArray(property.documents)) {
+        property.documents = property.documents.map(docs => {
+          return {
+            ...docs, 
+            document: docs.document.startsWith('http')
+              ? docs.document
+              : `${process.env.BACKEND_URL}/uploads${docs.document}`
+          };
+        });
+      }
+      
+      console.log('property', property)
       return res.json({
         statusCode: 200,
         message: "Successful",
@@ -315,12 +342,29 @@ class PropertyController {
       });
 
     try {
-      const deleted = await Property.findByIdAndDelete(id);
+      const property = await Property.findById(id)
+      const deleted = await Property.deleteOne({_id: id});
       if (!deleted)
         return res.status(404).json({
           statusCode: 404,
           message: `Property with id ${id} not found`,
         });
+
+        if(deleted.acknowledged) {
+          if(property?.images && property?.images.length > 0) {
+            property.images.forEach(imagePath => {
+              propertyController.clearImage(imagePath)
+            })
+          } 
+        }
+
+        if (property?.documents && property.documents.length > 0) {
+          property.documents.forEach(doc => {
+            if (doc.document) {
+              propertyController.clearImage(doc.document);
+            }
+          });
+        }
       const user = req.user as IUserInRequest;
       await user?.decreasePropertyCount();
       return res.json({
@@ -346,6 +390,16 @@ class PropertyController {
       res.status(500).send("An Error ocurred while retrieving data");
     }
   };
+
+
+  clearImage = (filepath: string) => {
+    if(!filepath) return
+
+    filepath = path.join(__dirname, '..', 'uploads' , filepath)
+    fs.unlink(filepath, err => {
+      console.log(err)
+    })
+  }
 }
 
 let propertyController = new PropertyController();

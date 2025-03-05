@@ -156,7 +156,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
     category: inputs.category,
     description: inputs.description,
     features: features,
-    ownerID: inputs.owner,
+    owner: inputs.owner,
     images,
     documents:inputs.documents,
   };

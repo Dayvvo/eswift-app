@@ -34,8 +34,6 @@ const AddBlog = () => {
 
   const route = useRouter();
 
-  console.log("headerImageFile", headerImageFile);
-  console.log("bodyImageFile", bodyImageFile);
   useEffect(() => {
     localStorage.setItem("headerImageFile", headerImageFile);
   }, [headerImageFile]);

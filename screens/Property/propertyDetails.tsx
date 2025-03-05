@@ -16,7 +16,6 @@ import { BsDot } from "react-icons/bs";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { FaRegImages } from "react-icons/fa";
-// import { PropertyCard } from "./propertyCard";
 import useProperty from "@/hooks/useProperty";
 import { useEffect, useState } from "react";
 import { useAppContext } from "@/context";
@@ -61,6 +60,7 @@ export const PropertyDetails = ({
   const [itemIdInModal, setItemIdInModal] = useState("");
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [getProperty, setGetProperty] = useState<PropertyCardProps[]>([]);
+  const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
 
   const [verificationStatus, setVerificationStatus] = useState(
     detailsData?.verification
@@ -115,11 +115,17 @@ export const PropertyDetails = ({
     setActiveModal((prevState) => !prevState);
   };
 
-  const openModal = (state: activeModalType, id?: string) => {
-    // id && setItemIdInModal(id);
+  const openModal = (state: activeModalType, documentUrl?: string) => {
+    if (state === "documents" && documentUrl) {
+      setSelectedDocument(documentUrl);
+    } else {
+      setSelectedDocument(null);
+    }
+  
     toggleModal();
     setModalType(state);
   };
+  
 
   const verifyPropertyFn = async (status: string) => {
     if (!id) {
@@ -213,15 +219,13 @@ export const PropertyDetails = ({
               isVerifying={isVerifying}
               deletePropertyFn={deletePropertyFn}
             />
-          ) : modalType === "documents" && detailsData?.documents ? (
+          ) : modalType === "documents" && selectedDocument ? (
             <embed
-              src={
-                detailsData?.documents?.find((item) => item.document)?.document
-              }
-              width="400px"
-              height="600px"
-              type="application/pdf"
-            />
+            src={selectedDocument}
+            width="100%"
+            height="600px"
+            type="application/pdf"
+          />
           ) : (
             <></>
           )}
@@ -390,9 +394,7 @@ export const PropertyDetails = ({
                         fontSize={"10px"}
                         fontWeight={500}
                         insetEnd={4}
-                        onClick={() => {
-                          openModal("documents", document.document);
-                        }}
+                        onClick={() => openModal("documents", document.document)}
                       >
                         View
                       </Btn>

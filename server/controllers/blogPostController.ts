@@ -2,6 +2,9 @@ import { Request, Response } from 'express'
 import BlogPost from '../models/BlogPost'
 import { validateBlogPostData } from '../utils/validation'
 import { IUserInRequest } from '../utils/interfaces'
+import path from 'path'
+import fs from 'fs'
+import Blog from '@/pages/blog'
 
 class BlogPostController {
   createBlogPost = async (req: Request, res: Response) => {
@@ -63,10 +66,17 @@ class BlogPostController {
       const blogpost = await BlogPost.find(findQuery)
         .skip(skip)
         .limit(POST_PER_PAGE)
+
+        const modifiedBlogPosts = blogpost.map(post => ({
+          ...post.toObject(),
+          header_image: post.header_image ? `${process.env.BACKEND_URL}/uploads/${post.header_image}` : null,
+          body_image: post.body_image ? `${process.env.BACKEND_URL}/uploads/${post.body_image}` : null
+      }));
+
       return res.status(200).json({
         statusCode: 200,
         message: 'fetched successfully',
-        data: blogpost,
+        data: modifiedBlogPosts,
         totalBlogPost: totalPost,
 
         hasNextPage: POST_PER_PAGE * page < totalPost,
@@ -96,21 +106,38 @@ class BlogPostController {
   }
 
   deleteBlogPost = async (req: Request, res: Response) => {
+
+    const { blogPostId} = req.params
     try {
       const user = req.user as IUserInRequest;
-      const blogpost = await BlogPost.deleteOne({
-        _id: req.params.blogPostId,
+      const blogpost = await BlogPost.findById(blogPostId)
+      const deletedBlogpost = await BlogPost.deleteOne({
+        _id: blogPostId,
       });
+
+      if(deletedBlogpost.acknowledged) {
+          if(blogpost?.header_image) blogPostController.clearImage(blogpost.header_image)
+          if(blogpost?.body_image)  blogPostController.clearImage(blogpost.body_image)
+      }
       return res.status(200).json({
         statusCode: 200,
         message: 'Deleted successfully',
-        data: blogpost,
+        data: deletedBlogpost,
       })
     } catch (error) {
       console.log(error)
       res.status(500).send('Internal Server Error')
     }
   }
+
+    clearImage = (filepath: string) => {
+      if(!filepath) return
+
+      filepath = path.join(__dirname, '..', 'uploads' , filepath)
+      fs.unlink(filepath, err => {
+        console.log(err)
+      })
+    }
 }
 
 let blogPostController = new BlogPostController()

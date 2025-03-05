@@ -20,10 +20,10 @@ export interface IAddPropertyValidation {
   price: string;
   category: string;
   description: string;
-  ownerID: string;
   features: Array<string>;
-  images: Array<string>;
+  images: Array<Express.Multer.File>;
   documents: Array<IDocument>;
+  owner: string
 }
 
 export interface IDeleteFileValidation {

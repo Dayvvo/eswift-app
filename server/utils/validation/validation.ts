@@ -42,10 +42,10 @@ export const validateSignupData = (signup: ISignupValidation) => {
 
 export const validateBlogPostData = (data: {
   title: string;
-  header_image: string;
+  header_image: Express.Multer.File;
   introduction: string;
   body: string;
-  body_image: string;
+  body_image: Express.Multer.File;
   conclusion: string;
   // tags: string[];
 }) => {
@@ -56,7 +56,7 @@ export const validateBlogPostData = (data: {
       .min(1)
       .max(255)
       .error(new Error("Title is required and must be under 256 characters")),
-    header_image: Joi.string().uri().required(),
+    header_image: Joi.any().required(),
     introduction: Joi.string()
       .required()
       .trim()
@@ -70,7 +70,7 @@ export const validateBlogPostData = (data: {
       .required()
       .trim()
       .error(new Error("Conclusion is required")),
-    body_image: Joi.string().uri().required(),
+    body_image: Joi.any().required(),
     // tags: Joi.array().items(Joi.string().trim()),
   });
   return blogPostSchema.validate(data);
@@ -138,8 +138,9 @@ export const ValidateEditProperty = (property: IAddPropertyValidation) => {
     lga: Joi.string().optional(),
     state: Joi.string().optional(),
     features: Joi.array().items(Joi.string().min(2).max(50)).min(1).optional(),
-    images: Joi.array().items(Joi.string().uri()).min(1).optional(),
+    images: Joi.array().items(Joi.any().required()).min(1).optional(),
     documents: Joi.array().items(documentSchema).optional(),
+    owner: Joi.string().required()
   });
 
   return propertySchema.validate(property);
