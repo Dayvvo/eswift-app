@@ -16,6 +16,9 @@ node_modules/
 .next/*
 .next/
 
+/dist/*
+dist/*
+
 
 #github
 .git/
