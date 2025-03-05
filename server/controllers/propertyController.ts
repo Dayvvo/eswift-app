@@ -20,7 +20,7 @@ import fs from 'fs'
 class PropertyController {
   //TODO: finish function
   createProperty = async (req: Request, res: Response) => {
-    console.log("request body", req.body);
+
     const validate = ValidateAddProperty(req.body);
     const { value, error } = validate;
 
@@ -73,7 +73,6 @@ class PropertyController {
         data: newProperty,
       });
     } catch (error: any) {
-      console.error(error?.message);
       return res.status(500).send("An Error ocurred while retrieving data");
     }
   };
@@ -90,7 +89,6 @@ class PropertyController {
     const { value, error } = validate;
 
     if (error) {
-      console.log('error', error)
       return res.status(400).json(error.details[0]);
     }
 
@@ -116,7 +114,6 @@ class PropertyController {
         data: updatedProperty,
       });
     } catch (error: any) {
-      console.error(error?.message);
       return res.status(500).send("An Error ocurred while retrieving data");
     }
   };
@@ -139,15 +136,19 @@ class PropertyController {
         .limit(pageSize)
         .skip(pageSize * (page - 1));
 
+        const modifiedProperties = properties.map(property => ({
+          ...property.toObject(),
+          images: property.images ? property.images.map(img => img.startsWith('http') ? img : `${process.env.BACKEND_URL}/uploads/${img}`) : [],
+
+        }))
+
       return res.status(200).json({
         statusCode: 200,
         message: "Property List",
-        data: properties,
+        data: modifiedProperties,
         pagination: { page, pages: Math.ceil(count / pageSize), count },
       });
     } catch (err: any) {
-      console.log("Error in email login", err);
-      console.error(err?.message);
       return res.status(500).send("An Error ocurred while retrieving data");
     }
   };
@@ -254,15 +255,12 @@ class PropertyController {
         });
       }
       
-      console.log('property', property)
       return res.json({
         statusCode: 200,
         message: "Successful",
         data: { ...property, isInFavorites },
       });
     } catch (error: any) {
-      console.log("Error in email login", error);
-      console.error(error?.message);
       res.status(500).send("An Error ocurred while retrieving data");
     }
   };
@@ -293,8 +291,6 @@ class PropertyController {
         }`,
       });
     } catch (error: any) {
-      console.log("Error", error);
-      console.error(error?.message);
       res.status(500).send("An Error ocurred while updating data");
     }
   };
@@ -372,7 +368,6 @@ class PropertyController {
         message: "Successful",
       });
     } catch (error: any) {
-      console.log("Error in email login", error);
       console.error(error?.message);
       res.status(500).send("An Error ocurred while retrieving data");
     }
