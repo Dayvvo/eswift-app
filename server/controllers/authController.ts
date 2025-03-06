@@ -32,10 +32,8 @@ class AuthController {
   googleAuthController = async (req: Request, res: Response) => {
     try {
       const profile = req?.user as generalRequestBody;
-      // console.log("profile", profile);
       this.jwtSignAndRedirect(res, profile);
     } catch (err) {
-      console.log("err in google auth callback", err);
       res.status(500).send("Server error");
     }
   };
@@ -84,7 +82,6 @@ class AuthController {
           .json({ statusCode: 401, message: "Wrong Email or Password" });
       }
     } catch (err) {
-      console.log("Error in email login", err);
       res.status(500).send("Internal Server Error");
     }
   };
@@ -95,7 +92,6 @@ class AuthController {
       newUser.save();
     });
 
-    console.log(`Seed successful`);
     res.send(`SEED COMPLETE!!`);
   };
 
@@ -126,7 +122,6 @@ class AuthController {
       await user.save();
       return res.status(200).json({ message: "Password successfully updated" });
     } catch (error) {
-      console.log(error);
       return res
         .status(500)
         .json({ message: "An error occurred while updating the password" });
