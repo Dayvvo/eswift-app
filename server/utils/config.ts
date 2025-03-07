@@ -26,7 +26,7 @@ export class appConfig {
         {
           clientID: process.env['GOOGLE_CLIENT_ID'] as string,
           clientSecret: process.env['GOOGLE_CLIENT_SECRET'] as string,
-          callbackURL: `${process.env['BACKEND_URL']}/api/auth/google/callback`,
+          callbackURL: `${process.env['BACKEND_URL']}/auth/google/callback`,
           proxy: true,
           passReqToCallback: true,
         },
