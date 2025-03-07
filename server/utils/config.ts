@@ -21,7 +21,6 @@ export class appConfig {
       done(null, id)
     })
 
-    // Configure Google Strategy
     passport.use(
       new GoogleStrategy(
         {
