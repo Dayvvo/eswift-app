@@ -15,8 +15,6 @@ export const CustomerSignUpcreen = () => {
 
   const {query} = router;
 
-  console.log('query', query)
-
   const refCode = query?.refCode as string;
   
   return (
