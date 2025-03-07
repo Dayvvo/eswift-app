@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import httpClient from "./useApi";
+import httpClient, { useApiUrl } from "./useApi";
 import { R } from "@/utils/types";
+import useAuth from "./useAuth";
 
 interface BlogObj {
   title: string;
@@ -22,31 +23,19 @@ interface MailType {
 }
 
 const useBlog = () => {
-  const baseUrl = "http://localhost:5500/api";
-  const [token, setToken] = useState("");
-  useEffect(() => {
-    const userData = localStorage.getItem("userData") || null;
+  const {token} = useAuth(); 
 
-    if (userData) {
-      const parsedData = JSON.parse(userData);
-      // console.log(parsedData);
-      setToken(parsedData.token);
-    }
-
-    // console.log("storedToken", userData);
-  }, []);
-// 8134423326
-  const {
-    query,
+    const {
+    get: query,
     post,
     delete: deleteRequest,
-    putMutation: putRequest,
-  } = httpClient({ token });
+    put: putRequest,
+    } = useApiUrl();
 
   const addBlog = useCallback(
     async (data:BlogObj) => {
       try {
-        const res = await post(`${baseUrl}/blog/post`, data);
+        const res = await post(`/blog/post`, data);
         return res;
       } 
       catch (err: any) {
@@ -61,7 +50,7 @@ const useBlog = () => {
     async (blogPostId: string, data: any) => {
      
       try {
-        const res = await putRequest(`${baseUrl}/blog/post/${blogPostId}`, data);
+        const res = await putRequest(`/blog/post/${blogPostId}`, data);
         return res;
       } catch (err: any) {
         throw new err();
@@ -72,7 +61,7 @@ const useBlog = () => {
 
   const contactUsFn = async (data: MailType) => {
     try {
-      const res = await post(`${baseUrl}/contact-us`, data);
+      const res = await post(`/contact-us`, data);
       // console.log("res", res);
       return res;
     } catch (err: any) {
@@ -86,7 +75,7 @@ const useBlog = () => {
     async (blogPostId: any) => {
       try {
         const res = await deleteRequest(
-          `${baseUrl}/blog/delete-post/${blogPostId}`
+          `/blog/delete-post/${blogPostId}`
         );
         return res;
         // console.log("res", res);
@@ -99,11 +88,11 @@ const useBlog = () => {
     [token]
   );
   
-  const getBlog = async (search?:string) =>  (await query(`${baseUrl}/blog/post?keyword=${search}`)).data as R; 
+  const getBlog = async (search?:string) =>  (await query(`/blog/post?keyword=${search}`)).data as R; 
 
   const getBlogByID = async (id: string) => {
     try {
-      const res = await query(`${baseUrl}/blog/post/${id}`);
+      const res = await query(`/blog/post/${id}`);
       return res.data as Record<string, unknown>;
     } catch (err: any) {
       // console.log("error", err);
