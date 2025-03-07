@@ -27,7 +27,7 @@ export class appConfig {
         {
           clientID: process.env['GOOGLE_CLIENT_ID'] as string,
           clientSecret: process.env['GOOGLE_CLIENT_SECRET'] as string,
-          callbackURL: `https://www.eswiftpropertymart.ng/auth/google/callback`,
+          callbackURL: process.env['redirect_uri'] as string,
           proxy: true,
           passReqToCallback: true,
         },
