@@ -1,6 +1,5 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
-// import Image from "next/image";
-
+import { Box, Flex, Text } from "@chakra-ui/react";
+import Image from "next/image";
 import { AuthHeaderProps } from "./authheader";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
@@ -31,7 +30,7 @@ export const CustomerSignUpcreen = () => {
     >
       <AuthBackground />
       <Box h={"fit-content"}>
-        <Image width={200} height={100} src={"/logo.svg"} alt={"e-Swift"} />
+        <Image width={200} height={100} src={"/Logo.svg"} alt={"e-Swift"} />
       </Box>
       <Flex justifyContent={"center"} alignItems={"center"}>
         <Box
