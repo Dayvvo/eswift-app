@@ -45,27 +45,25 @@ export class appConfig {
           
           const verifiedUser: GoogleAuthResponse = profile?._json
           try {
-            const user = await User.findOneAndUpdate(
-              { email: verifiedUser.email },
-              {
+            let user = await User.findOne({email: verifiedUser.email})
+            if(!user) {
+              user = new User({
                 tenantId: verifiedUser.sub,
                 firstName: verifiedUser.given_name,
                 lastName: verifiedUser.family_name,
                 avatar: verifiedUser.picture,
                 provider: AuthProvider.GOOGLE,
-                ...refferer?{
-                  referrer: refferer
-                }:{},
                 refCode: generateRefCode(8),
                 role: UserRole.CLIENT,
                 isActive: true,
                 isVerified: verifiedUser.email_verified,
-      
-              },
-              { upsert: true, new: true }
-            )
+                ...(refferer ? {refferer : refferer} : {})
 
+              })
+              await user.save()
+            }
             return done(null, user)
+        
           } catch (error) {
             console.log('err at google oauth', error)
           }
