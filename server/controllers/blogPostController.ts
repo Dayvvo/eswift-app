@@ -66,16 +66,23 @@ class BlogPostController {
         .skip(skip)
         .limit(POST_PER_PAGE);
 
-      const modifiedBlogPosts = blogpost.map((post) => ({
-        ...post.toObject(),
-        header_image: post.header_image
-          ? `${process.env.BACKEND_URL}/uploads/${post.header_image}`
-          : null,
-        body_image: post.body_image
-          ? `${process.env.BACKEND_URL}/uploads/${post.body_image}`
-          : null,
-      }));
-
+        const modifiedBlogPosts = blogpost.map((post) => {
+          const postObject = post.toObject();
+    
+          if (process.env.NODE_ENV === "production") {
+            return postObject; // Return as is in production
+          }
+    
+          return {
+            ...postObject,
+            header_image: post.header_image
+              ? `${process.env.BACKEND_URL}/uploads/${post.header_image}`
+              : null,
+            body_image: post.body_image
+              ? `${process.env.BACKEND_URL}/uploads/${post.body_image}`
+              : null,
+          };
+        });
       return res.status(200).json({
         statusCode: 200,
         message: "fetched successfully",
