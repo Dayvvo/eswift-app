@@ -147,7 +147,7 @@ class UploadController {
   async uploadSingle(req: Request, res: Response) {
     try {
       const file: Express.Multer.File | null = req.file ? req.file : null;
-      console.log("FILE", file);
+     
       if (!file) {
         return res
           .status(400)
