@@ -14,13 +14,12 @@ import mongoose from "mongoose";
 import { HttpStatusCode } from "axios";
 import User from "../models/User";
 import { mailGenMails } from "../utils/mails/mailgen.mail";
-import path from 'path'
-import fs from 'fs'
+import path from "path";
+import fs from "fs";
 
 class PropertyController {
   //TODO: finish function
   createProperty = async (req: Request, res: Response) => {
-
     const validate = ValidateAddProperty(req.body);
     const { value, error } = validate;
 
@@ -93,8 +92,8 @@ class PropertyController {
     }
 
     try {
-      const user = req.user as any
-      const ownerID = user._id
+      const user = req.user as any;
+      const ownerID = user._id;
       const property = await Property.findById(id);
       if (!property)
         return res.status(404).json({
@@ -136,11 +135,16 @@ class PropertyController {
         .limit(pageSize)
         .skip(pageSize * (page - 1));
 
-        const modifiedProperties = properties.map(property => ({
-          ...property.toObject(),
-          images: property.images ? property.images.map(img => img.startsWith('http') ? img : `${process.env.BACKEND_URL}/uploads/${img}`) : [],
-
-        }))
+      const modifiedProperties = properties.map((property) => ({
+        ...property.toObject(),
+        images: property.images
+          ? property.images.map((img) =>
+              img.startsWith("http")
+                ? img
+                : `${process.env.BACKEND_URL}/uploads/${img}`
+            )
+          : [],
+      }));
 
       return res.status(200).json({
         statusCode: 200,
@@ -220,7 +224,7 @@ class PropertyController {
     try {
       const property = await Property.findById(id).lean();
       // Check if the property is in the user's favorites
-     
+
       const existInFavourite = await Favourite.exists({
         user: userId,
         property: id,
@@ -236,25 +240,25 @@ class PropertyController {
       }
 
       if (property.images && Array.isArray(property.images)) {
-        property.images = property.images.map(image => {
-          if (!image.startsWith('http')) {
-            return `${process.env.BACKEND_URL}/uploads/${image}`
+        property.images = property.images.map((image) => {
+          if (!image.startsWith("http")) {
+            return `${process.env.BACKEND_URL}/uploads/${image}`;
           }
-          return image; 
+          return image;
         });
       }
 
       if (property.documents && Array.isArray(property.documents)) {
-        property.documents = property.documents.map(docs => {
+        property.documents = property.documents.map((docs) => {
           return {
-            ...docs, 
-            document: docs.document.startsWith('http')
+            ...docs,
+            document: docs.document.startsWith("http")
               ? docs.document
-              : `${process.env.BACKEND_URL}/uploads${docs.document}`
+              : `${process.env.BACKEND_URL}/uploads${docs.document}`,
           };
         });
       }
-      
+
       return res.json({
         statusCode: 200,
         message: "Successful",
@@ -338,29 +342,29 @@ class PropertyController {
       });
 
     try {
-      const property = await Property.findById(id)
-      const deleted = await Property.deleteOne({_id: id});
+      const property = await Property.findById(id);
+      const deleted = await Property.deleteOne({ _id: id });
       if (!deleted)
         return res.status(404).json({
           statusCode: 404,
           message: `Property with id ${id} not found`,
         });
 
-        if(deleted.acknowledged) {
-          if(property?.images && property?.images.length > 0) {
-            property.images.forEach(imagePath => {
-              propertyController.clearImage(imagePath)
-            })
-          } 
-        }
-
-        if (property?.documents && property.documents.length > 0) {
-          property.documents.forEach(doc => {
-            if (doc.document) {
-              propertyController.clearImage(doc.document);
-            }
+      if (deleted.acknowledged) {
+        if (property?.images && property?.images.length > 0) {
+          property.images.forEach((imagePath) => {
+            propertyController.clearImage(imagePath);
           });
         }
+      }
+
+      if (property?.documents && property.documents.length > 0) {
+        property.documents.forEach((doc) => {
+          if (doc.document) {
+            propertyController.clearImage(doc.document);
+          }
+        });
+      }
       const user = req.user as IUserInRequest;
       await user?.decreasePropertyCount();
       return res.json({
@@ -386,15 +390,17 @@ class PropertyController {
     }
   };
 
-
   clearImage = (filepath: string) => {
-    if(!filepath) return
+    if (!filepath) return;
 
-    filepath = path.join(__dirname, '..', 'uploads' , filepath)
-    fs.unlink(filepath, err => {
-      console.log(err)
-    })
-  }
+    filepath =
+      process.env.NODE_ENV === "production"
+        ? `/mnt/volume/uploads/${filepath}`
+        : path.join(__dirname, "..", "uploads", filepath);
+    fs.unlink(filepath, (err) => {
+      console.log(err);
+    });
+  };
 }
 
 let propertyController = new PropertyController();
