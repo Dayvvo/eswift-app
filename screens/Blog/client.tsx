@@ -39,25 +39,32 @@ const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
   const { getBlog } = useBlog();
 
   function scrollToSection() {
-    const section = document.querySelector("#main") as HTMLElement;
-    section.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      const section = document.querySelector("#blogs") as HTMLElement;
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+      } else {
+        console.error("Section not found!");
+      }
+    }, 100); 
   }
+  
 
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  // const { isOpen, onOpen, onClose } = useDisclosure();
 
-  useEffect(() => {
-    if (blogPost && blogPost?.length === 0) {
-      onOpen();
-    }
-  }, [blogPost, onOpen]);
+  // useEffect(() => {
+  //   if (blogPost && blogPost?.length === 0) {
+  //     onOpen();
+  //   }
+  // }, [blogPost, onOpen]);
 
   useEffect(() => {
     const getBlogFn = async () => {
       setLoading(true);
       try {
-        const req = await getBlog();
-
+        const req = await getBlog('');
+        console.log("req", req)
         setBlogPost(req?.data);
         setLoading(false);
         console.log("req", req);
@@ -68,6 +75,7 @@ const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
 
     getBlogFn();
   }, []);
+  console.log('blogPost', blogPost)
   return (
     <Box>
       <NavBar />
