@@ -69,7 +69,7 @@ const EditBlog = () => {
     getBlogByIdFn();
   }, [blogId]);
 
-  const EditBlog = async () => {
+  const editBloghandler = async () => {
     try {
       setLoading(true);
       const req = await updateBlog(blogDetails._id, blogData);
@@ -216,7 +216,8 @@ const EditBlog = () => {
             fontSize={".875rem"}
             fontWeight={500}
             className="inter"
-            onClick={EditBlog}
+            onClick={editBloghandler}
+            disabled={loading}
             isLoading={loading}
           >
             Make Changes

@@ -15,7 +15,7 @@ const PreviewBlog = () => {
   const [bodyImage, setBodyImage] = useState<string | null>(null);
   const [bodyImageFile, setBodyImageFile] = useState<string | null>(null);
   const [previewData, setPreviewData] = useState(null) as any;
-
+  const [loading, setLoading] = useState(false);
 
   const { addBlog } = useBlog();
 
@@ -71,8 +71,9 @@ const PreviewBlog = () => {
 
   const addBlogFn = async () => {
     try {
+      setLoading(true);
       const req = (await addBlog(data)) as any;
-      if (req?.statusCode === 201) {
+      if (req?.status === 201) {
         toast({
           status: "success",
           description: "Blog post created",
@@ -87,7 +88,7 @@ const PreviewBlog = () => {
         localStorage.removeItem("headerImageFile");
         localStorage.removeItem("bodyImageFile");
       }
-      // console.log("req", req);
+      console.log("req", req);
     } catch (err) {
       // console.log("error calling post", err);
       toast({
@@ -97,6 +98,8 @@ const PreviewBlog = () => {
         position: "top",
         duration: 5000,
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -119,6 +122,8 @@ const PreviewBlog = () => {
           className="mulish"
           fontWeight={500}
           fontSize={".875rem"}
+          disabled={loading}
+          isLoading={loading}
           onClick={addBlogFn}
         >
           Publish
@@ -234,6 +239,8 @@ const PreviewBlog = () => {
           className="mulish"
           fontWeight={500}
           fontSize={".875rem"}
+          disabled={loading}
+          isLoading={loading}
           onClick={addBlogFn}
         >
           Publish
