@@ -1,8 +1,8 @@
 "use client"
 import NavBar from "@/components/navBar";
-import { Box, Flex, Text, TextProps } from "@chakra-ui/react";
+import { Box, Flex, Text, TextProps, Image } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import { useRouter } from "next/router";
 import Btn from "@/components/Btn";
 import useBlog from "@/hooks/useBlog";
@@ -44,18 +44,19 @@ export const BlogDetailScreen = () => {
   console.log("blog", blog);
 
   return (
-    <>
+    <Box>
       <NavBar />
       <Flex w={"100%"} h={{ base: "86px", lg: "96px" }} />
       <Box
+       maxW={"1440px"} m={"auto"}
         w={"100%"}
         bg={"white"}
-        px={{ base: "1rem", lg: "4rem" }}
+        px={{ base: "1rem"}}
         py={"60px"}
         className="mulish"
       >
         <Box w={"100%"} mb={"36px"} px={{ base: "20px", lg: "60px" }}>
-          <Box w={"100%"} h={"402px"}>
+          {/* <Box w={"100%"} h={"402px"}>
             <Image
               src={`/`}
               alt={"blog"}
@@ -63,6 +64,9 @@ export const BlogDetailScreen = () => {
               height={1000}
               layout="responsive"
             />
+          </Box> */}
+          <Box width={'100%'} h={{ base: "300px", lg: "550px" }} mb={"36px"}>
+            <Image  src={blog?.header_image || `/`} width={'100%'} height={'100%'} />
           </Box>
           <Flex
             bg={"#2EC4B605"}
@@ -97,13 +101,9 @@ export const BlogDetailScreen = () => {
               richText={ blog?.introduction}
             />
           </Box>
-          <Image
-            src={`/`}
-            alt={"blog"}
-            width={1000}
-            height={1000}
-            layout="responsive"
-          />
+          <Box width={'100%'} h={{ base: "300px", lg: "550px" }} mb={"36px"}>
+            <Image  src={blog?.body_image || `/`} alt="blog" width={'100%'} height={'100%'} />
+          </Box>
           <Box w={"100%"} mt={{ base: "40px", lg: "80px" }}>
           <BlogContent
             fontWeight={400}
@@ -112,7 +112,16 @@ export const BlogDetailScreen = () => {
             richText={blog?.body}
           />
           </Box>
+          <Box w={"100%"} mt={{ base: "40px", lg: "80px" }}>
+          <BlogContent
+            fontWeight={400}
+            fontSize={{ base: "14px", lg: "16px" }}
+            textColor={"#4D4D4D"}
+            richText={blog?.conclusion}
+          />
+          </Box>
         </Box>
+        <Box w={"100%"} px={{ base: "20px", lg: "60px" }}>
         <Btn
           onClick={() => navigate.back()}
           w={"100%"}
@@ -132,7 +141,8 @@ export const BlogDetailScreen = () => {
         >
           BACK TO BLOG PAGE
         </Btn>
+        </Box>
       </Box>
-    </>
+    </Box>
   );
 };
