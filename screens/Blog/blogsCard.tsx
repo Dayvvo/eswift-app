@@ -1,4 +1,4 @@
-import { Box, Flex, Img, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import Image from "next/image";
 import moment from "moment";
 import DOMPurify from "dompurify";
@@ -25,17 +25,16 @@ export const BlogCard = ({ picture, title, date, details, id}: BlogCardProps) =>
         cursor={'pointer'}
         bg={"#FFF"}
         maxW={"388px"}
-        h={{base:'500px',lg:"650px"}}
+        h={{base:'500px',lg:"600px"}}
         px={{base:'12px',lg:'16px'}} py={{base:'14px',sm:'20px'}}
         overflow={"hidden"}
         border={'1px solid #262626'} borderRadius={'12px'}
       >
-        <Flex position={"relative"} w="100%" h={{base:'280px',lg:"356px"}} mb={{base:'20px',lg:"40px"}} >
+        <Flex position={"relative"} w="100%" h={{base:'280px',lg:"306px"}} mb={{base:'20px',lg:"40px"}} >
           <Image
             width={1000}
             height={1000}
-            layout="responsive"
-            src={`${picture}` || "/blogdumy.png"}
+            src={picture || "/blogdumy.png"}
             alt={"project"}
           />
           {/* <Img src={picture} alt={title} w="100%" /> */}
