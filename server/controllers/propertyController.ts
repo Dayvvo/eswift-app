@@ -135,8 +135,12 @@ class PropertyController {
         .limit(pageSize)
         .skip(pageSize * (page - 1));
 
-      const modifiedProperties = properties.map((property) => ({
-        ...property.toObject(),
+      const modifiedProperties = properties.map((property) => {
+        if(process.env.NODE_ENV === "production") {
+          return {...property.toObject()}
+        }
+
+       return {...property.toObject(),
         images: property.images
           ? property.images.map((img) =>
               img.startsWith("http")
@@ -144,7 +148,7 @@ class PropertyController {
                 : `${process.env.BACKEND_URL}/uploads/${img}`
             )
           : [],
-      }));
+      }});
 
       return res.status(200).json({
         statusCode: 200,
@@ -239,24 +243,26 @@ class PropertyController {
         isInFavorites = true;
       }
 
-      if (property.images && Array.isArray(property.images)) {
-        property.images = property.images.map((image) => {
-          if (!image.startsWith("http")) {
-            return `${process.env.BACKEND_URL}/uploads/${image}`;
-          }
-          return image;
-        });
-      }
-
-      if (property.documents && Array.isArray(property.documents)) {
-        property.documents = property.documents.map((docs) => {
-          return {
-            ...docs,
-            document: docs.document.startsWith("http")
-              ? docs.document
-              : `${process.env.BACKEND_URL}/uploads${docs.document}`,
-          };
-        });
+      if(process.env.NODE_ENV !== "production") {
+        if (property.images && Array.isArray(property.images)) {
+          property.images = property.images.map((image) => {
+            if (!image.startsWith("http")) {
+              return `${process.env.BACKEND_URL}/uploads/${image}`;
+            }
+            return image;
+          });
+        }
+  
+        if (property.documents && Array.isArray(property.documents)) {
+          property.documents = property.documents.map((docs) => {
+            return {
+              ...docs,
+              document: docs.document.startsWith("http")
+                ? docs.document
+                : `${process.env.BACKEND_URL}/uploads${docs.document}`,
+            };
+          });
+        }
       }
 
       return res.json({
