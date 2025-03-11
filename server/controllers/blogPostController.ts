@@ -104,6 +104,14 @@ class BlogPostController {
   fetchBlogPostById = async (req: Request, res: Response) => {
     try {
       const blogPostDetail = await BlogPost.findById(req.params.blogPostId);
+      if(process.env.NODE_ENV !== "production") {
+        if(blogPostDetail) {
+          blogPostDetail.header_image = `${process.env.BACKEND_URL}/uploads/${blogPostDetail.header_image}`;
+          blogPostDetail.body_image = `${process.env.BACKEND_URL}/uploads/${blogPostDetail.body_image}`;
+        }
+
+      
+      }
       return res.status(200).json({
         message: "Fetched successfully",
         data: blogPostDetail,
