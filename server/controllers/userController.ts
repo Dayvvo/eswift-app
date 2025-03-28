@@ -89,7 +89,7 @@ class UserController {
           .json({ statusCode: 400, message: 'User with email already exists' })
       }
 
-      let password = generateTempPass()
+      let password:string = generateTempPass()
 
       const user = await User.create({
         email,
@@ -107,6 +107,9 @@ class UserController {
       return res.status(201).json({
         _id: user._id,
         firstName: user.firstName,
+        lastName: user.lastName,
+        phoneNumber: user.phoneNumber,
+        property: user.propertyCount,
         email: user.email,
         role: user.role,
       })

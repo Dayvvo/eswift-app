@@ -75,7 +75,7 @@ const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
 
     getBlogFn();
   }, []);
-  console.log('blogPost', blogPost)
+  
   return (
     <Box>
       <NavBar />

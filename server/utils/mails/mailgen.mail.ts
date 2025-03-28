@@ -8,10 +8,11 @@ class MailgenMails {
     password: string,
     smtpConfig?: boolean
   ) {
+    
     const html = {
       body: {
         name,
-        intro: `Welcome to Eswift! We're very excited to have you on board. Your generated password is ${password}. You would be required to change this during your first signup.`,
+        intro:  `Welcome to Eswift! We're very excited to have you on board. Your generated password is <strong>${password}</strong>. You would be required to change this during your first signup.`,
         outro:
           "Need help, or have questions? Just reply to this email, we'd love to help.",
       },
@@ -74,7 +75,7 @@ class MailgenMails {
     const html = {
       body: {
         name,
-        intro: `Welcome to Eswift! We're very excited to have you on board. Your referral link is ${`${process.env.FRONTEND_URL}/auth?refcode=${refCode}`}. Share this to invite someone.`,
+        intro: `Welcome to Eswift! We're very excited to have you on board. Your referral link is ${`${process.env.BACKEND_URL}/auth?refcode=${refCode}`}. Share this to invite someone.`,
         outro:
           "Need help, or have questions? Just reply to this email, we'd love to help.",
       },
