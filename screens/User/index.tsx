@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Container,
   Flex,
   FormControl,
   FormLabel,
@@ -12,6 +13,8 @@ import {
   MenuItem,
   MenuList,
   Select,
+  Skeleton,
+  Stack,
   Table,
   TableContainer,
   Tbody,
@@ -31,7 +34,7 @@ import Btn from "@/components/Btn";
 import { Modal } from "@/components/modal";
 import useToast from "@/hooks/useToast";
 
-const AddUser = ({ close }: { close: () => void }) => {
+const AddUser = ({ close, setTable }: { close: () => void,  setTable: React.Dispatch<React.SetStateAction<any>>;  }) => {
   const toast = useToast();
 
   const [userData, setUserData] = useState({
@@ -41,6 +44,7 @@ const AddUser = ({ close }: { close: () => void }) => {
     lastName: "",
     role: "CLIENT",
   });
+
 
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -104,11 +108,20 @@ const AddUser = ({ close }: { close: () => void }) => {
       try {
         setLoading(true);
         const res = await addUser(userData);
+
+        setTable((prev: any) => [ {
+          email: res.data.email,
+          firstName: res.data.firstName,
+          lastName: res.data.lastName,
+          createdAt: new Date().toISOString(),
+          phoneNumber: res.data.phoneNumber,
+          role: res.data.role,
+        }, ...prev]);
         setUserData({
           email: "",
           firstName: "",
           lastName: "",
-          role: "ADMIN",
+          role: "CLIENT",
         });
         close();
         toast.toast({
@@ -116,66 +129,18 @@ const AddUser = ({ close }: { close: () => void }) => {
           title: "User created",
         });
         return res;
-      } catch (err) {
-        console.log("err", err);
+      } catch (err: any) {
+        
+        toast.toast({
+          status: "error",
+          title: "Error creating user",
+          description: err?.response?.data?.message ||'An error occurred while creating user please try again!',
+        });
       } finally {
         setLoading(false);
       }
     }
   };
-
-  //   const passW =       <Box pt="15px">
-  //   <FormLabel className="robotoF" fontSize={".875rem"} display={"flex"}
-  //     gap={"4px"}>
-  //     <Text>Password</Text>
-  //     <Text color={"red"}>*</Text>
-  //     </FormLabel>
-  //   {/* <Input className="robotoF" type="text" w="314px" name="password" value={userData.password} onChange={handleChange} /> */}
-  //   <InputGroup
-  //     display={"flex"}
-  //     justifyContent={"center"}
-  //     border={"1px"}
-  //     borderRadius={"10px"}
-  //     borderColor={"var(--soft200)"}
-  //     className="robotoF"
-  //     cursor={"text"}
-  //     fontSize={14}
-  //     textColor={"var--(sub600)"}
-  //     w="100%"
-  //     h="40px"
-  //     _placeholder={{ textColor: "var--(soft400)", fontSize: 12 }}
-  //   >
-  //     <Input
-  //       w={"100%"}
-  //       h={"100%"}
-  //       outline={"none"}
-  //       type={show ? "text" : "Password"}
-  //       placeholder="*********"
-  //       name="password"
-  //       value={userData.password}
-  //       onChange={handleChange}
-  //       onBlur={validatePassword}
-  //     />
-  //     <InputRightElement
-  //       width="fit-content"
-  //       marginRight={"20px"}
-  //       cursor={"pointer"}
-  //     >
-  //       <Box onClick={() => setShow(!show)}>
-  //         {!show ? (
-  //           <BsEyeSlash className="formicon" />
-  //         ) : (
-  //           <BsEye className="formicon" />
-  //         )}
-  //       </Box>
-  //     </InputRightElement>
-  //   </InputGroup>
-  //   {err4 && (
-  //     <Text className="robotoF" color="red" fontSize={".625rem"}>
-  //       Password must be more than 7 characters
-  //     </Text>
-  //   )}
-  // </Box>
 
   return (
     <FormControl>
@@ -264,8 +229,14 @@ const AddUser = ({ close }: { close: () => void }) => {
           value={userData.role}
           onChange={handleChange}
         >
-          <option value="CLIENT">ADMIN</option>
+
+          <option value="AGENT">AGENT</option>
           <option value="AFFILIATE">AFFILIATE</option>
+          <option value="ADMIN">ADMIN</option>
+          <option value="CLIENT">CLIENT</option>
+          <option value="AFFILIATE">AFFILIATE</option>
+          <option value="STAFF">STAFF</option>
+          <option value="GUEST">GUEST</option>
         </Select>
       </Box>
       <Btn
@@ -288,18 +259,30 @@ const UserScreen = () => {
   const [showModal, setShowModal] = useState(false);
   const [search, setSearch] = useState<string>("");
   const [verify, setVerify] = useState("Pending");
-
+  const [loading, setLoading] = useState(false);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
 
   const { getUser, getUserById } = useUser();
 
   const getUserFn = async () => {
-    const res: any = await getUser(search);
-    let data = res?.data?.data as any;
-    setTable(data);
-  };
+    setLoading(true);
+    try {
+      const res: any = await getUser(search);
+      let data = res?.data?.data as any;
+      setTable(data);
+    } catch (err) {
+      toast.toast({
+        status: "error",
+        title: "Failed to fech users",
+        description: 'An error occurred while fetching users',
+      });
+    } finally {
+      setLoading(false);
+    }
 
+  };
   useEffect(() => {
     getUserFn();
   }, [search]);
@@ -375,11 +358,11 @@ const UserScreen = () => {
           Add User
         </Btn>
         <Modal onClose={toggleModal} isVisible={showModal} label="Add User">
-          <AddUser close={toggleModal} />
+          <AddUser close={toggleModal} setTable={setTable}/>
         </Modal>
       </Flex>
       <TableContainer mt="30px">
-        <Table size="sm">
+       {!loading && table.length > 0 && <Table size="sm">
           <Thead>
             <Tr bgColor={"#F5F7FA"}>
               {[
@@ -460,7 +443,21 @@ const UserScreen = () => {
             btnRef={btnRef}
             userEl={userEl}
           />
-        </Table>
+        </Table>}
+        {loading && (
+        <Stack spacing={4} mt="30px">
+          <Skeleton height='30px' />
+          <Skeleton height='30px' />
+          <Skeleton height='30px' />
+        </Stack>
+      )}
+      {table.length === 0 && !loading && (
+        <Container>
+          <Text fontSize={".875rem"} color={"#525866"} mt="30px">
+            No user found
+          </Text>
+        </Container>
+      )}
       </TableContainer>
     </Box>
   );
