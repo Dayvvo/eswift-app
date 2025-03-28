@@ -43,7 +43,7 @@ const useUser = () => {
       const req = await client.post("/user/add-user", data);
       return req;
     } catch (err: any) {
-      throw new err();
+      throw err;
     }
   }, []);
   const updateUser = useCallback(async (data: AddUserProps) => {
