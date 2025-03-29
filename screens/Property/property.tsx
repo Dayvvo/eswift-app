@@ -61,7 +61,6 @@ export const PropertyScreen = () => {
   const getPropertyFunction = async () => {
     setLoading(true);
     try {
-      setLoading(false);
       const { data } = await getAdminProperty(inputValue);
 
       const propertiesToAdd = data?.data.filter((prop: PropertyCardProps) => {
@@ -73,8 +72,9 @@ export const PropertyScreen = () => {
 
       setTotalPages(data?.pagination.pages);
     } catch (error) {
-      setLoading(false);
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -87,12 +87,12 @@ export const PropertyScreen = () => {
   const { getUser, getUserById } = useUser();
   const { setGlobalContext } = useAppContext();
   const getUserFn = async () => {
-    const res: any = await getUser();
-    setGlobalContext?.((prevContext: any) => ({
-        ...prevContext,
-        getUser: res?.data?.data,
-    }));
-    
+    try {
+      const res: any = await getUser();
+      setUsers(res?.data?.data);
+    } catch (error) {
+     console.log(error);
+    } 
   };
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export const PropertyScreen = () => {
 
   useEffect(() => {
     getPropertyFunction();
-  }, [showModal, loading, inputValue, page]);
+  }, [showModal, inputValue, page]);
 
   return (
     <>
@@ -258,7 +258,7 @@ export const PropertyScreen = () => {
             >
               {propertyEl.map((property, index) => {
                 const user = users.find((u) => u._id === property?.creatorID);
-
+         
                 return (
                   <PropertyCard
                     key={index}
