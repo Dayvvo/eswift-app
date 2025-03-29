@@ -15,11 +15,7 @@ class AuthController {
   };
 
   jwtSignAndRedirect = (res: Response, user: generalRequestBody) => {
-    // const payload = {
-    //   user: {
-    //     id: user._id,
-    //   },
-    // };
+
     const payloadStringified = JSON.stringify({
       token: generateToken(user?._id),
       user,
