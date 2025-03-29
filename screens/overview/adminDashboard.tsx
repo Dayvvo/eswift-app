@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardBody,
+  Container,
   Flex,
   FormControl,
   FormLabel,
@@ -45,6 +46,7 @@ import { useRouter } from "next/router";
 import users from "@/pages/users";
 import { PropertyCard, PropertyCardProps } from "../Property/propertyCard";
 import useProperty from "@/hooks/useProperty";
+import useToast from "@/hooks/useToast";
 
 interface MyData {
   _id: any;
@@ -71,7 +73,6 @@ const DashboardScreen = () => {
   const navigate = useRouter();
 
   const [getProperty, setGetProperty] = useState<PropertyCardProps[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
   const [page, setPage] = useState<any>(1);
   const [totalPages, setTotalPages] = useState<any>(1);
   const [inputValue, setInputValue] = useState<any>("");
@@ -87,8 +88,9 @@ const DashboardScreen = () => {
     lastName: "",
     role: "CLIENT",
   });
-
+  const [loadingUser, setLoadingUser] = useState(false);
   const { addUser } = useUser();
+    const toast = useToast();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -122,9 +124,20 @@ const DashboardScreen = () => {
   const { getUser, getUserById } = useUser();
 
   const getUserFn = async () => {
-    const res: any = await getUser();
-    console.log(res?.data);
-    setTable(res?.data?.data);
+    setLoadingUser(true);
+    try {
+      const res: any = await getUser();
+      setTable(res?.data?.data);
+    } catch (error) {
+      toast.toast({
+        status: "error",
+        title: "Failed to fech users",
+        description: 'An error occurred while fetching users',
+      });
+    } finally {
+      setLoadingUser(false);
+    }
+
   };
 
   useEffect(() => {
@@ -144,26 +157,30 @@ const DashboardScreen = () => {
     setShowModal((prevState) => !prevState);
   };
 
-  const { addProperty, getAdminProperty } = useProperty();
+  const { getAdminProperty } = useProperty();
 
   const getPropertyFunction = async () => {
     setLoading(true);
     try {
-      setLoading(false);
       const getAllProperties = await getAdminProperty(inputValue);
       if (getAllProperties?.data?.data) {
         setGetProperty(getAllProperties?.data?.data);
         setTotalPages(getAllProperties.data?.pagination.pages);
       }
     } catch (error) {
-      setLoading(false);
-      console.log(error);
+      toast.toast({
+        status: "error",
+        title: "Failed to fech Properties",
+        description: 'An error occurred while fetching Properties',
+      });
+    } finally {
+      setLoading(false)
     }
   };
 
   useEffect(() => {
     getPropertyFunction();
-  }, [showModal, loading]);
+  }, [showModal]);
 
     const Affiliates = table?.filter((item:{role:string;}) => item?.role !== 'AFFILIATE');
   
@@ -385,7 +402,7 @@ const DashboardScreen = () => {
         </Modal>
       </Flex>
       <TableContainer mt="30px">
-        <Table size="sm">
+       {!loadingUser && table?.length > 0 && <Table size="sm">
           <Thead>
             <Tr bgColor={"#F5F7FA"}>
               {[
@@ -463,7 +480,21 @@ const DashboardScreen = () => {
               userEl={userEl}
             />
           </Tbody>
-        </Table>
+        </Table>}
+      {loadingUser && (
+        <Stack spacing={4} mt="30px">
+          <Skeleton height='30px' />
+          <Skeleton height='30px' />
+          <Skeleton height='30px' />
+        </Stack>
+      )}
+      {table?.length === 0 && !loadingUser && (
+        <Container>
+          <Text fontSize={".875rem"} color={"#525866"} mt="30px">
+            No user found
+          </Text>
+        </Container>
+      )}
       </TableContainer>
       <Box w={"100%"} my={"24px"}>
         <Flex w="100%" justifyContent={"space-between"} alignItems={"center"}>
@@ -503,7 +534,7 @@ const DashboardScreen = () => {
         // height={{ xl: "calc(80vh - 100px)" }}
         // mt={4}
         >
-          {!loading && (
+          {!loading && getProperty?.length > 0 && (
             <Grid
               overflowY={{ base: "scroll" }}
               w={"fit-content"}
@@ -518,8 +549,8 @@ const DashboardScreen = () => {
               placeItems={"center"}
             >
               {getProperty.slice(0, 3).map((property, index) => {
-                const user = users.find((u) => u._id === property?.creatorID);
-
+                const user = table?.find((u: any) => u._id === property?.creatorID);
+                
                 return (
                   <PropertyCard
                     key={index}
@@ -527,7 +558,7 @@ const DashboardScreen = () => {
                     images={property?.images}
                     title={property?.title}
                     price={property?.price}
-                    location={property?.address}
+                    address={property?.address}
                     verificationState={property?.verificationState}
                     userImage={user?.avatar || "/"}
                     email={user?.email}
@@ -537,6 +568,20 @@ const DashboardScreen = () => {
                 );
               })}
             </Grid>
+          )}
+          {loading && (
+            <Stack spacing={4} mt="30px">
+              <Skeleton height='30px' />
+              <Skeleton height='30px' />
+              <Skeleton height='30px' />
+            </Stack>
+          )}
+          {getProperty?.length === 0 && !loading && (
+            <Container>
+              <Text fontSize={".875rem"} color={"#525866"} mt="30px">
+                No verified property found
+              </Text>
+            </Container>
           )}
         </Box>
       </Box>
