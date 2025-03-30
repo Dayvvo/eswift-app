@@ -28,12 +28,14 @@ class PropertyController {
     }
     const user = req.user! as any;
     try {
-      if (!isValidObjectId(value.ownerID)) {
-        return res
-          .status(HttpStatusCode.BadRequest)
-          .json({ message: `Invalid object Id` });
-      }
-      const newProperty = new Property({ creatorID: user["_id"], ...value });
+      // if (!isValidObjectId(value.ownerID)) {
+      //   return res
+      //     .status(HttpStatusCode.BadRequest)
+      //     .json({ message: `Invalid object Id` });
+      // }
+      const propertydata = { creatorID: user["_id"], ownerID: user["_id"], ...value}
+      console.log('propertydata', propertydata)
+      const newProperty = new Property(propertydata);
       const locateInterest: any = [];
       const state = newProperty.state;
       locateInterest.push(state);
@@ -72,6 +74,7 @@ class PropertyController {
         data: newProperty,
       });
     } catch (error: any) {
+      console.log('error', error)
       return res.status(500).send("An Error ocurred while retrieving data");
     }
   };
@@ -109,7 +112,7 @@ class PropertyController {
 
       return res.status(HttpStatusCode.Created).json({
         statusCode: 200,
-        message: "Property created",
+        message: "Property updated",
         data: updatedProperty,
       });
     } catch (error: any) {
@@ -129,7 +132,7 @@ class PropertyController {
     };
 
     try {
-      const count = await Property.countDocuments(findQuery);
+      const count = await Property.countDocuments(findQuery).sort({ createdAt: -1 }); ;
       const properties = await Property.find(findQuery)
         .populate({ path: "ownerID", select: "role firstName lastName" })
         .limit(pageSize)
@@ -165,115 +168,115 @@ class PropertyController {
   getCreatedProperties = async (req: Request, res: Response) => {
     const pageSize = 60;
     const page = Number(req.params.pageNumber) || 1;
-
+  
     const keyword = req.query.keyword as string;
-
     const regex = new RegExp(keyword, "i");
-
+  
     const findQuery = {
       $or: [{ title: regex }, { description: regex }, { category: regex }],
       isActive: true,
     };
-
+  
     try {
-      const count = await Property.countDocuments(findQuery);
-
+      const count = await Property.countDocuments(findQuery).sort({ createdAt: -1 });
+  
       const user = req?.user as IUser;
-
-      const matchingFavorites = await Favourite.find({
-        ...(user
-          ? {
-              user: user._id,
-            }
-          : {}),
-      })
-        .select("property")
+  
+      // Fetch user's favorite properties (if logged in)
+      const matchingFavorites = await Favourite.find(user ? { user: user._id } : {})
+        .select("property _id") // Get both `property` and `favoriteId`
         .lean();
-
-      const favoritePropertyIds = new Set(
-        matchingFavorites.map((fav) => fav.property.toString())
+  
+      // Create a map of propertyId -> favoriteId
+      const favoriteMap = new Map(
+        matchingFavorites.map((fav) => [fav.property.toString(), fav._id.toString()])
       );
-
+  
+      // Fetch properties with pagination
       const properties = await Property.find(findQuery)
         .lean()
         .limit(pageSize)
         .skip(pageSize * (page - 1));
-
+  
+      // Add favorite status & ID to each property
+      const modifiedProperties = properties.map((property) => ({
+        ...property,
+        images: process.env.NODE_ENV === "production"
+          ? property.images
+          : property.images.map((img) =>
+              img.startsWith("http") ? img : `${process.env.BACKEND_URL}/uploads/${img}`
+            ),
+        isInFavorites: favoriteMap.has(property._id.toString()), // Check if it's a favorite
+        favoriteId: favoriteMap.get(property._id.toString()) || null, // Get favoriteId if available
+      }));
+  
       return res.status(200).json({
         statusCode: 200,
         message: "Property List",
-        data: properties.map((prop) => ({
-          ...prop,
-          isInFavorites: favoritePropertyIds.has(prop._id.toString()),
-        })),
+        data: modifiedProperties,
         pagination: { page, pages: Math.ceil(count / pageSize), count },
       });
     } catch (err: any) {
       console.error(err?.message);
-      res.status(500).send("An Error ocurred while retrieving data");
+      res.status(500).send("An Error occurred while retrieving data");
     }
   };
+  
 
   getPropertyById = async (req: Request, res: Response) => {
     const id = req.params.id;
     if (!isValidObjectId(id))
-      return res.status(400).json({
-        statusCode: 400,
-        message: "Invalid ObjectId",
-      });
+        return res.status(400).json({
+            statusCode: 400,
+            message: "Invalid ObjectId",
+        });
 
     const user = req.user as any;
     const userId = user?._id as string;
-    let isInFavorites = false;
+
     try {
-      const property = await Property.findById(id).lean();
-      // Check if the property is in the user's favorites
+        const property = await Property.findById(id).lean();
+        if (!property)
+            return res.status(404).json({
+                statusCode: 404,
+                message: `Property with id ${id} not found`,
+            });
 
-      const existInFavourite = await Favourite.exists({
-        user: userId,
-        property: id,
-      });
+        // Find if the property exists in the user's favorites and get the favorite ID
+        const favorite = await Favourite.findOne({
+            user: userId,
+            property: id,
+        }).select("_id").lean();
 
-      if (!property)
-        return res.status(404).json({
-          statusCode: 404,
-          message: `Property with id ${id} not found`,
-        });
-      if (existInFavourite) {
-        isInFavorites = true;
-      }
+        const isInFavorites = !!favorite; // Convert to boolean
+        const favoriteId = favorite?._id || null; // Get the favorite ID if it exists
 
-      if(process.env.NODE_ENV !== "production") {
-        if (property.images && Array.isArray(property.images)) {
-          property.images = property.images.map((image) => {
-            if (!image.startsWith("http")) {
-              return `${process.env.BACKEND_URL}/uploads/${image}`;
+        if (process.env.NODE_ENV !== "production") {
+            if (property.images && Array.isArray(property.images)) {
+                property.images = property.images.map((image) =>
+                    image.startsWith("http") ? image : `${process.env.BACKEND_URL}/uploads/${image}`
+                );
             }
-            return image;
-          });
-        }
-  
-        if (property.documents && Array.isArray(property.documents)) {
-          property.documents = property.documents.map((docs) => {
-            return {
-              ...docs,
-              document: docs.document.startsWith("http")
-                ? docs.document
-                : `${process.env.BACKEND_URL}/uploads${docs.document}`,
-            };
-          });
-        }
-      }
 
-      return res.json({
-        statusCode: 200,
-        message: "Successful",
-        data: { ...property, isInFavorites },
-      });
+            if (property.documents && Array.isArray(property.documents)) {
+                property.documents = property.documents.map((docs) => ({
+                    ...docs,
+                    document: docs.document.startsWith("http")
+                        ? docs.document
+                        : `${process.env.BACKEND_URL}/uploads${docs.document}`,
+                }));
+            }
+        }
+        return res.json({
+            statusCode: 200,
+            message: "Successful",
+            data: { ...property, isInFavorites, favoriteId },
+        });
     } catch (error: any) {
-      res.status(500).send("An Error ocurred while retrieving data");
+        res.status(500).send("An Error occurred while retrieving data");
     }
-  };
+};
+
 
   isActiveSwitch = async (req: Request, res: Response) => {
     const id = req.params.id;

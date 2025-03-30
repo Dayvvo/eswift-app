@@ -148,14 +148,15 @@ export const AddPropertyScreenOne = ({
 
   const { globalContext } = useAppContext();
   const getUser = globalContext.getUser;
-  console.log(getUser)
-  const arrName = getUser?.map((entry: { firstName: string; lastName: string; _id: string; })=> {
-    return({
-        userName: entry?.firstName + " " + entry?.lastName,
-        ID: entry?._id
-      }
-    )
-  })
+
+  const OWNERS = ["ESWIFT", "AFFILIATE", "AGENT"];
+  // const arrName = getUser?.map((entry: { firstName: string; lastName: string; _id: string; })=> {
+  //   return({
+  //       userName: entry?.firstName + " " + entry?.lastName,
+  //       ID: entry?._id
+  //     }
+  //   )
+  // })
 
   return (
     <>
@@ -293,7 +294,7 @@ export const AddPropertyScreenOne = ({
               fontSize={14}
               textColor={"var--(sub600)"}
               _placeholder={{ textColor: "var--(soft400)" }}
-              placeholder="eSwift"
+              placeholder=""
               name="owner"
               border={
                 touched.owner && !validation.owner
@@ -305,9 +306,9 @@ export const AddPropertyScreenOne = ({
               value={input.owner}
 
             >
-              {arrName.map((entry:{ID:string, userName:string},index:number) => (
-                <option value={`${entry?.ID}`} key={index} color="var(--soft400)">
-                  {entry?.userName}
+              {OWNERS.map((owner, index) => (
+                <option value={owner} key={index} color="var(--soft400)">
+                  {owner}
                 </option>
               ))}
             </Select>

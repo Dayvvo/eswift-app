@@ -12,7 +12,7 @@ class MailgenMails {
     const html = {
       body: {
         name,
-        intro:  `Welcome to Eswift! We're very excited to have you on board. Your generated password is <strong>${password}</strong>. You would be required to change this during your first signup.`,
+        intro:  `Welcome to Eswift! We're very excited to have you on board. Your generated password is <strong>${password}</strong>. You would be required to change this during your first signup  ${`${process.env.BACKEND_URL}/admin`}.`,
         outro:
           "Need help, or have questions? Just reply to this email, we'd love to help.",
       },

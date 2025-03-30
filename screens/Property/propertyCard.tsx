@@ -111,7 +111,6 @@ export const PropertyCard = ({
   };
 
   const [image1]= image || []; 
-
   return (
     <Box
       className="RobotoF"

@@ -43,8 +43,21 @@ class UserController {
     }
   }
   getAllUsers = async (req: Request, res: Response) => {
+    const keyword = req.query.keyword as string
+    const regex = new RegExp(keyword, 'i')
+
+    const findQuery = {
+      $or: [
+        { firstName: regex },
+        { lastName: regex },
+        { email: regex },
+        { phoneNumber: regex },
+        { email: regex },
+        { role: regex },
+      ],
+    }
     try {
-      const users = await User.find()
+      const users = await User.find(findQuery).sort({ createdAt: -1 }); 
       return res.status(200).json({
         message: 'Fetched successfully',
         data: users,

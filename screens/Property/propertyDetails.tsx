@@ -11,6 +11,10 @@ import {
   ModalOverlay,
   ModalContent,
   Checkbox,
+  Stack,
+  Skeleton,
+  Card,
+  CardBody,
 } from "@chakra-ui/react";
 import { BsDot } from "react-icons/bs";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -27,6 +31,7 @@ import useToast from "@/hooks/useToast";
 import { AddProperties } from "./Add";
 import { BiEdit } from "react-icons/bi";
 import { color } from "framer-motion";
+import { BackIcon } from "@/components/svg";
 
 export const PropertyDetails = ({
   my,
@@ -61,7 +66,7 @@ export const PropertyDetails = ({
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [getProperty, setGetProperty] = useState<PropertyCardProps[]>([]);
   const [selectedDocument, setSelectedDocument] = useState<string | null>(null);
-
+  const [loading, setLoading] = useState(false);
   const [verificationStatus, setVerificationStatus] = useState(
     detailsData?.verification
   );
@@ -80,6 +85,7 @@ export const PropertyDetails = ({
   const id = router.query.id as string;
 
   const getPropertyDetailFn = async () => {
+    setLoading(true);
     try {
       const request = await getPropertyDetails(id);
       const data = request.data as R;
@@ -92,6 +98,8 @@ export const PropertyDetails = ({
       setDetailsData(data?.data);
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -99,7 +107,7 @@ export const PropertyDetails = ({
     setIsVerifying(true);
     try {
       setIsVerifying(false);
-      const getAllProperties = await getAdminProperty("");
+      const getAllProperties = await getAdminProperty("", 1);
       setGetProperty(getAllProperties?.data?.data);
     } catch (error) {
       setIsVerifying(false);
@@ -240,6 +248,27 @@ export const PropertyDetails = ({
 
 
       <Box bg={"#FFF"} w={"100%"}>
+        <Box  
+           cursor={"pointer"} 
+           alignItems={"center"}
+           justifyContent={"center"}
+           display={'flex'}
+            border={"1px solid #E1E4EA"}
+            borderRadius={"50%"}
+            maxW={"30px"}
+            h="30px"
+            onClick={() => router.back()}
+            >
+              <BackIcon color="black" />
+        </Box>
+            {loading && (
+              <Stack spacing={4} p={4}>
+                <Skeleton height="40px" />
+                <Skeleton height="40px" />
+                <Skeleton height="40px" />
+              </Stack>
+            )}
+     {!loading  && detailsData &&  <>
         <Flex w={"100%"} my={my || "24px"} pos={"relative"}>
           <Grid
             templateColumns={
@@ -605,7 +634,7 @@ export const PropertyDetails = ({
                 images={property?.images}
                 title={property?.title}
                 price={property?.price}
-                location={property?.address}
+                address={property?.address}
                 verificationState={property?.verificationState}
                 userImage={user?.avatar || "/"}
                 email={user?.email}
@@ -615,6 +644,14 @@ export const PropertyDetails = ({
             );
           })}
         </Flex>
+        </>}
+        {!loading && !detailsData && (
+        <Card>
+          <CardBody>
+            <Text>Property details not available please try again</Text>
+          </CardBody>
+        </Card>
+         )}
       </Box>
     </>
   );

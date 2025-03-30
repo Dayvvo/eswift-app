@@ -57,7 +57,8 @@ class FavouritePropertyController {
   
       const properties = await FavouriteProperty.find({
         user: req.user,
-      }).populate("property");
+      }).populate("property")
+      .sort({ createdAt: -1 });
       return res.status(200).json({
         statusCode: 200,
         message: "Favourite properties",

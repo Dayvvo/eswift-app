@@ -1,20 +1,11 @@
 import {
   Box,
-  Button,
-  Card,
-  CardBody,
   Container,
   Flex,
   FormControl,
   FormLabel,
   Grid,
   Input,
-  InputGroup,
-  InputLeftElement,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Select,
   Skeleton,
   Stack,
@@ -29,45 +20,17 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import React, { FormEvent, useEffect, useState } from "react";
-import { ActionIcon, FilterIcon, SearchIcon } from "../../components/svg";
-import axios from "axios";
-import { useApiUrl } from "@/hooks/useApi";
-
+import React, {  useEffect, useState } from "react";
 import useUser from "@/hooks/useUser";
 import Btn from "@/components/Btn";
 import { Modal } from "@/components/modal";
 import UserDrawer from "./UserDrawer";
-import { FiMinus } from "react-icons/fi";
-import { GoPlus } from "react-icons/go";
 import { HiOutlineHome } from "react-icons/hi2";
 import { LuUser2, LuUsers2 } from "react-icons/lu";
 import { useRouter } from "next/router";
-import users from "@/pages/users";
 import { PropertyCard, PropertyCardProps } from "../Property/propertyCard";
 import useProperty from "@/hooks/useProperty";
 import useToast from "@/hooks/useToast";
-
-interface MyData {
-  _id: any;
-  title: string;
-  price: string;
-  address: string;
-  email: string;
-  owner: string;
-  userImage: string;
-  verificationState: string;
-  images: any;
-  creatorID: any;
-}
-interface User {
-  _id: any;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: number;
-  avatar: any;
-}
 
 const DashboardScreen = () => {
   const navigate = useRouter();
@@ -126,7 +89,7 @@ const DashboardScreen = () => {
   const getUserFn = async () => {
     setLoadingUser(true);
     try {
-      const res: any = await getUser();
+      const res: any = await getUser('');
       setTable(res?.data?.data);
     } catch (error) {
       toast.toast({

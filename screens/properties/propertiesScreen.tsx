@@ -1,7 +1,7 @@
 
 import { HeroPropsVideo } from "@/components/heroPropsVideo";
 import NavBar from "@/components/navBar";
-import { Box,InputGroup, Input, InputRightElement, Grid } from '@chakra-ui/react'
+import { Box,InputGroup, Input, InputRightElement, Grid, Stack, Skeleton, Card, CardBody, Text } from '@chakra-ui/react'
 import { useEffect, useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { PropertiesCard } from "./propertiesCard";
@@ -13,6 +13,8 @@ import { TextHeader } from "../home/textHeader";
 import { properties } from "@/utils/types";
 import { PropertyCardProps } from "../Property/propertyCard";
 import { useDebounce } from "@/hooks/useDebounce";
+import useProperty from "@/hooks/useProperty";
+import useToast from "@/hooks/useToast";
 
 
 const PropertiesScreen =()=> {
@@ -26,7 +28,29 @@ const PropertiesScreen =()=> {
     const [page, setPage] = useState<number>(0);
 
     const debouce = useDebounce()
+    const toast = useToast()
 
+    const {getFavorites} = useProperty()
+    const getFavoritesList = async() => {
+        try {
+            const {data} = await getFavorites()
+            console.log('data', data.data)
+            
+        } catch(error: any) {
+            let err = error 
+            if(err?.response){
+                toast.toast({
+                    title:'Request failed',
+                    status:'error',
+                    description:'Failed to get favorites list'
+                })
+            }
+        }
+    }
+   useEffect(()=>{
+        getFavoritesList()
+    
+   }, [page, inputValue])
     useEffect(()=> {
         const getPropertyFunction = async () => {
             setLoading(true);
@@ -35,9 +59,10 @@ const PropertiesScreen =()=> {
                 setFetchData(fetchData?.data?.data);
             } 
             catch (error) {
-                setLoading(false);
                 console.log(error);
-            };
+            } finally {
+                setLoading(false);
+            }
         };
 
         debouce(()=>getPropertyFunction())
@@ -107,8 +132,15 @@ const PropertiesScreen =()=> {
                     </InputGroup>
 
                     <TextHeader Header={"Discover a World of Possibilities"} sub={"Our portfolio of properties is as diverse as yur dreams. Explore the following categories to find the perfect property that resonates with your vision of home"}/>
+                    {isLoading && (
+                        <Stack spacing={4} width={'100%'} maxW={'1020px'}>
+                        <Skeleton height="40px" />
+                        <Skeleton height="40px" />
+                        <Skeleton height="40px" />
+                        </Stack>
+                    )}
 
-                    <Grid templateColumns={{base:'repeat(1, 1fr)', md:'repeat(2, 1fr)', xl:'repeat(3, 1fr)'}} 
+               {!isLoading && fetchData?.length > 0 && <Grid templateColumns={{base:'repeat(1, 1fr)', md:'repeat(2, 1fr)', xl:'repeat(3, 1fr)'}} 
                         gap={'20px'} placeContent={'center'}
                     >
                         {
@@ -122,8 +154,12 @@ const PropertiesScreen =()=> {
                                 )
                             })
                         }
-                    </Grid>
-
+                    </Grid>}
+               { !isLoading && fetchData?.length === 0 && <Card>
+                <CardBody>
+                    <Text>No property available or reload</Text>
+                </CardBody>
+              </Card>}
                     {/* <LoadMore click={()=> page + 1}/> */}
                     
                 </Box>

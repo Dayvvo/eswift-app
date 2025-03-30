@@ -25,12 +25,6 @@ const Dashboard = () => {
 
     const myCookie = getCookie("auth-cookie");
 
-    if (!user && !myCookie) {
-      // No auth, redirect to login
-      navigate.push("/auth");
-      return;
-    }
-
     if (myCookie) {
       const userData = localStorage.getItem("userData");
       if (!userData) {
@@ -47,8 +41,15 @@ const Dashboard = () => {
       }
     }
 
+    // if (!user && !myCookie) {
+    //   navigate.push("/auth");
+    //   return;
+    // }
+
+
+
     setLoading(false);
-  }, [user, isWindow]);
+  }, [isWindow]);
 
   if (loading) {
     

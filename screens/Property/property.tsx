@@ -61,7 +61,7 @@ export const PropertyScreen = () => {
   const getPropertyFunction = async () => {
     setLoading(true);
     try {
-      const { data } = await getAdminProperty(inputValue);
+      const { data } = await getAdminProperty(inputValue, page);
 
       const propertiesToAdd = data?.data.filter((prop: PropertyCardProps) => {
         return getProperty.findIndex((index) => index._id === prop._id) === -1;
@@ -88,7 +88,7 @@ export const PropertyScreen = () => {
   const { setGlobalContext } = useAppContext();
   const getUserFn = async () => {
     try {
-      const res: any = await getUser();
+      const res: any = await getUser("");
       setUsers(res?.data?.data);
     } catch (error) {
      console.log(error);
@@ -97,22 +97,7 @@ export const PropertyScreen = () => {
 
   useEffect(() => {
     getUserFn();
-  }, []);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response: AxiosResponse<{ data: User[] }> = await client.get(
-  //         `/user/users`
-  //       );
-  //       setUsers(response.data.data);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
+  }, [showModal, inputValue, page]);
 
   useEffect(() => {
     getPropertyFunction();
@@ -258,7 +243,7 @@ export const PropertyScreen = () => {
             >
               {propertyEl.map((property, index) => {
                 const user = users.find((u) => u._id === property?.creatorID);
-         
+            
                 return (
                   <PropertyCard
                     key={index}
@@ -280,7 +265,7 @@ export const PropertyScreen = () => {
           {!loading && propertyEl?.length === 0 && (
             <Card>
               <CardBody>
-                <Text>No property available please wait</Text>
+                <Text>No property available or reload</Text>
               </CardBody>
             </Card>
           )}

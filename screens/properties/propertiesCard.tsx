@@ -10,6 +10,7 @@ import useAuth from "@/hooks/useAuth";
 import useProperty, { Favourite } from "@/hooks/useProperty";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAppContext } from "@/context";
+import { useState } from "react";
 
 
 interface propertiesCard extends PropertyCardProps {
@@ -22,8 +23,7 @@ interface propertiesCard extends PropertyCardProps {
 export const PropertiesCard =({images, title, price, description, address, _id, onClick, view, favoriteId, isInFavorites}:propertiesCard) => {
 
     const toast = useToast();
-
-    const  {setGlobalContext} = useAppContext()
+    const [isFavorite, setIsFavorite] = useState<boolean>(isInFavorites || false);
 
     const {  authProtectedFn } = useAuth();
 
@@ -34,21 +34,20 @@ export const PropertiesCard =({images, title, price, description, address, _id, 
         router.push(`/properties/${_id}`)
     }
 
+    const [image1]= images || []; 
+
     const pathName = router.pathname;
 
     const addToFave = async(id:string)=>{
         try{
             const {data} = await addToFavorites(id)  as AxiosResponse ; 
             if(data){
+                setIsFavorite(true);
                 toast.toast({
                     title:'Request successful',
                     status:'success',
                     description:'Property added to favoriites'
                 });
-                setGlobalContext && setGlobalContext(prev=>({
-                    ...prev,
-                    favourites: [...prev.favourites, data as Favourite] 
-                }))
                 
             };
         }
@@ -65,18 +64,16 @@ export const PropertiesCard =({images, title, price, description, address, _id, 
     }
 
     const deleteFromFave = async(id:string)=>{
+     
         try{
             const {data} = await deleteFromFavorites(id)  as AxiosResponse ; 
             if(data){
+                setIsFavorite(false);
                 toast.toast({
                     title:'Request successful',
                     status:'success',
                     description:'Property removed from favoriites'
-                });
-                setGlobalContext && setGlobalContext(prev=>({
-                    ...prev,
-                    favourites: prev.favourites.filter(prop=> prop?.favoriteId !==id) 
-                }))
+                })
                 
             };
         }
@@ -109,8 +106,9 @@ export const PropertiesCard =({images, title, price, description, address, _id, 
                     overflow={'hidden'}
                 >
                     <Image 
-                     width={1000} height={1000}
-                     src={`${images}`} 
+                     width={'100%'}
+                      minWidth={{lg:'500px'}}
+                     src={`${image1}`} 
                      alt={'property'}
                     />
                 </Flex>
@@ -174,21 +172,28 @@ export const PropertiesCard =({images, title, price, description, address, _id, 
                     </Flex>
 
                     <Flex gap='1em' align={'center'}>
-                        {
-                            !isInFavorites?
-                                <Tooltip content='add to favorites' >
-                                    <IoIosHeartEmpty onClick={()=>authProtectedFn(()=> addToFave(_id as string), pathName )} cursor={'pointer'} className="empty"  fontSize={'30px'} color='#3170A6' />
-                                </Tooltip>
-                            :
-                                <Tooltip content='remove from favorites'>
-                                   <IoIosHeartDislike onClick={()=>deleteFromFave(favoriteId as string)} cursor={'pointer'} className="dislike" fontSize={'30px'} color='#3170A6'/>
-                               </Tooltip>
-               
+                    {!isFavorite ? (
+                        <Tooltip content="Add to favorites">
+                            <IoIosHeartEmpty
+                                onClick={() => authProtectedFn(() => addToFave(_id as string), pathName)}
+                                cursor={"pointer"}
+                                className="empty"
+                                fontSize={"30px"}
+                                color="#3170A6"
+                            />
+                            </Tooltip>
+                        ) : (
+                            <Tooltip content="Remove from favorites">
+                            <IoIosHeartDislike
+                                onClick={() => deleteFromFave(favoriteId as string)}
+                                cursor={"pointer"}
+                                className="dislike"
+                                fontSize={"30px"}
+                                color="#3170A6"
+                            />
+                        </Tooltip>
+                    )}
 
-                        }
-
-
-                         
                         <Btn onClick={Navigate}
                             display={'flex'}
                             justifyContent={'center'}

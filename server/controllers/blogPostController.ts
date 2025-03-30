@@ -63,6 +63,7 @@ class BlogPostController {
       };
       const totalPost = await BlogPost.find(findQuery).countDocuments();
       const blogpost = await BlogPost.find(findQuery)
+        .sort({ createdAt: -1 })
         .skip(skip)
         .limit(POST_PER_PAGE);
 

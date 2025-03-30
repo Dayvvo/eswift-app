@@ -265,7 +265,6 @@ const UserScreen = () => {
   const toast = useToast();
 
   const { getUser, getUserById } = useUser();
-
   const getUserFn = async () => {
     setLoading(true);
     try {
