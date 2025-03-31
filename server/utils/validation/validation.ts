@@ -162,6 +162,13 @@ export const resetPasswordValidation = Joi.object({
     .valid(Joi.ref("new_password"))
     .messages({ "any.one": "Confirm password must match new password" }),
 });
+export const changePasswordValidation = Joi.object({
+  new_password: Joi.string().required(),
+});
+
+export const validateEmail = Joi.object({
+  email: Joi.string().email().required()
+})
 
 export const customerOnboard = Joi.object({
   state: Joi.string().required(),

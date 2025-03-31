@@ -255,7 +255,7 @@ export const LoginScreen = () => {
               >
                 Keep me logged in
               </Checkbox>
-              <Link href={"/reset"}>
+              <Link href={"/forgot-password"}>
                 <Text
                   fontWeight={500}
                   fontSize={"14px"}

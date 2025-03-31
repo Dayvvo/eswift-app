@@ -5,7 +5,8 @@ import { ILoginValidation } from "../utils/interfaces/interface.validation";
 import { validateLoginData } from "../utils/validation";
 import { adminUsers } from "../data";
 import generateToken from "../utils/helperFunctions/generateToken";
-
+import crypto from "crypto";
+import { mailGenMails } from "../utils/mails/mailgen.mail";
 class AuthController {
   handleCreateUser = async (personalData: generalRequestBody) => {
     const newUser = await new User({
@@ -123,6 +124,49 @@ class AuthController {
         .json({ message: "An error occurred while updating the password" });
     }
   };
+  sendTokenToEmail = async (req: Request, res: Response) => {
+    const { email } = req.body;
+    try {
+
+      const user = await User.findOne({ email });
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
+
+      const {firstName} = user
+
+      const token = crypto.randomBytes(32).toString("hex");
+      user.token = token;
+      await mailGenMails.forgotPassword(firstName, email, token, true)
+      await user.save();
+      return res.status(200).json({
+        message: "Token sent to email"
+      })
+    } catch(error) {
+      return res.status(500).json({ message: "An error occurred" });
+    }
+  }
+  forgotPassword = async (req: Request, res: Response) => {
+    const { token } = req.params;
+    const { new_password } = req.body;
+    try {
+      const user = await User.findOne({ token });
+      
+      if (!user) {
+        return res.status(404).json({
+          message: "Invalid token",
+        });
+      }
+      user.hash = new_password;
+      user.token = undefined;
+      await user.save();
+      return res.status(200).json({ message: "Password successfully updated" });
+    } catch(error) {
+      return res.status(500).json({ message: "An error occurred" });
+    }
+  }
 }
 
 let authController = new AuthController();

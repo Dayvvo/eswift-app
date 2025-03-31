@@ -2,7 +2,7 @@ import express from "express";
 import passport from "passport";
 import authController from "../controllers/authController";
 import { validateRequestMiddleware } from "../utils/middleware/request-validator.middleware";
-import { resetPasswordValidation } from "../utils/validation";
+import { changePasswordValidation, resetPasswordValidation, validateEmail } from "../utils/validation";
 import { isAuth } from "../utils/middleware";
 
 const router = express.Router();
@@ -32,5 +32,8 @@ router.put(
   authController.resetPassword
   // WatchAsyncController(inspectionController.createInspection)
 );
+
+router.post("/forgot-password", validateRequestMiddleware(validateEmail, "body") ,authController.sendTokenToEmail);
+router.post('/change-password/:token', validateRequestMiddleware(changePasswordValidation, 'body'), authController.forgotPassword)
 
 export default router;

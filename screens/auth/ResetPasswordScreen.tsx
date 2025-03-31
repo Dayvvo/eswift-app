@@ -77,7 +77,7 @@ export const ResetPasswordScreen = () => {
     { email: "", old_password: "", new_password: "", confirm_new_password: "" },
     validation
   );
-  const { reset, logout } = useAuth();
+  const { reset, logout, forgotPassword } = useAuth();
 
   const resetPasswordFn = async () => {
     // event.preventDefault();
@@ -109,6 +109,33 @@ export const ResetPasswordScreen = () => {
       setLoading(false);
     }
   };
+
+  const forgetPasswordFunction = async () => {
+  
+    try {
+      const resp = await forgotPassword(input.email);
+      console.log(resp);
+      localStorage.removeItem("token");
+      localStorage.removeItem("userData");
+      router.push("/admin");
+      toast({
+        status: "success",
+        description: `Token sent to email you can check your email and click on the link to reset your password`,
+        title: "Success",
+        position: "top",
+        duration: 5000,
+      })
+    } catch(error) {
+      console.log(error)
+      toast({
+        status: "error",
+        description: `Faile to send token to email`,
+        title: "Failed",
+        position: "top",
+        duration: 1000,
+      })
+    }
+  }
 
   return (
     <form>
@@ -291,20 +318,7 @@ export const ResetPasswordScreen = () => {
               borderRadius={"10px"}
               textColor={"#FFFFFF"}
               my={"24px"}
-              onClick={() => {
-                if (!inputIsvalid("email")) {
-                  toast({
-                    status: "error",
-                    description: "Email is not valid",
-                    title: "Failed",
-                    position: "top",
-                    duration: 1000,
-                  });
-                  onBlurHandler("email");
-                  return;
-                }
-                onOpen();
-              }}
+              onClick={forgetPasswordFunction}
             >
               Reset Password
               {/* <Link href={"/verify-password"}>Reset Password</Link> */}

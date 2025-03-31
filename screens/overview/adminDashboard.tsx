@@ -125,7 +125,7 @@ const DashboardScreen = () => {
   const getPropertyFunction = async () => {
     setLoading(true);
     try {
-      const getAllProperties = await getAdminProperty(inputValue);
+      const getAllProperties = await getAdminProperty(inputValue, page);
       if (getAllProperties?.data?.data) {
         setGetProperty(getAllProperties?.data?.data);
         setTotalPages(getAllProperties.data?.pagination.pages);

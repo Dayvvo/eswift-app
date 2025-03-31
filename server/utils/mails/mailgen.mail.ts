@@ -29,6 +29,43 @@ class MailgenMails {
       }
     );
   }
+  async forgotPassword(
+    name: string,
+    email: string,
+    token: string,
+    smtpConfig?: boolean
+  ) {
+    
+    const html = {
+      body: {
+        name,
+        intro: `We received a request to reset your password. No worries—we're here to help! Click the link below to set a new password:`,
+        action: {
+          instructions: "Click the button below to reset your password:",
+          button: {
+            color: "#22BC66",
+            text: "Reset Password",
+            link: `${process.env.BACKEND_URL}/forgot-password/${token}`,
+          },
+        },
+        outro: `If you did not request this, please ignore this email. Your account remains secure.  
+        Need any help? Just reply to this email—we're happy to assist!`,
+      },
+    };
+    
+
+    const template = mailGenerator.generate(html);
+    await mailTransport(
+      `Eswift<${process.env.SENDING_MAIL}>`,
+      email,
+      "Eswift Forgot Password",
+      template,
+      {
+        smtpConfig,
+      }
+    );
+  }
+  
   async propertyCreationEmail(
     emailData: { name: string; email: string }[], // Accept an array of objects with name and email
     smtpConfig?: boolean
