@@ -93,10 +93,10 @@ const useProperty = () => {
     [token]
   );
   
-  const getAdminProperty = async (inputValue: string) => {
+  const getAdminProperty = async (inputValue: string, page: number) => {
     try {
       const res = await query(
-        `/property/admin?keyword=${inputValue}`
+        `/property/admin?keyword=${inputValue}&PageNumber={${page}}`
       );
       return res as PropertyResponse;
     } catch (err: any) {
@@ -127,7 +127,15 @@ const useProperty = () => {
 
   const addToFavorites = async(id:string)=>  await post(`/property/favourite/${id}`,{}) ;
 
-  const deleteFromFavorites = async(id:string)=>  await delProperty(`/property/favourite/${id}`);
+  // const deleteFromFavorites = async(id:string)=>  await delProperty(`/property/favourite/${id}`);
+  const deleteFromFavorites = async(id:string)=>  {
+    try {
+      const res = await delProperty(`/property/favourite/${id}`);
+      return res as any;
+    } catch (error) {
+      throw error;
+    }
+  }
 
   return {
     propertyCreator,

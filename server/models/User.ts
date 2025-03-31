@@ -98,6 +98,7 @@ const UserSchema = new Schema<IUser>(
       type: String,
       required: false,
     },
+    token: {type: String, required: false},
     agendIdDocument: { type: String, required: false },
     occupation: { type: String, required: false },
     isOnboarded: {

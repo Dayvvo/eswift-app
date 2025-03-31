@@ -18,7 +18,7 @@ interface PasswordProps {
   name: string;
   value?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: () => void;
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
   isError?: boolean;
   errorMessage?: string;
 }

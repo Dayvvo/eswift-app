@@ -130,7 +130,23 @@ const useAuth = () => {
       throw error;
     }
   };
+  const forgotPassword = async (email: string) => {
+    try {
+      const req = await axios.post("/api/auth/forgot-password", { email });
+      return req as any;
+    } catch (error) {
+      throw error;
+    }
+  }
 
+  const changePassword = async (new_password: string, token: string) => {
+    try {
+      const req = await axios.post(`/api/auth/change-password/${token}`, { new_password });
+      return req as any;
+    } catch (error) {
+      throw error;
+    }
+  }
   const authProtectedFn = (fn: (args?: any) => unknown, route: string) => {
     if (token) {
       fn();
@@ -142,6 +158,8 @@ const useAuth = () => {
 
   return {
     user,
+    forgotPassword,
+    changePassword,
     loading,
     error,
     isWindow,

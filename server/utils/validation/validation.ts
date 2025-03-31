@@ -100,12 +100,13 @@ export const ValidateAddProperty = (property: IAddPropertyValidation) => {
     price: priceSchema.required(),
     category: Joi.string().required(),
     description: Joi.string().required(),
-    ownerID: Joi.string().required(),
     state: Joi.string(),
     lga: Joi.string(),
     features: Joi.array().items(Joi.string().min(2).max(50)).min(1).required(),
-    images: Joi.array().items(Joi.string().uri()).min(1).required(),
+    images: Joi.array().items(Joi.any().required()).min(1).optional(),
+    // images: Joi.array().items(Joi.string().uri()).min(1).required(),
     documents: Joi.array().items(documentSchema).required(),
+    owner: Joi.string().required()
   });
 
   return propertySchema.validate(property);
@@ -161,6 +162,13 @@ export const resetPasswordValidation = Joi.object({
     .valid(Joi.ref("new_password"))
     .messages({ "any.one": "Confirm password must match new password" }),
 });
+export const changePasswordValidation = Joi.object({
+  new_password: Joi.string().required(),
+});
+
+export const validateEmail = Joi.object({
+  email: Joi.string().email().required()
+})
 
 export const customerOnboard = Joi.object({
   state: Joi.string().required(),

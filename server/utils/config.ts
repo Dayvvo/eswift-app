@@ -27,6 +27,7 @@ export class appConfig {
           clientID: process.env['GOOGLE_CLIENT_ID'] as string,
           clientSecret: process.env['GOOGLE_CLIENT_SECRET'] as string,
           callbackURL: `${process.env['BACKEND_URL']}/api/auth/google/callback`,
+          scope: ['profile', 'email'],
           proxy: true,
           passReqToCallback: true,
         },
@@ -40,15 +41,19 @@ export class appConfig {
           const refCode = req.query['state'];
           let refferer ;
           if (refCode){
-            refferer = User.findOne({refCode})
+            refferer = await User.findOne({refCode})
           }
           
           const verifiedUser: GoogleAuthResponse = profile?._json
+          if (!verifiedUser.email) {
+            return done(new Error('Email missing from Google profile'), false);
+        }
           try {
             let user = await User.findOne({email: verifiedUser.email})
             if(!user) {
               user = new User({
                 tenantId: verifiedUser.sub,
+                email: verifiedUser.email,
                 firstName: verifiedUser.given_name,
                 lastName: verifiedUser.family_name,
                 avatar: verifiedUser.picture,
@@ -65,7 +70,7 @@ export class appConfig {
             return done(null, user)
         
           } catch (error) {
-            console.log('err at google oauth', error)
+            return done(error, false);
           }
         }
       )

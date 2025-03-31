@@ -43,6 +43,7 @@ export interface IUser {
   contactMethod?: string;
   idDocument?: string;
   agendIdDocument?: string;
+  token?: string;
   occupation: string;
   isOnboarded?: boolean;
 }

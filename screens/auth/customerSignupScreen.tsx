@@ -6,6 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import Btn from "@/components/Btn";
 import { useRouter } from "next/router";
 import { AuthBackground } from "./authBackground";
+import Link from "next/link";
 
 export const CustomerSignUpcreen = () => {
   
@@ -65,13 +66,13 @@ export const CustomerSignUpcreen = () => {
           >
             Sign in with Google <FcGoogle />
           </Btn>
-          {/* <Flex w="100%" my={"10px"} justifyContent={"space-between"}>
+          <Flex w="100%" my={"10px"} justifyContent={"space-between"}>
             <Text
               fontWeight={400}
               fontSize={{ base: "10px", lg: "14px" }}
               textColor={"var(--strong950)"}
             >
-              Already have an account?
+              Login with email and password
             </Text>
             <Link href={"/admin"}>
               <Text
@@ -83,7 +84,7 @@ export const CustomerSignUpcreen = () => {
                 Log In
               </Text>
             </Link>
-          </Flex> */}
+          </Flex>
         </Box>
       </Flex>
       <Text fontSize={"14px"} fontWeight={400} textColor={"var(--sub600)"}>

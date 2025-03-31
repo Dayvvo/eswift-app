@@ -36,7 +36,6 @@ const FileInputComponent = ({
 
     const isValidFile = (file: File) => {
       let validationErr = "";
-      console.log("file type", file.type);
       if (file.type !== "application/pdf") {
         validationErr = "Invalid File type";
       } else if (file.size / (1024 * 1024) > 6) {
@@ -203,8 +202,6 @@ export const AddPropertyScreenFour = ({
   //   }
   //   return true;
   // };
-
-  console.log("fine app", loading);
 
   return (
     <>

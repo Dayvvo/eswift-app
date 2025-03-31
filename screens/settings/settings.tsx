@@ -373,7 +373,6 @@ export const SettingsScreen = () => {
                 </Flex>
               </Flex>
             </Flex>
-            {user?.role === "ADMIN" ? (
               <Flex w={"100%"} alignItems={"center"} py={"20px"}>
                 <Flex
                   w={"100%"}
@@ -421,12 +420,9 @@ export const SettingsScreen = () => {
                   </Btn>
                 </Flex>
               </Flex>
-            ) : (
-              <></>
-            )}
           </Flex>
         </Box>
-      </form>{" "}
+      </form>
     </>
   );
 };

@@ -1,6 +1,6 @@
 "use client"
 import NavBar from "@/components/navBar";
-import { Box, Flex, Text, TextProps, Image } from "@chakra-ui/react";
+import { Box, Flex, Text, TextProps, Image, Stack, Skeleton, Card, CardBody } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 // import Image from "next/image";
 import { useRouter } from "next/router";
@@ -32,11 +32,20 @@ export const BlogDetailScreen = () => {
   const fetchBlog = useBlog();
   const { id } = navigate.query;
   const [blog, setBlog] = useState<any>(null);
+  const [isLoading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchBlogFn = async () => {
-      const blogDetails = await fetchBlog.getBlogByID(id as string);
-      setBlog(blogDetails.data);
+      setLoading(true);
+      try {
+        const blogDetails = await fetchBlog.getBlogByID(id as string);
+        setBlog(blogDetails.data);
+      } catch (error) { 
+
+      } finally {
+        setLoading(false);
+      }
+   
     };
     id && fetchBlogFn();
   }, [id]);
@@ -55,16 +64,16 @@ export const BlogDetailScreen = () => {
         py={"60px"}
         className="mulish"
       >
+            {isLoading && !blog && (
+                <Stack spacing={4} p={4}>
+                  <Skeleton height="40px" />
+                  <Skeleton height="40px" />
+                  <Skeleton height="40px" />
+                </Stack>
+              )}
+       {!isLoading && blog &&  <>
         <Box w={"100%"} mb={"36px"} px={{ base: "20px", lg: "60px" }}>
-          {/* <Box w={"100%"} h={"402px"}>
-            <Image
-              src={`/`}
-              alt={"blog"}
-              width={1000}
-              height={1000}
-              layout="responsive"
-            />
-          </Box> */}
+   
           <Box width={'100%'} h={{ base: "300px", lg: "550px" }} mb={"36px"}>
             <Image  src={blog?.header_image || `/`} width={'100%'} height={'100%'} />
           </Box>
@@ -121,6 +130,14 @@ export const BlogDetailScreen = () => {
           />
           </Box>
         </Box>
+        </>}
+              {!isLoading && !blog && (
+              <Card mt={'60px'}>
+                <CardBody>
+                  <Text>Blog post details not available please try again</Text>
+                </CardBody>
+              </Card>
+                )}
         <Box w={"100%"} px={{ base: "20px", lg: "60px" }}>
         <Btn
           onClick={() => navigate.back()}
