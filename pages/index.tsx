@@ -149,7 +149,7 @@ export const OnboardingModal = ({ isOpen, onClose }: InformationModalProps) => {
   };
 
   return (
-    <Modal isCentered isOpen={isOpen} onClose={onClose} size={"lg"}>
+    <Modal closeOnOverlayClick={false} isCentered isOpen={isOpen} onClose={onClose} size={"lg"}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader

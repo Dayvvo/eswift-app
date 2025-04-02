@@ -34,7 +34,6 @@ class PropertyController {
       //     .json({ message: `Invalid object Id` });
       // }
       const propertydata = { creatorID: user["_id"], ownerID: user["_id"], ...value}
-      console.log('propertydata', propertydata)
       const newProperty = new Property(propertydata);
       const locateInterest: any = [];
       const state = newProperty.state;
@@ -65,9 +64,12 @@ class PropertyController {
         email: user.email,
         name: `${user.firstName} ${user.lastName}`,
       }));
-      await newProperty.save();
-      await mailGenMails.propertyCreationEmail(emailData);
 
+      if(newProperty) {
+        await mailGenMails.propertyCreationEmail(emailData, newProperty.title, newProperty._id.toString(), true);
+      }
+     
+      await newProperty.save();
       return res.status(HttpStatusCode.Created).json({
         statusCode: 200,
         message: "Property created",

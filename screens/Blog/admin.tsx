@@ -160,7 +160,7 @@ const BlogScreen = () => {
         </Box>
       </Flex>
       {loading && (
-        <Stack>
+        <Stack marginTop={'50px'}>
           <Skeleton height="40px" />
           <Skeleton height="40px" />
           <Skeleton height="40px" />

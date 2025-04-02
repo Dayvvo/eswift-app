@@ -109,7 +109,7 @@ export const PropertyScreen = () => {
       <Box
         className="robotoF"
         px={{ base: "16px", lg: "20px" }}
-        height={{ base: "70vh", md: "78vh", lg: "60vh", xl: "65vh" }}
+        width={'100%'}
       >
         <Flex
           mb={"24px"}
@@ -123,7 +123,7 @@ export const PropertyScreen = () => {
           bg="white"
           mt="2em"
         >
-          <Flex w={"100%"}>
+          <Flex w={{base:"100%", lg: '60%', xl: '100%'}}>
             <InputGroup
               display={"flex"}
               alignItems={"center"}
@@ -216,8 +216,8 @@ export const PropertyScreen = () => {
 
         {/* Scrollable Property Cards Container */}
         <Box
-          overflowY={{ xl: "auto" }}
-          height={{ xl: "520px" }}
+          // overflowY={{ xl: "auto" }}
+          // height={{ xl: "520px" }}
           // mt={4}
         >
           {loading && (
@@ -235,8 +235,8 @@ export const PropertyScreen = () => {
               templateColumns={{
                 base: "repeat(1, 1fr)",
                 md: "repeat(2, 1fr)",
-                lg: "repeat(3, 1fr)",
-                xl: "repeat(4, 1fr)",
+                xl: "repeat(3, 1fr)",
+                '2xl': "repeat(4, 1fr)",
               }}
               gap={{ base: "24px", lg: "28px" }}
               paddingBottom={{ base: "20rem", lg: "3rem", xl: "6rem" }}

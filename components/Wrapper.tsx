@@ -135,7 +135,7 @@ const Wrapper = ({
   return (
     <Box
       w={"100%"}
-      py={{ base: "0", lg: "10px" }}
+      // py={{ base: "0", lg: "10px" }}
       h={isOpen ? '100vh' : 'auto'}
       overflowX={"hidden"}
       overflowY={`${isOpen ? 'clip' : 'auto'}`}
@@ -152,7 +152,7 @@ const Wrapper = ({
         <Box
           className={`${isOpen ? 'slideOpen' : 'slideClose'}`}
           borderRight={"1px solid #E1E4EA"}
-          w={"244px"} 
+          maxW={"270px"} 
           bg={"white"}
           pos={'fixed'}
           // top={0}
@@ -174,7 +174,7 @@ const Wrapper = ({
             <Image src="/logo.svg" width="226px" height="40px" alt="logo" />
           </Link>
           <Box my="2rem">
-            <Divider w="196px" color="#1A1D66" />
+            <Divider w="100%" color="#1A1D66" />
           </Box>
           <Box
             display={"flex"}
@@ -221,7 +221,7 @@ const Wrapper = ({
             })}
           </Box>
           <Box mt={"5rem"}>
-            <Divider color="#E1E4EA" mb={"20px"} w="204px" />
+            <Divider color="#E1E4EA" mb={"20px"} w="100%" />
             <Grid
               gridTemplateColumns={"1fr 2fr"}
               gridTemplateRows={"1fr 1fr"}
@@ -242,8 +242,9 @@ const Wrapper = ({
                 <Text
                   color="#525866"
                   className="inter"
-                  fontSize={"0.75rem"}
+                  fontSize={"0.65rem"}
                   fontWeight={400}
+                  whiteSpace={'wrap'}
                 >
                   {`${user?.email}`}
                 </Text>
@@ -323,16 +324,12 @@ const Wrapper = ({
               </Text>
               </Flex>
             </Grid>
-            {/* <Flex gap={"20px"} alignItems={"center"}> */}
-              {/* <SearchIcon />
-              <NotifIcon /> */}
-            {/* </Flex> */}
           </Flex>
         </Box>
         <Box
           position={"relative"}
           top={"20px"}
-          left={{ base: "0px", lg: "250px" }}
+          left={{ base: "0px", lg: "265px" }}
           w={{ base: "full", lg: "80vw" }}
           {...(noPadding ? {} : { px: "20px", pt:'20px',pb:'40px' })}
         >

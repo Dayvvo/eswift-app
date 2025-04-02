@@ -57,7 +57,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
     price: price?.amount ||  "",
     category: category || "",
     documents: initialDocValues ,
-    owner :'eSwift',
+    owner :'ESWIFT',
   }
 
   const initialTouchedValues = {

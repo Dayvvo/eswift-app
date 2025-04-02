@@ -67,42 +67,52 @@ class MailgenMails {
   }
   
   async propertyCreationEmail(
-    emailData: { name: string; email: string }[], // Accept an array of objects with name and email
+    emailData: { name: string; email: string }[], 
+    propertyName: string, 
+    newPropertyid: string,
     smtpConfig?: boolean
   ) {
-    // Iterate through each recipient
+    
     for (const recipient of emailData) {
       try {
-        // Generate the email template for each recipient
         const html = {
           body: {
-            name: recipient.name, // Use recipient's name
-            intro: `Thank you for using Eswift! This is to notify that a new property is available for sale in your state or location of interest`,
+            name: recipient.name,
+            intro: `Exciting news! A new property, **${propertyName}**, has just been listed in your preferred location.`,
+            action: {
+              instructions: "Don't miss out on this opportunity! Click the button below to view the property details:",
+              button: {
+                color: "#0073e6",
+                text: "View Property",
+                link: `${process.env.BACKEND_URL}/properties/${newPropertyid}`,
+              },
+            },
             outro:
-              "Need help, or have questions? Just reply to this email, we'd love to help find your dream property.",
+              "If you have any questions, feel free to reply to this email. We're happy to assist you!",
           },
         };
-
+  
         const template = mailGenerator.generate(html);
-
+  
         // Send the email
         await mailTransport(
-          `Eswift<${process.env.SENDING_MAIL}>`,
+          `Eswift <${process.env.SENDING_MAIL}>`,
           recipient.email, // Use recipient's email
-          "Eswift Property Update",
+          `New Property Alert: ${propertyName}`,
           template,
           {
             smtpConfig,
           }
         );
-
+  
         console.log(`Email sent successfully to ${recipient.email}`);
       } catch (error) {
         console.error(`Failed to send email to ${recipient.email}:`, error);
       }
     }
   }
-
+  
+  
   async refLink(
     name: string,
     email: string,
@@ -140,23 +150,30 @@ class MailgenMails {
   ) {
     const html = {
       body: {
-        name,
+        name: "Eswift Support Team", // Display recipient name as Eswift support
         intro: `
-          <div> Name: ${name} </div>
-          <div> Phone: ${phone} </div>
-          <div> Reason for inquiry: ${reason} </div>
-          <div> How they first heard about eswift: ${contactMode} </>
+          <p>Hello Eswift Team,</p>
+          <p>You have received a new customer inquiry. Below are the details:</p>
+          <ul>
+            <li><strong>Name:</strong> ${name}</li>
+            <li><strong>Email:</strong> ${email}</li>
+            <li><strong>Phone:</strong> ${phone}</li>
+            <li><strong>Reason for Inquiry:</strong> ${reason}</li>
+            <li><strong>How they heard about Eswift:</strong> ${contactMode}</li>
+          </ul>
         `,
-
-        outro: detail,
+        action: {
+          instructions:
+            "Please review the user's message below and follow up as necessary.",
+        },
+        outro: `<p>${detail}</p>`,
       },
     };
 
-    const template = mailGenerator.generate(html);
     await mailTransport(
-      `Eswift<${process.env.SENDING_MAIL}>`,
+      `${name}<${email}>`,
       `${process.env["SENDING_MAIL"]}`,
-      `You were contacted from e-swiftproperties.com`,
+      `Customer Inquiry: ${reason}`,
       html,
       { smtpConfig: true }
     );

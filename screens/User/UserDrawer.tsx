@@ -172,7 +172,7 @@ const UserDrawer = ({
                 fontSize={".875rem"}
                 fontWeight={500}
               >
-                {'N/A'}
+                {userEl?.phoneNumber || 'N/A'}
               </Text>
             </Box>
             <Box mt="10px">
