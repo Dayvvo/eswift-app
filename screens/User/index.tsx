@@ -405,7 +405,7 @@ const UserScreen = () => {
                     {item.email}
                   </Td>
                   <Td color={"#525866"} py="12px">
-                    {"09094631170"}
+                    {item.phoneNumber}
                   </Td>
                   <Td color={"#525866"} py="12px">
                     {item.createdAt.split("T")[0]}

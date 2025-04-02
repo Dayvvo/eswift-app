@@ -10,7 +10,7 @@ import useAuth from "@/hooks/useAuth";
 import useProperty, { Favourite } from "@/hooks/useProperty";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAppContext } from "@/context";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 
 interface propertiesCard extends PropertyCardProps {
@@ -18,9 +18,10 @@ interface propertiesCard extends PropertyCardProps {
     isInFavorites?: boolean;
     onClick?: () => void;
     favoriteId?: string;
+    setFavoritesUpdated: Dispatch<SetStateAction<boolean>>
 }
 
-export const PropertiesCard =({images, title, price, description, address, _id, onClick, view, favoriteId, isInFavorites}:propertiesCard) => {
+export const PropertiesCard =({setFavoritesUpdated, images, title, price, description, address, _id, onClick, view, favoriteId, isInFavorites}:propertiesCard) => {
 
     const toast = useToast();
     const [isFavorite, setIsFavorite] = useState<boolean>(isInFavorites || false);
@@ -42,6 +43,7 @@ export const PropertiesCard =({images, title, price, description, address, _id, 
         try{
             const {data} = await addToFavorites(id)  as AxiosResponse ; 
             if(data){
+                setFavoritesUpdated(prev => !prev);
                 setIsFavorite(true);
                 toast.toast({
                     title:'Request successful',
@@ -68,7 +70,9 @@ export const PropertiesCard =({images, title, price, description, address, _id, 
         try{
             const {data} = await deleteFromFavorites(id)  as AxiosResponse ; 
             if(data){
+                setFavoritesUpdated(prev => !prev);
                 setIsFavorite(false);
+             
                 toast.toast({
                     title:'Request successful',
                     status:'success',

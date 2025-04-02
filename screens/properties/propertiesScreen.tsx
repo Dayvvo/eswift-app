@@ -26,6 +26,7 @@ const PropertiesScreen =()=> {
     const [isLoading, setLoading] = useState<boolean>(false);
 
     const [page, setPage] = useState<number>(0);
+    const [favoritesUpdated, setFavoritesUpdated] = useState(false);
 
     const debouce = useDebounce()
     const toast = useToast()
@@ -34,7 +35,6 @@ const PropertiesScreen =()=> {
     const getFavoritesList = async() => {
         try {
             const {data} = await getFavorites()
-            console.log('data', data.data)
             
         } catch(error: any) {
             let err = error 
@@ -47,10 +47,7 @@ const PropertiesScreen =()=> {
             }
         }
     }
-   useEffect(()=>{
-        getFavoritesList()
-    
-   }, [page, inputValue])
+
     useEffect(()=> {
         const getPropertyFunction = async () => {
             setLoading(true);
@@ -66,7 +63,12 @@ const PropertiesScreen =()=> {
         };
 
         debouce(()=>getPropertyFunction())
-    },[page, inputValue]);
+    },[page, inputValue, favoritesUpdated]);
+
+    useEffect(()=>{
+        getFavoritesList()
+    
+   }, [page, inputValue, favoritesUpdated])
 
     function scrollToSection() {
         const section = document.querySelector('#main') as HTMLElement;
@@ -150,6 +152,7 @@ const PropertiesScreen =()=> {
                                         {...item}
                                         _id={item?._id}
                                         view='client'
+                                        setFavoritesUpdated={setFavoritesUpdated}
                                     />
                                 )
                             })

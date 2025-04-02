@@ -28,6 +28,7 @@ import { FaCheckCircle } from "react-icons/fa";
 
 export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+   const [favoritesUpdated, setFavoritesUpdated] = useState(false);
   const router = useRouter()
   const pathName = router.pathname;
 
@@ -60,17 +61,13 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
     try {
       const { data } = (await addToFavorites(id)) as AxiosResponse;
       if (data) {
+        setFavoritesUpdated((prev => !prev))
         setIsFavorite(true);
         toast.toast({
           title: "Request successful",
           status: "success",
           description: "Property added to favoriites",
         });
-        setGlobalContext &&
-          setGlobalContext((prev) => ({
-            ...prev,
-            favourites: [...prev.favourites, data as Favourite],
-          }));
       }
     } catch (err) {
       let error = err as AxiosError;
@@ -89,6 +86,7 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
     try {
       const { data } = (await deleteFromFavorites(id)) as AxiosResponse;
       if (data) {
+        setFavoritesUpdated((prev => !prev))
         setIsFavorite(false);
         toast.toast({
           title: "Request successful",
@@ -132,13 +130,13 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
     if (detailsData) {
       setIsFavorite(detailsData.isInFavorites || false);
     }
-  }, [detailsData]);
+  }, [detailsData, favoritesUpdated]);
 
   useEffect(() => {
     if (isReady) {
       getPropertyFunction();
     }
-  }, [isReady, query?.id]);
+  }, [isReady, query?.id, favoritesUpdated]);
 
   const isAdmin = user?.role === "Admin";
 
@@ -386,26 +384,27 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
               </Btn>
 
               {!detailsData || !isReady ? null : !isFavorite ? (
-  <Btn
-    border="1px solid #FB3748"
-    borderRadius={"10px"}
-    padding={"10px"}
-    color="#FB3748"
-    className="robotoF"
-    bgColor="transparent"
-    w="100%"
-    onClick={() =>
-      authProtectedFn(() => addToFave(detailsData?._id as string), pathName)
-    }
-    isLoading={loadingBtn}
-  >
-    Add to favorites
-  </Btn>
+              <Btn
+                border="1px solid #FB3748"
+                borderRadius={"10px"}
+                padding={"10px"}
+                color="#FB3748"
+                className="robotoF"
+                bgColor="transparent"
+                w="100%"
+                onClick={() =>
+                  authProtectedFn(() => addToFave(detailsData?._id as string), pathName)
+                }
+                isLoading={loadingBtn}
+              >
+                Add to favorites
+              </Btn>
               ) : (
                 <Btn
                   border="1px solid #FB3748"
                   borderRadius={"10px"}
-                  padding={"10px"}
+                  py={"10px"}
+                  px={'2rem'}
                   color="#FB3748"
                   className="robotoF"
                   bgColor="transparent"

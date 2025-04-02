@@ -197,23 +197,23 @@ export const UploadIcon = ({ color }: { color?: string }) => {
       <path
         d="M12.5002 12.0002V21.0002M12.5002 12.0002L10.0002 14.0002M12.5002 12.0002L15.0002 14.0002M5.53421 9.11719C4.58842 9.35518 3.76208 9.93035 3.21046 10.7346C2.65883 11.5389 2.41989 12.5169 2.53851 13.485C2.65714 14.453 3.12517 15.3444 3.85467 15.9917C4.58417 16.639 5.52494 16.9976 6.50021 17.0002H7.50021"
         stroke="#07122F"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M16.3306 7.13772C15.9889 5.78429 15.1452 4.61146 13.9708 3.85698C12.7963 3.10249 11.3789 2.82281 10.0059 3.07462C8.63289 3.32643 7.40699 4.0909 6.57671 5.21306C5.74643 6.33521 5.37391 7.73109 5.53465 9.11772C5.53465 9.11772 5.68765 9.99972 6.00065 10.4997"
         stroke="#07122F"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M17.5 17C18.206 16.9995 18.904 16.8495 19.5479 16.5599C20.1917 16.2702 20.767 15.8475 21.2357 15.3195C21.7045 14.7915 22.0561 14.1702 22.2674 13.4965C22.4787 12.8229 22.545 12.1121 22.4618 11.4109C22.3786 10.7098 22.1479 10.0343 21.7848 9.42874C21.4217 8.82321 20.9345 8.30145 20.3552 7.89778C19.776 7.49412 19.1178 7.21772 18.424 7.08676C17.7302 6.9558 17.0166 6.97327 16.33 7.138L15 7.5"
         stroke="#07122F"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -231,10 +231,10 @@ export const BackIcon = ({ color }: { color?: string }) => {
       <path
         d="M14.0674 3.6166L8.28803 9.39595C7.6055 10.0785 7.6055 11.1953 8.28803 11.8779L14.0674 17.6572"
         stroke={color || "#FF382B"}
-        stroke-width="1.63644"
+        strokeWidth="1.63644"
         stroke-miterlimit="10"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

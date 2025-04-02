@@ -115,7 +115,7 @@ export const PropertyCard = ({
     <Box
       className="RobotoF"
       bg={"#FFF"}
-      w={{base:'100%', sm:'320px'}}
+      w={{base:'100%', lg: '300px', '2xl': '320px'}}
       h={"420px"}
       // pb={"1px"}
       boxShadow={'md'}
