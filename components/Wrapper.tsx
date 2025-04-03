@@ -220,7 +220,7 @@ const Wrapper = ({
               );
             })}
           </Box>
-          <Box mt={"5rem"}>
+          <Box mt={{base: "2rem", md: '5rem'}}>
             <Divider color="#E1E4EA" mb={"20px"} w="100%" />
             <Grid
               gridTemplateColumns={"1fr 2fr"}
