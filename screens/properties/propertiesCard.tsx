@@ -10,211 +10,227 @@ import useAuth from "@/hooks/useAuth";
 import useProperty, { Favourite } from "@/hooks/useProperty";
 import { AxiosError, AxiosResponse } from "axios";
 import { useAppContext } from "@/context";
-import { Dispatch, SetStateAction, useState } from "react";
-
-
-interface propertiesCard extends PropertyCardProps {
-    view?: 'client' | 'admin',
-    isInFavorites?: boolean;
-    onClick?: () => void;
-    favoriteId?: string;
-    setFavoritesUpdated: Dispatch<SetStateAction<boolean>>
+import { Dispatch, SetStateAction, useState, useEffect } from "react";
+import { R } from "@/utils/types";
+interface PropertiesCardProps extends PropertyCardProps {
+  view?: "client" | "admin";
+  isInFavorites?: boolean;
+  onClick?: () => void;
+  favoriteId?: string;
 }
 
-export const PropertiesCard =({setFavoritesUpdated, images, title, price, description, address, _id, onClick, view, favoriteId, isInFavorites}:propertiesCard) => {
+export const PropertiesCard = ({
+  images,
+  title,
+  price,
+  description,
+  address,
+  _id,
+  onClick,
+  view,
+  favoriteId,
+  isInFavorites,
+}: PropertiesCardProps) => {
+  const toast = useToast();
+  const { setGlobalContext, globalContext } = useAppContext();
+  const { authProtectedFn } = useAuth();
+  const { addToFavorites, deleteFromFavorites, getFavorites } = useProperty();
 
-    const toast = useToast();
-    const [isFavorite, setIsFavorite] = useState<boolean>(isInFavorites || false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(isInFavorites || false);
+  const [favId, setFavId] = useState<string | undefined>(favoriteId);
 
-    const {  authProtectedFn } = useAuth();
+  const pathName = router.pathname; // ✅ Ensure route is defined
+ 
 
-    const { addToFavorites, deleteFromFavorites } = useProperty();
-
-    const Navigate = () => {
-        onClick && onClick();
-        router.push(`/properties/${_id}`)
-    }
-
-    const [image1]= images || []; 
-
-    const pathName = router.pathname;
-
-    const addToFave = async(id:string)=>{
-        try{
-            const {data} = await addToFavorites(id)  as AxiosResponse ; 
-            if(data){
-                setFavoritesUpdated(prev => !prev);
-                setIsFavorite(true);
-                toast.toast({
-                    title:'Request successful',
-                    status:'success',
-                    description:'Property added to favoriites'
-                });
+    useEffect(()=>{
+        (async()=>{
+            try{
+                const { data:res } = await getFavorites();
                 
-            };
-        }
-        catch(err){
-            let error = err as AxiosError;
-            if(error?.response){
-                toast.toast({
-                    status:'error',
-                    title:'Request successful',
-                    description:'Failed to add property added to favoriites'
-                })
-            }   
-        }
+                const favorites = {
+                    ...res,
+                    data: res?.data?.map((res:R)=>({
+                        ...res?.property,
+                        _id:res?.property?._id,
+                        favoriteId:res?._id,
+                        isFavorite:true,
+                    } as Favourite))
+                }
+
+                setGlobalContext &&  setGlobalContext(prev=>({
+                    ...prev,
+                    favourites:favorites?.data
+                }))
+            }
+            catch(err){
+                console.log('err',err);
+            }
+        })()
+    },[isFavorite])
+  useEffect(() => {
+    const fav = globalContext.favourites.find((fav) => fav._id === _id);
+    setIsFavorite(!!fav);
+    setFavId(fav?.favoriteId); // Ensure favoriteId is available
+  }, [globalContext.favourites, _id]);
+
+  const addToFave = async (id: string) => {
+    try {
+      const { data } = (await addToFavorites(id)) as AxiosResponse;
+
+      if (data) {
+        setIsFavorite(true);
+        setFavId(data._id); // Store favoriteId
+
+        toast.toast({
+          title: "Added to favorites",
+          status: "success",
+          description: "Property added to favorites",
+        });
+
+        setGlobalContext &&
+          setGlobalContext((prev) => ({
+            ...prev,
+            favourites: [...prev.favourites, data as Favourite],
+          }));
+      }
+    } catch (err) {
+      let error = err as AxiosError;
+      toast.toast({
+        status: "error",
+        title: "Error",
+        description: "Failed to add property to favorites",
+      });
     }
+  };
 
-    const deleteFromFave = async(id:string)=>{
-     
-        try{
-            const {data} = await deleteFromFavorites(id)  as AxiosResponse ; 
-            if(data){
-                setFavoritesUpdated(prev => !prev);
-                setIsFavorite(false);
-             
-                toast.toast({
-                    title:'Request successful',
-                    status:'success',
-                    description:'Property removed from favoriites'
-                })
-                
-            };
-        }
-        catch(err){
-            let error = err as AxiosError;
-            if(error?.response){
-                toast.toast({
-                    title:'Request successful',
-                    description:'Failed to remove property from favoriites'
-                })
-            }   
-        }
+  const deleteFromFave = async (id: string) => {
+    if (!id) return; // Prevent deleting undefined ID
+
+    try {
+      await deleteFromFavorites(id);
+      setIsFavorite(false);
+      setFavId(undefined); // Clear stored favoriteId
+
+      toast.toast({
+        title: "Removed from favorites",
+        status: "success",
+        description: "Property removed from favorites",
+      });
+
+      setGlobalContext &&
+        setGlobalContext((prev) => ({
+          ...prev,
+          favourites: prev.favourites.filter((prop) => prop.favoriteId !== id),
+        }));
+    } catch (err) {
+      toast.toast({
+        title: "Error",
+        description: "Failed to remove property from favorites",
+      });
     }
+  };
 
-    return(
-        <>
-            <Box 
-                className="roboto"
-                bg={'#fff'}
-                maxW={'400px'} h={'fit-content'}
-                p={{base:'14px',sm:'20px'}} borderRadius={'12px'}
-                border={'1px solid #262626'} 
-                overflow={'hidden'}
-                cursor={'pointer'}
-            >
-                <Flex
-                    position={'relative'}
-                    w='100%' h='250px' 
-                    borderRadius={'10px'}
-                    overflow={'hidden'}
-                >
-                    <Image 
-                     width={'100%'}
-                      minWidth={{lg:'500px'}}
-                     src={`${image1}`} 
-                     alt={'property'}
-                    />
-                </Flex>
-                <Flex  
-                    className="robotoF"
-                    flexDir={'column'} gap={'16px'}
-                    w={'100%'} 
-                    my={'24px'} 
-                >
-                    <Flex 
-                        w={'100%'}
-                        h={'32px'}
-                        alignItems={'center'}
-                        px={'12px'} borderRadius={'28px'}
-                        border={'1px solid #262626'} gap={'4px'}
-                        textColor={'black'} fontSize={'16px'}
-                        className="robotoF" fontWeight={500}
-                    >
-                        <MdLocationOn />
-                        <Text fontSize="14px" maxW={'90%'} overflow={'hidden'} textOverflow={'ellipsis'} whiteSpace={'nowrap'}>
-                            {address}
-                        </Text>
-                    </Flex>
-                    <Flex  
-                        flexDir={'column'}
-                        w={'100%'} 
-                        textColor={'#191919'}
-                    >
-                        <Text
-                            fontSize={{base:'20px', lg:'20px'}} 
-                            fontWeight={600}
-                        >
-                            {title}
-                        </Text>
-                        <Text h={'48px'} overflow={'hidden'}  textOverflow={'ellipsis'} fontSize={'16px'} fontWeight={500} textColor={'#999999'} className="roboto">
-                            {description}
-                        </Text>
-                    </Flex>          
-                </Flex>
-                <Flex 
-                    w={'100%'} 
-                    justifyContent={'space-between'}
-                    alignItems={'end'}
-                    gap={'10px'} className="robotoF"
-                >
-                    <Flex 
-                        flexDir={'column'}
-                        justifyContent={'space-between'}
-                    >
-                        <Text fontWeight={500} fontSize={'14px'} textColor={'#999999'}>
-                            Price
-                        </Text>
-                        <Text
-                            display={'flex'} alignItems={'center'}
-                            fontSize={'20px'} 
-                            fontWeight={600} textColor={'#191919'}
-                        >
-                            <TbCurrencyNaira /> 
-                            {price?.amount}
-                        </Text>
-                    </Flex>
+  return (
+    <Box
+      className="roboto"
+      bg={"#fff"}
+      maxW={"400px"}
+      h={"fit-content"}
+      p={{ base: "14px", sm: "20px" }}
+      borderRadius={"12px"}
+      border={"1px solid #262626"}
+      overflow={"hidden"}
+      cursor={"pointer"}
+    >
+      <Flex
+        position={"relative"}
+        w="100%"
+        h="250px"
+        borderRadius={"10px"}
+        overflow={"hidden"}
+      >
+        <Image width={"100%"} src={images?.[0]} alt={"property"} />
+      </Flex>
 
-                    <Flex gap='1em' align={'center'}>
-                    {!isFavorite ? (
-                        <Tooltip content="Add to favorites">
-                            <IoIosHeartEmpty
-                                onClick={() => authProtectedFn(() => addToFave(_id as string), pathName)}
-                                cursor={"pointer"}
-                                className="empty"
-                                fontSize={"30px"}
-                                color="#3170A6"
-                            />
-                            </Tooltip>
-                        ) : (
-                            <Tooltip content="Remove from favorites">
-                            <IoIosHeartDislike
-                                onClick={() => deleteFromFave(favoriteId as string)}
-                                cursor={"pointer"}
-                                className="dislike"
-                                fontSize={"30px"}
-                                color="#3170A6"
-                            />
-                        </Tooltip>
-                    )}
+      <Flex className="robotoF" flexDir={"column"} gap={"16px"} w={"100%"} my={"24px"}>
+        <Flex
+          w={"100%"}
+          h={"32px"}
+          alignItems={"center"}
+          px={"12px"}
+          borderRadius={"28px"}
+          border={"1px solid #262626"}
+          gap={"4px"}
+          textColor={"black"}
+          fontSize={"16px"}
+          className="robotoF"
+          fontWeight={500}
+        >
+          <MdLocationOn />
+          <Text fontSize="14px" maxW={"90%"} overflow={"hidden"} textOverflow={"ellipsis"} whiteSpace={"nowrap"}>
+            {address}
+          </Text>
+        </Flex>
+        <Text fontSize={{ base: "20px", lg: "20px" }} fontWeight={600}>
+          {title}
+        </Text>
+        <Text h={"48px"} overflow={"hidden"} textOverflow={"ellipsis"} fontSize={"16px"} fontWeight={500} textColor={"#999999"} className="roboto">
+          {description}
+        </Text>
+      </Flex>
 
-                        <Btn onClick={Navigate}
-                            display={'flex'}
-                            justifyContent={'center'}
-                            alignItems={'center'}
-                            maxW={'208px'}
-                            h="48px"
-                            bg={'#3170A6'}
-                            borderRadius={'8px'}
-                            textColor={'white'}
-                            className="robotoF" fontSize={{base:'10px', xl:'14px'}} fontWeight={500}
-                        >
-                            View Details
-                        </Btn>
-                    </Flex>
-                </Flex>
-                        
-            </Box>
-        </>
-    )
-}
+      <Flex w={"100%"} justifyContent={"space-between"} alignItems={"end"} gap={"10px"} className="robotoF">
+        <Flex flexDir={"column"} justifyContent={"space-between"}>
+          <Text fontWeight={500} fontSize={"14px"} textColor={"#999999"}>
+            Price
+          </Text>
+          <Text display={"flex"} alignItems={"center"} fontSize={"20px"} fontWeight={600} textColor={"#191919"}>
+            <TbCurrencyNaira />
+            {price?.amount}
+          </Text>
+        </Flex>
+
+        <Flex gap="1em" align={"center"}>
+          {!isFavorite ? (
+            <Tooltip content="Add to favorites">
+              <IoIosHeartEmpty
+                onClick={() => authProtectedFn(() => addToFave(_id as string), pathName)}
+                cursor={"pointer"}
+                className="empty"
+                fontSize={"30px"}
+                color="#3170A6"
+              />
+            </Tooltip>
+          ) : (
+            <Tooltip content="Remove from favorites">
+              <IoIosHeartDislike
+                onClick={() => favId && deleteFromFave(favId)}
+                cursor={"pointer"}
+                className="dislike"
+                fontSize={"30px"}
+                color="#3170A6"
+              />
+            </Tooltip>
+          )}
+
+          <Btn
+            onClick={() => router.push(`/properties/${_id}`)}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            maxW={"208px"}
+            h="48px"
+            bg={"#3170A6"}
+            borderRadius={"8px"}
+            textColor={"white"}
+            className="robotoF"
+            fontSize={{ base: "10px", xl: "14px" }}
+            fontWeight={500}
+          >
+            View Details
+          </Btn>
+        </Flex>
+      </Flex>
+    </Box>
+  );
+};

@@ -297,7 +297,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
   return (
     <>
       <form>
-        <Modal onClose={toggleModal} isVisible={showModal}>
+        <Modal  onClose={toggleModal} isVisible={showModal}>
           {/* {currentChildComponent} */}
           {showScreen === 1 ? (
             <AddPropertyScreenOne

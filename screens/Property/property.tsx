@@ -230,7 +230,9 @@ export const PropertyScreen = () => {
 
           {!loading && propertyEl?.length > 0 && (
             <Grid
-              mt={4}
+              // mt={4}
+              // maxHeight={'400px'}
+              // overflow={'scroll'}
               w={"fit-content"}
               templateColumns={{
                 base: "repeat(1, 1fr)",
@@ -239,7 +241,8 @@ export const PropertyScreen = () => {
                 '2xl': "repeat(4, 1fr)",
               }}
               gap={{ base: "24px", lg: "28px" }}
-              paddingBottom={{ base: "20rem", lg: "3rem", xl: "6rem" }}
+              paddingY={'2rem'}
+              // paddingBottom={{ base: "20rem", lg: "3rem" }}
             >
               {propertyEl.map((property, index) => {
                 const user = users.find((u) => u._id === property?.creatorID);
@@ -280,6 +283,8 @@ export const PropertyScreen = () => {
           mt={{ base: "14px", md: "10px" }}
           gap={{ base: "1rem", md: "0rem" }}
           px={'20px'}
+          py={'20px'}
+
         >
           <Text
             fontSize={"14px"}

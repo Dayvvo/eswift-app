@@ -66,20 +66,20 @@ const ImageUpload = ({
 
   return (
     <>
-      <label
-        htmlFor={"name"}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "700px",
-          borderRadius: "7px",
-          overflow: "hidden",
-          position: "relative",
-          maxHeight: "200px",
-          zIndex: "1",
-          backgroundColor: "rgba(46, 196, 182, 0.10)",
-        }}
+      <Flex
+      as="label"
+      htmlFor="headerImage"
+      direction="column"
+      align="center"
+      justify="center"
+      w={{ base: "100%",lg: '700px' }}
+      maxH="200px"
+      borderRadius="7px"
+      overflow="hidden"
+      position="relative"
+      bg="rgba(46, 196, 182, 0.10)"
+      cursor="pointer"
+      _hover={{ bg: "rgba(46, 196, 182, 0.15)" }}
       >
         {image ? (
           <img src={ image?.dataUrl } alt="header-img" style={{ width: "100%" }} />
@@ -133,7 +133,7 @@ const ImageUpload = ({
             zIndex: "2",
           }}
         />
-      </label>
+      </Flex>
     </>
   );
 };
