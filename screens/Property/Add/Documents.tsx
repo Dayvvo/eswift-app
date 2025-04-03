@@ -212,7 +212,7 @@ export const AddPropertyScreenFour = ({
         maxH={"600px"}
         overflow={"scroll"}
       >
-        <Flex w={"100%"} justifyContent={"space-between"}>
+        <Flex w={"100%"} justifyContent={"space-between"} flexDir={{base: 'column', md: 'row'}}>
           {subs.map((sub) => (
             <Flex
               key={sub?.id}

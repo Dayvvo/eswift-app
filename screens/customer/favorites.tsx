@@ -1,28 +1,31 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import Wrapper from "../../components/Wrapper"
 import { PropertiesCard } from "@/screens/properties/propertiesCard";
-import { Box, Flex, Grid , Text } from "@chakra-ui/react";
+import { Box, Flex, Grid , Skeleton, Stack, Text } from "@chakra-ui/react";
 import useProperty, { Favourite } from "@/hooks/useProperty";
 import { R } from "@/utils/types";
 import { useAppContext } from "@/context";
 import { RiSearch2Line } from "react-icons/ri";
 import Btn from "@/components/Btn";
 import { useRouter } from "next/router";
+import useToast from "@/hooks/useToast";
 
 
 
 const FavouriteScreen = ()=>{
     const router = useRouter()
     // const [favourites,setFavourites] = useState<Favourite[]>([]);
+     const [loading, setLoading] = useState(false);
 
     const { getFavorites } = useProperty()
 
     const { globalContext, setGlobalContext} = useAppContext()
-
+    const {toast} = useToast();
     const { favourites } = globalContext;
 
     useEffect(()=>{
         (async()=>{
+            setLoading(true)
             try{
                 const { data:res } = await getFavorites();
                 
@@ -43,6 +46,13 @@ const FavouriteScreen = ()=>{
             }
             catch(err){
                 console.log('err',err);
+                toast({
+                    status: "error",
+                    title: "Error",
+                    description: "Failed to fetch favorite properties",
+                  });
+            } finally {
+                setLoading(false)
             }
         })()
     },[])
@@ -50,7 +60,7 @@ const FavouriteScreen = ()=>{
     return(
       <Box>
             {
-                favourites?.length === 0  ?  
+                !loading && favourites?.length === 0  ?  
                 <Flex flexDir={'column'} alignItems={'start'} rowGap={'10px'} gap={'16px'} justifyContent={'space-between'} className="urbanist">
                     <Text fontSize={'16px'}>
                         No favourites, explore new properties...
@@ -73,14 +83,35 @@ const FavouriteScreen = ()=>{
                     </Btn>
                 </Flex>
                 : 
-                <Grid templateColumns={{lg:'repeat(3,1fr)'}} rowGap={'2em'} columnGap={{md:'1.2em',lg:'1.5em'}}>
+                <Grid 
+                    mt={4}
+                    w={"fit-content"}
+                    templateColumns={{
+                    base: "repeat(1, 1fr)",
+                    md: "repeat(2, 1fr)",
+                    xl: "repeat(3, 1fr)",
+                    '2xl': "repeat(4, 1fr)",
+                    }}
+                    gap={{ base: "24px", lg: "28px" }}
+                    // paddingBottom={{ base: "20rem", lg: "3rem" }}
+                    paddingY={'2rem'}
+                >
                     {
-                        favourites.map((fave,index)=>
-                            <PropertiesCard key={index} {...fave} />                
-                        )
+                        favourites.map((fave,index)=> {
+                          return  <PropertiesCard 
+                                     key={index} {...fave}
+                                   />                
+                        })
                     }
                 </Grid>
             }
+            {loading && (
+            <Stack>
+              <Skeleton height="40px" />
+              <Skeleton height="40px" />
+              <Skeleton height="40px" />
+            </Stack>
+          )}
         </Box>  
     )
 }

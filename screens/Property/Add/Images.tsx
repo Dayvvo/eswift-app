@@ -136,8 +136,9 @@ export const AddPropertyScreenThree = ({
 
   return (
     <>
-      <Box w={"100%"} px={"20px"} className="inter">
-        <Flex w={"100%"} justifyContent={"space-between"}>
+      <Box w={"100%"} px={"20px"} className="inter"        maxH={"600px"}
+        overflow={"scroll"}>
+        <Flex w={"100%"} justifyContent={"space-between"} flexDir={{base: 'column', md: 'row'}}>
           {subs.map((sub) => (
             <Flex
               key={sub?.id}

@@ -68,6 +68,10 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
           status: "success",
           description: "Property added to favoriites",
         });
+        setGlobalContext && setGlobalContext(prev=>({
+          ...prev,
+          favourites: [...prev.favourites, data as Favourite] 
+      }))
       }
     } catch (err) {
       let error = err as AxiosError;
@@ -230,12 +234,13 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
           <Box
             border="1.5px solid #262626"
             borderRadius={"12px"}
-            padding={"40px"}
+            padding={{base: '20px', md:"40px"}}
             mt="24px"
             display={"flex"}
-            gap={"10px"}
+            flexDirection={{base: 'column', lg: 'row'}}
+            gap={{base: '25px', lg:"10px"}}
           >
-            <Box w={"585px"} h={"507px"}>
+            <Box w={{ base: '100%', lg: detailsData?.images.length > 1 ? '585px' : '100%' }} h={{base: 'auto', lg:"507px"}}>
               <Image
                 w={"100%"}
                 h={"100%"}
@@ -244,7 +249,16 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
                 borderRadius={"10px"}
               />
             </Box>
-            <Box w={"585px"} h={"507px"}>
+            <Box w={{ base: '100%', lg: '585px' }} h={{base: 'auto', lg:"507px"}}>
+              <Image
+                w={"100%"}
+                h={"100%"}
+                src={detailsData?.images[0]}
+                alt={``}
+                borderRadius={"10px"}
+              />
+            </Box>
+           {detailsData?.images.length > 1 && <Box w={{base: '100%',lg:"585px"}} h={{base: 'auto', lg:"507px"}}>
               <Image
                 w={"100%"}
                 h={"100%"}
@@ -256,7 +270,7 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
                 alt={``}
                 borderRadius={"10px"}
               />
-            </Box>
+            </Box>}
           </Box>
         }
         <Flex direction={{base:'column', lg:'row'}} gap={"16px"} mt={"16px"}>
@@ -265,7 +279,7 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
             flexDir={"column"}
             borderRadius={"10px"}
             border="1.5px solid #262626"
-            padding={"40px"}
+            padding={{base: '20px', md:"40px"}}
             w={{lg:"630px"}}
             h={"514px"}
           >
@@ -421,7 +435,7 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
           <Box
             borderRadius={"10px"}
             border="1.5px solid #262626"
-            padding={"40px"}
+            padding={{base: '20px', md:"40px"}}
             w={{lg:"630px"}}
           >
             <Text
@@ -464,7 +478,7 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
           flexDir={"column"}
           borderRadius={"10px"}
           border="1.5px solid #262626"
-          padding={"40px"}
+          padding={{base: '20px', md:"40px"}}
           w={'100%'}
           mt={'20px'}
           gap={'24px'}
