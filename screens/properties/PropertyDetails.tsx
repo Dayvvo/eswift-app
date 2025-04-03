@@ -249,15 +249,6 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
                 borderRadius={"10px"}
               />
             </Box>
-            <Box w={{ base: '100%', lg: '585px' }} h={{base: 'auto', lg:"507px"}}>
-              <Image
-                w={"100%"}
-                h={"100%"}
-                src={detailsData?.images[0]}
-                alt={``}
-                borderRadius={"10px"}
-              />
-            </Box>
            {detailsData?.images.length > 1 && <Box w={{base: '100%',lg:"585px"}} h={{base: 'auto', lg:"507px"}}>
               <Image
                 w={"100%"}
