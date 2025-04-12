@@ -232,8 +232,6 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
     const { documents, price, images, ...rest } = propertyData;
     const action = property ? 'update' :'create';
 
-    console.log('images', images)
-
     try {
       const uploadedFiles = (await uploadPropertyFiles(images, documents as Documents)) || {
         images: [],
@@ -268,7 +266,6 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
       // update endpoint
       (uploadedFiles && property ) && (await editProperty(payload, property?._id as string)); // If no error occurs, the following code runs
 
-      console.log("payload", payload)
       setShowModal(false);
       setInput(initialValues);
       setTouched(initialTouchedValues);

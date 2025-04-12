@@ -431,8 +431,8 @@ export default function Home() {
             isOpen={showModal}
             onClose={() => setShowModal(false)}
           />
-          {/* {building ? <Resdesign /> : <HomePage />} */}
-          {building ? <Resdesign /> : <Box>HOme</Box>}
+          {building ? <Resdesign /> : <HomePage />}
+          {/* {building ? <Resdesign /> : <Box>HOme</Box>} */}
         </>
       )}
     </>

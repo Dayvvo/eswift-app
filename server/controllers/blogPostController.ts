@@ -66,9 +66,6 @@ class BlogPostController {
         { ...value },
         { new: true }
       );
-
-
-      console.log('blogPost', blogPost);
       return res.status(200).json({
         statusCode: 200,
         message: "updated successfully",
@@ -114,8 +111,6 @@ class BlogPostController {
               : post.body_image,
           };
         });
-
-        console.log('modifiedBlogPosts', modifiedBlogPosts)
       return res.status(200).json({
         statusCode: 200,
         message: "fetched successfully",
@@ -152,7 +147,6 @@ class BlogPostController {
          }
         }
       }
-      console.log('blogPostDetail', blogPostDetail)
       return res.status(200).json({
         message: "Fetched successfully",
         data: blogPostDetail,

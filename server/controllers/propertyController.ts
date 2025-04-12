@@ -112,7 +112,7 @@ class PropertyController {
         { ...value, ownerID: ownerID },
         { new: true }
       );
-       console.log('  UPDATED PROPERTY WE CHECKING ', updatedProperty)
+      
       return res.status(HttpStatusCode.Created).json({
         statusCode: 200,
         message: "Property updated",
