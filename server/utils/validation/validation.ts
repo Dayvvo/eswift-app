@@ -29,7 +29,8 @@ export const validateSignupData = (signup: ISignupValidation) => {
       UserRole.CLIENT,
       UserRole.AFFILIATE,
       UserRole.ADMIN,
-      UserRole.AGENT
+      UserRole.AGENT,
+      UserRole.STAFF
     ).optional(),
     phoneNumber: Joi.string()
       .pattern(/^(\+?\d{1,4}|\d{1,4})?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/)
@@ -56,7 +57,7 @@ export const validateBlogPostData = (data: {
       .min(1)
       .max(255)
       .error(new Error("Title is required and must be under 256 characters")),
-    header_image: Joi.any().required(),
+    header_image: Joi.any().optional(),
     introduction: Joi.string()
       .required()
       .trim()
@@ -70,7 +71,7 @@ export const validateBlogPostData = (data: {
       .required()
       .trim()
       .error(new Error("Conclusion is required")),
-    body_image: Joi.any().required(),
+    body_image: Joi.any().optional(),
     // tags: Joi.array().items(Joi.string().trim()),
   });
   return blogPostSchema.validate(data);

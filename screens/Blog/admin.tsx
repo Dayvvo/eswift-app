@@ -38,6 +38,7 @@ interface BlogPostProps {
 
 const BlogScreen = () => {
   const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
+  const [selectedBlog, setSelectedBlog] = useState<BlogPostProps | null>(null);
   const [isAdmin, setIsAdmin] = useState("");
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -48,8 +49,6 @@ const BlogScreen = () => {
   const toggleModal = () => {
     setShowModal((prevState) => !prevState);
   };
-  // console.log('check', check);
-
   const { deleteBlog, getBlog } = useBlog();
 
   const debounce = useDebounce();
@@ -171,162 +170,128 @@ const BlogScreen = () => {
         <SimpleGrid columns={{base:1, md:2, lg:3}} spacing={5} mt="20px">
           {currentBlogsInView.map((item, index) => {
             const dateString = new Date(item.createdAt);
-
             const formattedDate = dateString.toLocaleDateString("en-US", {
               month: "long",
               day: "numeric",
               year: "numeric",
             });
             return (
-              <>
-              <Modal onClose={toggleModal} isVisible={showModal} label={`Delete ${item.title}`}>
-                  <Box className="robotoF">
-                    <Text>Are you sure you want to delete <strong>{item.title}</strong> blog post?</Text>
-                    <HStack justify={'center'} mt='15px'>
-                      <Btn bgColor="#6AFFB0"       
-                       borderRadius={"50px"}
-                        className="urbanist"
-                        fontWeight={400}
-                        fontSize={".937rem"}
-                        w="144px"
-                        h="28px"
-                      onClick={() => deleteBlogFn(item._id)}
-                        >Yes</Btn>
-                      <Btn bgColor="#FF5764"      
-                       borderRadius={"50px"}
-                        className="urbanist"
-                        fontWeight={400}
-                        fontSize={".937rem"}
-                        w="144px"
-                        h="28px" onClick={toggleModal}>No</Btn>
-                    </HStack>
-                  </Box>
+              <Box key={index}>
+                <Modal onClose={toggleModal} isVisible={showModal} label={`Delete ${selectedBlog?.title}`}>
+                    <Box className="robotoF">
+                      <Text>Are you sure you want to delete <strong>{selectedBlog?.title}</strong> blog post?</Text>
+                      <HStack justify={'center'} mt='15px'>
+                        <Btn bgColor="#6AFFB0"
+                        borderRadius={"50px"}
+                          className="urbanist"
+                          fontWeight={400}
+                          fontSize={".937rem"}
+                          w="144px"
+                          h="28px"
+                        onClick={() => deleteBlogFn(selectedBlog?._id)}
+                          >Yes</Btn>
+                        <Btn bgColor="#FF5764"      
+                        borderRadius={"50px"}
+                          className="urbanist"
+                          fontWeight={400}
+                          fontSize={".937rem"}
+                          w="144px"
+                          h="28px" onClick={toggleModal}>No</Btn>
+                      </HStack>
+                    </Box>
                 </Modal>
-           
-              <Box
-                key={index}
-                bgColor={"#fff"}
-                maxW={{base:'100%',sm:"340px"}}
-                boxShadow={
-                  "0px 17.579px 52.738px 0px rgba(133, 133, 133, 0.10)"
-                }
-                display="flex"
-                flexDirection="column" // Ensure the content stacks vertically
-                flexBasis={1}
-              >
-                <Box w="100%" borderRadius={"7px 7px 0 0"}>
-                  <Img src={item.header_image} alt={item.title} w="100%" />
-                </Box>
                 <Box
-                  flex="1"
-                  // p="10px"
+                  key={index}
+                  bgColor={"#fff"}
+                  maxW={{base:'100%',sm:"340px"}}
+                  boxShadow={
+                    "0px 17.579px 52.738px 0px rgba(133, 133, 133, 0.10)"
+                  }
                   display="flex"
-                  flexDirection="column"
-                  justifyContent="space-between"
+                  flexDirection="column" // Ensure the content stacks vertically
+                  flexBasis={1}
                 >
-                  {/* Flex and justify space-between ensure the buttons stay at the bottom */}
-                  <Box flex={1} p="20px 25px">
-                    <Text
-                      className="mulish"
-                      fontWeight={700}
-                      color={"#4D4D4D"}
-                      fontSize={".937rem"}
-                    >
-                      {item.title}
-                    </Text>
-                    <Text
-                      className="mulish"
-                      fontWeight={400}
-                      color={"#797979"}
-                      fontSize={".75rem"}
-                      my="20px"
-                      dangerouslySetInnerHTML={{
-                        __html: DOMPurify.sanitize(item.introduction),
-                      }}
-                    />
-                    <Text
-                      className="mulish"
-                      fontWeight={400}
-                      color={"#797979"}
-                      fontSize={".75rem"}
-                    >
-                      {formattedDate}
-                    </Text>
+                  <Box w="100%" borderRadius={"7px 7px 0 0"}>
+                    <Img src={item.header_image} alt={item.title} w="100%" />
                   </Box>
-                  {isAdmin === "ADMIN" && (
-                    <Flex
-                      justify={"space-between"}
-                      gap={"6px"}
-                      mt="auto"
-                      p="10px"
-                    >
-                      <Btn
-                        bgColor="#6AFFB0"
-                        borderRadius={"50px"}
-                        className="robotoF"
-                        cursor={"pointer"}
-                        fontWeight={400}
+                  <Box
+                    flex="1"
+                    // p="10px"
+                    display="flex"
+                    flexDirection="column"
+                    justifyContent="space-between"
+                  >
+                    {/* Flex and justify space-between ensure the buttons stay at the bottom */}
+                    <Box flex={1} p="20px 25px">
+                      <Text
+                        className="mulish"
+                        fontWeight={700}
+                        color={"#4D4D4D"}
                         fontSize={".937rem"}
-                        w="144px"
-                        h="28px"
-                        onClick={() =>
-                          route.push(`/blog/edit?blogId=${item._id}`)
-                        }
                       >
-                        Edit
-                      </Btn>
-                      <Btn
-                        bgColor="#FF5764"
-                        borderRadius={"50px"}
-                        className="robotoF"
+                        {item.title}
+                      </Text>
+                      <Text
+                        className="mulish"
                         fontWeight={400}
-                        fontSize={".937rem"}
-                        w="144px"
-                        h="28px"
-                        onClick={toggleModal}
+                        color={"#797979"}
+                        fontSize={".75rem"}
+                        my="20px"
+                        dangerouslySetInnerHTML={{
+                          __html: DOMPurify.sanitize(item.introduction),
+                        }}
+                      />
+                      <Text
+                        className="mulish"
+                        fontWeight={400}
+                        color={"#797979"}
+                        fontSize={".75rem"}
                       >
-                        Delete
-                      </Btn>
-                      <Modal
-                        onClose={toggleModal}
-                        isVisible={showModal}
-                        label="Delete blog"
+                        {formattedDate}
+                      </Text>
+                    </Box>
+                    {isAdmin === "ADMIN" && (
+                      <Flex
+                        justify={"space-between"}
+                        gap={"6px"}
+                        mt="auto"
+                        p="10px"
                       >
-                        <Text className="robotoF">
-                          Are you sure you want to delete this blog?
-                        </Text>
-                        <Flex justify={"space-between"} my='20px'>
-                          <Btn
-                            bgColor="#FF5764"
-                            borderRadius={"50px"}
-                            className="robotoF"
-                            fontWeight={400}
-                            fontSize={".937rem"}
-                            w="144px"
-                            h="28px"
-                            onClick={() => deleteBlogFn(item._id)}
-                          >
-                            Delete
-                          </Btn>
-                          <Btn
-                            bgColor="#000"
-                            borderRadius={"50px"}
-                            className="robotoF"
-                            cursor={"pointer"}
-                            fontWeight={400}
-                            fontSize={".937rem"}
-                            w="144px"
-                            h="28px"
-                            onClick={toggleModal}
+                        <Btn
+                          bgColor="#6AFFB0"
+                          borderRadius={"50px"}
+                          className="robotoF"
+                          cursor={"pointer"}
+                          fontWeight={400}
+                          fontSize={".937rem"}
+                          w="144px"
+                          h="28px"
+                          onClick={() =>
+                            route.push(`/blog/edit?blogId=${item._id}`)
+                          }
                         >
-                            Cancel
-                          </Btn>
-                        </Flex>
-                      </Modal>
-                    </Flex>
-                  )}
-                </Box>
-              </Box>   </>
+                          Edit
+                        </Btn>
+                        <Btn
+                          bgColor="#FF5764"
+                          borderRadius={"50px"}
+                          className="robotoF"
+                          fontWeight={400}
+                          fontSize={".937rem"}
+                          w="144px"
+                          h="28px"
+                          onClick={() => {
+                            setSelectedBlog(item);
+                            toggleModal();
+                          }}
+                        >
+                          Delete
+                        </Btn>
+                      </Flex>
+                    )}
+                  </Box>
+                </Box>  
+             </Box>
             );
           })}
         </SimpleGrid>

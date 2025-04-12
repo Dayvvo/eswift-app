@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from "react";
 import { PlusIcon, UploadIcon } from "./svg";
 import { Flex, Text } from "@chakra-ui/react";
 import useUpload from "@/hooks/useUpload";
+import useToast from "@/hooks/useToast";
 
 export interface ImageData {
   dataUrl: string;
@@ -21,11 +22,38 @@ const ImageUpload = ({
 }) => {
   const [image, setImage] = useState<ImageData | null>(null);
   const { uploadSingle } = useUpload();
+  const { toast } = useToast();
+  const MAX_FILE_SIZE_MB = 2.5;
+  const validTypes = ["image/jpeg", "image/gif" ,"image/jpg", "image/png"];
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
 
+      console.log("file", file);
+      const fileSizeInMB = file.size / (1024 * 1024);
+
+      const validFiletype = validTypes.includes(file.type);
+      if (!validFiletype) {
+        toast({
+          status: "error",
+          title: "Invalid file type",
+          description: "Please upload a JPEG or PNG image.",
+          duration: 5000,
+        });
+        e.target.value = "";
+        return;
+      }
+      if (fileSizeInMB > MAX_FILE_SIZE_MB) {
+        toast({
+          status: "error",
+          title: "Image cannot be uploaded",
+          description: "Image file exceeds 2.5MB",
+          duration: 5000,
+        });
+        e.target.value = "";
+        return;
+      }
       const reader = new FileReader();
       reader.onload = (event: ProgressEvent<FileReader>) => {
         const dataUrl = event.target?.result as string;

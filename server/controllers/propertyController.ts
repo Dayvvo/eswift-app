@@ -16,6 +16,7 @@ import User from "../models/User";
 import { mailGenMails } from "../utils/mails/mailgen.mail";
 import path from "path";
 import fs from "fs";
+import { checkImageArray } from "../utils/helperFunctions/generateToken";
 
 class PropertyController {
   //TODO: finish function
@@ -106,12 +107,12 @@ class PropertyController {
           message: `Property with id ${id} not found`,
         });
 
-      const updatedProperty = await Property.findByIdAndUpdate(
+        const updatedProperty = await Property.findByIdAndUpdate(
         id,
         { ...value, ownerID: ownerID },
         { new: true }
       );
-
+       console.log('  UPDATED PROPERTY WE CHECKING ', updatedProperty)
       return res.status(HttpStatusCode.Created).json({
         statusCode: 200,
         message: "Property updated",

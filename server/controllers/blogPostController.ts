@@ -29,16 +29,46 @@ class BlogPostController {
   };
 
   updatePost = async (req: Request, res: Response) => {
+    const { error, value } = validateBlogPostData(req.body);
+    if (error) {
+      return res.status(400).json(error.message);
+    }
     try {
-      const { error, value } = validateBlogPostData(req.body);
-      if (error) {
-        return res.status(400).json(error.message);
+      const blog = await BlogPost.findById(req.params.blogPostId);
+      if (!blog) {
+        return res.status(404).json({
+          statusCode: 404,
+          message: "Blog post not found",
+        });
       }
+
+    const stripUploadsPrefix = (img: string | undefined | null): string => {
+      if (!img) return "";
+      return img.replace(/^.*\/uploads\//, '');
+    };
+    
+    let blogHeaderImage = stripUploadsPrefix(blog?.header_image);
+    let valueHeaderImage = stripUploadsPrefix(value.header_image);
+    
+    if (blogHeaderImage && blogHeaderImage !== valueHeaderImage) {
+      blogPostController.clearImage(blogHeaderImage); // clear by filename only
+    }
+
+      let blogBodyImage = stripUploadsPrefix(blog.body_image);
+      let valueBodyImage = stripUploadsPrefix(value.body_image);
+      
+      if (blogBodyImage && blogBodyImage !== valueBodyImage) {
+        blogPostController.clearImage(blogBodyImage);
+      }
+
       const blogPost = await BlogPost.findOneAndUpdate(
         { _id: req.params.blogPostId },
         { ...value },
         { new: true }
       );
+
+
+      console.log('blogPost', blogPost);
       return res.status(200).json({
         statusCode: 200,
         message: "updated successfully",
@@ -76,14 +106,16 @@ class BlogPostController {
     
           return {
             ...postObject,
-            header_image: post.header_image
+            header_image: post.header_image && !(post.header_image.startsWith('http') || post.header_image.startsWith('https'))
               ? `${process.env.BACKEND_URL}/uploads/${post.header_image}`
-              : null,
-            body_image: post.body_image
+              : post.header_image,
+            body_image: post.body_image && !(post.body_image.startsWith('http') || post.body_image.startsWith('https'))
               ? `${process.env.BACKEND_URL}/uploads/${post.body_image}`
-              : null,
+              : post.body_image,
           };
         });
+
+        console.log('modifiedBlogPosts', modifiedBlogPosts)
       return res.status(200).json({
         statusCode: 200,
         message: "fetched successfully",
@@ -105,14 +137,22 @@ class BlogPostController {
   fetchBlogPostById = async (req: Request, res: Response) => {
     try {
       const blogPostDetail = await BlogPost.findById(req.params.blogPostId);
+     
       if(process.env.NODE_ENV !== "production") {
         if(blogPostDetail) {
-          blogPostDetail.header_image = `${process.env.BACKEND_URL}/uploads/${blogPostDetail.header_image}`;
+          if(!blogPostDetail.header_image?.startsWith('http') && !blogPostDetail.header_image?.startsWith('https')) {
+            blogPostDetail.header_image = `${process.env.BACKEND_URL}/uploads/${blogPostDetail.header_image}`;
+          } else {
+            blogPostDetail.header_image = blogPostDetail.header_image
+          }
+         if(!blogPostDetail.body_image?.startsWith('http') && !blogPostDetail.body_image?.startsWith('https')) {
           blogPostDetail.body_image = `${process.env.BACKEND_URL}/uploads/${blogPostDetail.body_image}`;
+         } else {
+          blogPostDetail.body_image = blogPostDetail.body_image
+         }
         }
-
-      
       }
+      console.log('blogPostDetail', blogPostDetail)
       return res.status(200).json({
         message: "Fetched successfully",
         data: blogPostDetail,

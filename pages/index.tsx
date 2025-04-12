@@ -46,63 +46,41 @@ export const OnboardingModal = ({ isOpen, onClose }: InformationModalProps) => {
   const [loading, setLoading] = useState(false);
   const { user, setUser } = useAuth();
   const [inputValue, setInputValue] = useState<string>("");
-  const [onboard, setOnboard] = useState<onBoard>({
+  const [touched, setTouched] = useState({
+    state: false,
+    propertyInterest: false,
+    locationInterest: false,
+  })
+  const [errors, setErrors] = useState({
     state: "",
-    propertyInterest: [],
-    locationInterest: [],
+    propertyInterest: '',
+    locationInterest: '',
+  })
+  const [onboard, setOnboard] = useState<onBoard>({
+    state: user?.state || "",
+    propertyInterest: user?.propertyInterest || [],
+    locationInterest:  user?.locationInterest || [],
   });
 
- 
-  const submitHandler = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    const {firstName, lastName, email} = user  as IUser;
-    try {
-      const {data,status} = await client.put(`/user/profile?onboarding=true`, {
-        firstName,
-        lastName,
-        email,
-        ...onboard,
-      });
-      if (status === 201) {
-        const storedData = localStorage.getItem("userData");
-        if (storedData) {
-          const existingTokenStore = JSON.parse(storedData);
-          let newUser = {
-            ...user,
-            ...onboard,
-            isOnboarded: true
-          } as IUser        
-          localStorage.setItem("userData", JSON.stringify({
-            ...existingTokenStore,
-            user:newUser
-          }));
-          setUser(newUser)
-        }
-        onClose();
-
-        toast({
-          status: "success",
-          description: "Preference updated successfully",
-          title: "Onboarding Completed",
-          position: "top",
-          duration: 1000,
-        });
-        setLoading(false);
-      }
-    } catch (error) {
-      toast({
-        status: "error",
-        description: "Onboarding failed",
-        title: "Failed",
-        position: "top",
-        duration: 1000,
-      });
-      setLoading(false);
+  const validateOnboard = (key: keyof onBoard) => {
+    let isErr = false;
+    if (!onboard[key] || (Array.isArray(onboard[key]) && (onboard[key].length === 0 || onboard[key].includes("")))) {
+   
+      setErrors((prev) => ({ ...prev, [key]: `${key} is required` }));
+      isErr = true;
+    } else {
+      setErrors((prev) => ({ ...prev, [key]: "" }));
+      isErr = false;
     }
+    return isErr;
   };
 
+  const handleBlur = (field: keyof onBoard) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    validateOnboard(field);
+  };
 
+  
   const handleAddTag = () => {
     const newLocation = inputValue.trim();
     if (
@@ -116,7 +94,10 @@ export const OnboardingModal = ({ isOpen, onClose }: InformationModalProps) => {
           newLocation,
         ],
       }));
+      handleBlur("locationInterest")
       setInputValue("");
+    } else {
+      handleBlur("locationInterest")
     }
   };
 
@@ -127,6 +108,9 @@ export const OnboardingModal = ({ isOpen, onClose }: InformationModalProps) => {
         prevOnboard.locationInterest?.filter((_location, i) => i !== index) ??
         [],
     }));
+    if(onboard.locationInterest && (onboard.locationInterest?.length === 0 || onboard.locationInterest.includes(''))) {
+      handleBlur("locationInterest")
+    }
   };
 
   // const handleKeyPress =(e:KeyboardEvent<HTMLInputElement>) => {
@@ -148,8 +132,83 @@ export const OnboardingModal = ({ isOpen, onClose }: InformationModalProps) => {
     }));
   };
 
+  const submitHandler = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const hasError = validateOnboard('locationInterest') || validateOnboard('state') || validateOnboard('propertyInterest');
+    
+    if(!hasError) {
+      setLoading(true);
+      const {firstName, lastName, email} = user  as IUser;
+      try {
+        const {data,status} = await client.put(`/user/profile?onboarding=true`, {
+          firstName,
+          lastName,
+          email,
+          ...onboard,
+        });
+        if (status === 201) {
+          const storedData = localStorage.getItem("userData");
+          if (storedData) {
+            const existingTokenStore = JSON.parse(storedData);
+            let newUser = {
+              ...user,
+              ...onboard,
+              isOnboarded: true
+            } as IUser        
+            localStorage.setItem("userData", JSON.stringify({
+              ...existingTokenStore,
+              user:newUser
+            }));
+            setUser(newUser)
+          }
+          onClose();
+          setOnboard({
+            state: "",
+            propertyInterest: [],
+            locationInterest: [],
+          });
+          toast({
+            status: "success",
+            description: "Preference updated successfully",
+            title: "Onboarding Completed",
+            position: "top",
+            duration: 1000,
+          });
+          setLoading(false);
+        }
+      } catch (error) {
+        toast({
+          status: "error",
+          description: "Onboarding failed",
+          title: "Failed",
+          position: "top",
+          duration: 1000,
+        });
+        setLoading(false);
+      }
+    } else {
+      toast({
+        status: "error",
+        description: "Please fill all required fields",
+        title: "Failed",
+        position: "top",
+        duration: 1000,
+      });
+    }
+
+  };
+
+  useEffect(() => {
+    if (user) {
+      setOnboard({
+        state: user.state || "",
+        propertyInterest: user.propertyInterest || [],
+        locationInterest: user.locationInterest || [],
+      });
+    }
+  }, [user]);
   return (
-    <Modal closeOnOverlayClick={false} isCentered isOpen={isOpen} onClose={onClose} size={"lg"}>
+    <Modal closeOnOverlayClick={false} isCentered isOpen={isOpen} onClose={onClose} size={{base:'sm',md:"md", lg: 'lg'}}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader
@@ -192,29 +251,30 @@ export const OnboardingModal = ({ isOpen, onClose }: InformationModalProps) => {
                 label="What property are you interested in buying"
                 placeholder="Select property"
                 name="propertyInterest"
-                errorMessage="Select property"
+                errorMessage={'Select a valid property you are interested in'}
                 value={onboard?.propertyInterest}
                 onChange={handlePropertyInterest}
-                // onBlur={() => onBlurHandler("propertyInterest")}
+                onBlur={() => handleBlur("propertyInterest")}
+                inputIsinvalid={touched.propertyInterest && !!errors.propertyInterest}
               />
             </Box>
             <Box>
               <SelectInput
                 items={nigerianStates}
                 label="State"
-                placeholder="Select state"
+                placeholder="Select a valid state"
                 name="state"
                 errorMessage="Select state"
-                // inputIsinvalid={inputIsinvalid("state")}
+                inputIsinvalid={errors.state.length > 0}
                 value={onboard?.state}
-                onChange={(e) =>
+                onChange={(e) => {
                   setOnboard((prevOnboard) => ({
                     ...prevOnboard,
                     state: e.target.value,
                   }))
-                }
+                }}
 
-                // onBlur={() => onBlurHandler("state")}
+                onBlur={() => handleBlur("state")}
               />
             </Box>
             <Box mt={5}>
@@ -223,10 +283,11 @@ export const OnboardingModal = ({ isOpen, onClose }: InformationModalProps) => {
                   label="Where are you interested in buying property"
                   name="locationInterest"
                   placeholder="Enter location"
-                  errorMessage="enter your location"
+                  // errorMessage={"Enter a valid location of intrest"}
+                  // inputIsinvalid={touched.locationInterest && !!errors.locationInterest}
                   value={inputValue}
                   onChange={handleTagInput}
-                  // onBlur={() => onBlurHandler("locationInterest")}
+                  onBlur={() => handleBlur("locationInterest")}
                 />
                 <Btn
                   w={"40px"}
@@ -241,6 +302,9 @@ export const OnboardingModal = ({ isOpen, onClose }: InformationModalProps) => {
                   <BsPlus />
                 </Btn>
               </Flex>
+           {touched.locationInterest && !!errors.locationInterest &&  <Text color={"var(--errorBase)"} fontSize={"12px"}>
+                {'Enter a valid location you are interested in'}
+              </Text>}
               <Flex flexWrap={"wrap"} gap={"8px"} mt={"8px"}>
                 {onboard?.locationInterest?.map((location, index) => (
                   <Flex
@@ -367,8 +431,8 @@ export default function Home() {
             isOpen={showModal}
             onClose={() => setShowModal(false)}
           />
-          {building ? <Resdesign /> : <HomePage />}
-          {/* {building ? <Resdesign /> : <Box>HOme</Box>} */}
+          {/* {building ? <Resdesign /> : <HomePage />} */}
+          {building ? <Resdesign /> : <Box>HOme</Box>}
         </>
       )}
     </>

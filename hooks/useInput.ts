@@ -73,7 +73,7 @@ export type PropImages = (File|string)[]
 export const useImage = ({existingImages}:{existingImages?: PropImages }) => {
   const [images, setImages] = useState<PropImages>( existingImages || []);
   const [error, setError] = useState<string | null>(null);
-  const validFileTypes: string[] = ["image/jpeg", "image/png", "image/gif"];
+  const validFileTypes: string[] = ["image/jpeg", "image/png", "image/gif", "image/png"];
   const maxFileSize: number = 5 * 1024 * 1024;
 
   const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {

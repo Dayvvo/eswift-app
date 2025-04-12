@@ -53,7 +53,7 @@ const AddUser = ({ close, setTable }: { close: () => void,  setTable: React.Disp
     // password:'',
     firstName: "",
     lastName: "",
-    role: "ADMIN",
+    role: "CLIENT",
   });
 
   const { addUser } = useUser();
@@ -234,7 +234,6 @@ const AddUser = ({ close, setTable }: { close: () => void,  setTable: React.Disp
           <option value="AFFILIATE">AFFILIATE</option>
           <option value="ADMIN">ADMIN</option>
           <option value="CLIENT">CLIENT</option>
-          <option value="AFFILIATE">AFFILIATE</option>
           <option value="STAFF">STAFF</option>
           <option value="GUEST">GUEST</option>
         </Select>

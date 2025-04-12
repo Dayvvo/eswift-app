@@ -213,24 +213,44 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
       }
 
       return {
-        images: resolveImagesInArray,
+        images: [...images.filter((img) => typeof img === 'string'), ...resolveImagesInArray],
         documents: documentPayload,
       };
     } catch (err) {
-      console.log("err", err);
+      toast({
+        status: "error",
+        description: `Failed to upload files`,
+        title: "Failed",
+        position: "top",
+        duration: 5000,
+      });
     }
   };
 
   const addPropertyFn = async () => {
     setLoading(true);
     const { documents, price, images, ...rest } = propertyData;
-    const action = property? 'update' :'create';
+    const action = property ? 'update' :'create';
+
+    console.log('images', images)
 
     try {
       const uploadedFiles = (await uploadPropertyFiles(images, documents as Documents)) || {
         images: [],
         documents: [],
       };
+
+      if(!uploadedFiles) {
+        toast({
+          status: "error",
+          description: `Failed to upload files`,
+          title: "Failed",
+          position: "top",
+          duration: 5000,
+        });
+        setLoading(false);
+        return;
+      }
 
       const payload = {
         ...rest,
@@ -241,16 +261,14 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
         features: features,
         ...uploadedFiles,
       };
-
       // create endpoint
+     
       (uploadedFiles && !property ) && (await addProperty(payload)); // If no error occurs, the following code runs
 
       // update endpoint
       (uploadedFiles && property ) && (await editProperty(payload, property?._id as string)); // If no error occurs, the following code runs
 
-      
-
-
+      console.log("payload", payload)
       setShowModal(false);
       setInput(initialValues);
       setTouched(initialTouchedValues);
@@ -297,7 +315,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
   return (
     <>
       <form>
-        <Modal  onClose={toggleModal} isVisible={showModal}>
+        <Modal  onClose={toggleModal} isVisible={showModal} label={property ? `Edit ${title} Property` : "Add Property"}>
           {/* {currentChildComponent} */}
           {showScreen === 1 ? (
             <AddPropertyScreenOne
