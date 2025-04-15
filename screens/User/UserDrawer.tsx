@@ -22,6 +22,7 @@ const UserDrawer = ({
   onClose,
   btnRef,
   userEl,
+  propCount,
   verify,
   setVerify,
 }: any) => {
@@ -31,21 +32,7 @@ const UserDrawer = ({
 
 
   const status = userEl?.verification === "Suspend" ? "Suspend" : "Unsuspend"
-  
-  // const { getUser } = useUser();
 
-  // const getUserFn = async () => {
-  //   const res:any = await getUser();
-  //   console.log(res);
-  //   setTable(res?.data?.data);
-  // }
-  //  toast({
-  //    status: "success",
-  //    description: "profile updated",
-  //    title: "Success",
-  //    position: "top",
-  //    duration: 1000,
-  //  });
 
   const suspendFn = async (status: string) => {
     if (!userEl._id) {
@@ -122,7 +109,7 @@ const UserDrawer = ({
         <DrawerBody p={0}>
           <Flex align={"center"} justify={"center"}>
             <Box>
-              <Img src="/dummy.jpg" w="180px" h="172px" borderRadius={"50%"} />
+              <Img src={userEl ? userEl.avatar : "/dummy.jpg"} w="180px" h="172px" borderRadius={"50%"} />
             </Box>
           </Flex>
           <Box p={"6px 20px"} bgColor={"#F5F7FA"} mt="25px">
@@ -208,7 +195,7 @@ const UserDrawer = ({
                 fontSize={".875rem"}
                 fontWeight={500}
               >
-                {userEl?.propertyType || "Nil"}
+                {propCount[userEl._id] || "Nil"}
               </Text>
             </Box>
           </Box>

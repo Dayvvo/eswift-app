@@ -10,7 +10,7 @@ const BlogPostSchema = new mongoose.Schema(
     },
     header_image: {
       type: String, //possibly a json string
-      required: true,
+      required: false,
     },
     introduction: {
       type: String, //possibly a json string
@@ -26,7 +26,7 @@ const BlogPostSchema = new mongoose.Schema(
     },
     body_image: {
       type: String, //possibly a json string
-      required: true,
+      required: false,
     },
     author: {
       type: mongoose.Types.ObjectId,

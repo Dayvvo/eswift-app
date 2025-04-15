@@ -51,6 +51,7 @@ const DashboardScreen = () => {
     lastName: "",
     role: "CLIENT",
   });
+  const [propCount, setPropCount] = useState<Record<string, number>>({})
   const [loadingUser, setLoadingUser] = useState(false);
   const { addUser } = useUser();
     const toast = useToast();
@@ -140,6 +141,17 @@ const DashboardScreen = () => {
       setLoading(false)
     }
   };
+
+  useEffect(() => {
+    const counts: Record<string, number> = {};
+    table?.forEach((user: any) =>{
+      const propertyCount = getProperty.filter((property) => {
+        return property.creatorID === user._id;
+      }).length;
+      counts[user._id] = propertyCount 
+    })
+    setPropCount(counts)
+  }, [getProperty, table])
 
   useEffect(() => {
     getPropertyFunction();
@@ -412,28 +424,17 @@ const DashboardScreen = () => {
                     {item.email}
                   </Td>
                   <Td color={"#525866"} py="12px">
-                    {item.phoneNumber}
+                    {item.phoneNumber || "N/A"}
                   </Td>
                   <Td color={"#525866"} py="12px">
                     {item.createdAt.split("T")[0]}
                   </Td>
                   <Td color={"#525866"} py="12px">
-                    {item.propertyCount}
+                    {propCount[item._id] ?? 0}
                   </Td>
                   <Td color={"#525866"} py="12px">
                     {item.role}
                   </Td>
-                  {/* <Td color={"#525866"} py="12px">
-                        <Menu>
-                            <MenuButton as={"button"} className="robotoF">
-                            <ActionIcon />
-                            </MenuButton>
-                            <MenuList>
-                            <MenuItem>Edit</MenuItem>
-                            <MenuItem>Delete</MenuItem>
-                            </MenuList>
-                        </Menu>
-                        </Td> */}
                 </Tr>
               ))}
             <UserDrawer
@@ -441,6 +442,7 @@ const DashboardScreen = () => {
               onClose={onClose}
               btnRef={btnRef}
               userEl={userEl}
+              propCount={propCount}
             />
           </Tbody>
         </Table>}

@@ -2,13 +2,15 @@ import { Request, Response } from "express";
 import Profile from "../models/User";
 import { validateProfile } from "../utils/validation";
 import { IUserInRequest } from "../utils/interfaces";
+import { clearImage } from "../utils/helperFunctions/generateToken";
+import path from "path";
+import fs from "fs";
 
 class ProfileController {
   createProfile = async (req: Request, res: Response) => {
     try {
       const { error, value } = validateProfile(req.body);
       if (error) {
-        // console.log("error", error.message);
         return res.status(400).json(error.message);
       }
       const user = req.user as IUserInRequest;
@@ -37,7 +39,6 @@ class ProfileController {
   updateProfile = async (req: Request, res: Response) => {
     try {
       const { onboarding } = req.query;
-      console.log("onboard", onboarding);
       const { error, value } = validateProfile(req.body);
       if (error) {
         return res.status(400).json(error.message);
@@ -47,6 +48,24 @@ class ProfileController {
       if (!userId) {
         return res.status(401).json({ message: "Unauthorized" });
       }
+
+      const selectedUser = await Profile.findById(userId)
+      if(!selectedUser) {
+        return res.status(404).json({
+          statusCode: 404,
+          message: 'User not find'
+        })
+      }
+      const stripUploadsPrefix = (img: string | undefined | null): string => {
+        if (!img) return "";
+        return img.replace(/^.*\/uploads\//, '');
+      };
+    let profileImage = stripUploadsPrefix(selectedUser?.avatar);
+    let valueProfileImage = stripUploadsPrefix(value.avatar);
+  
+    if(profileImage && profileImage !== valueProfileImage) {
+      profileController.clearImage(profileImage); 
+    }
 
       const userProfile = await Profile.findOneAndUpdate(
         { _id: userId },
@@ -84,6 +103,17 @@ class ProfileController {
       res.status(500).send("Failed get profile data");
     }
   };
+    clearImage = (filepath: string) => {
+      if (!filepath) return;
+  
+      filepath =
+        process.env.NODE_ENV === "production"
+          ? `/mnt/volume/uploads/${filepath}`
+          : path.join(__dirname, "..", "uploads", filepath);
+      fs.unlink(filepath, (err) => {
+        console.log(err);
+      });
+    };
 }
 
 let profileController = new ProfileController();

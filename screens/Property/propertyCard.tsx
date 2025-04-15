@@ -67,6 +67,18 @@ export const PropertyCard = ({
     router.push("/property/" + id);
   };
 
+  let finalImage = userImage;
+
+  if (finalImage) {
+    const isDataUrl = finalImage.startsWith("data:image");
+    const isFullUrl = finalImage.startsWith("http") || finalImage.startsWith("https");
+  
+    if (!isDataUrl && !isFullUrl) {
+      finalImage = `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${finalImage}`;
+    }
+  }
+  
+
   const data = {
     verification: "Verified",
   };
@@ -86,7 +98,7 @@ export const PropertyCard = ({
     setIsVerifying(true);
     try {
       const req = await verifyProperty(id, data);
-      console.log(req);
+    
       if (req.statusCode === 201) {
         setVerificationStatus(data.verification);
         toast({
@@ -201,7 +213,7 @@ export const PropertyCard = ({
         >
           <Flex h={"18px"} gap={"8px"} alignItems={"center"}>
             <Box w={"18px"} h={"18px"} borderRadius={"100px"} overflow={"clip"}>
-              <Image width={18} height={18} src={`${userImage}`} alt="/" />
+              <Image width={18} height={18} src={`${finalImage}`} alt="/" />
             </Box>
             <Text fontWeight={300} fontSize={{ base: "12px", lg: "14px" }}>
               {user}

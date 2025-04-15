@@ -33,6 +33,8 @@ import useUser from "@/hooks/useUser";
 import Btn from "@/components/Btn";
 import { Modal } from "@/components/modal";
 import useToast from "@/hooks/useToast";
+import { PropertyCardProps } from "../Property/propertyCard";
+import useProperty from "@/hooks/useProperty";
 
 const AddUser = ({ close, setTable }: { close: () => void,  setTable: React.Dispatch<React.SetStateAction<any>>;  }) => {
   const toast = useToast();
@@ -53,7 +55,7 @@ const AddUser = ({ close, setTable }: { close: () => void,  setTable: React.Disp
     // password:'',
     firstName: "",
     lastName: "",
-    role: "ADMIN",
+    role: "CLIENT",
   });
 
   const { addUser } = useUser();
@@ -234,7 +236,6 @@ const AddUser = ({ close, setTable }: { close: () => void,  setTable: React.Disp
           <option value="AFFILIATE">AFFILIATE</option>
           <option value="ADMIN">ADMIN</option>
           <option value="CLIENT">CLIENT</option>
-          <option value="AFFILIATE">AFFILIATE</option>
           <option value="STAFF">STAFF</option>
           <option value="GUEST">GUEST</option>
         </Select>
@@ -260,11 +261,13 @@ const UserScreen = () => {
   const [search, setSearch] = useState<string>("");
   const [verify, setVerify] = useState("Pending");
   const [loading, setLoading] = useState(false);
-
+   const [getProperty, setGetProperty] = useState<PropertyCardProps[]>([]);
+  const [propCount, setPropCount] = useState<Record<string, number>>({})
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
   const { getUser, getUserById } = useUser();
+    const { getAdminProperty } = useProperty();
   const getUserFn = async () => {
     setLoading(true);
     try {
@@ -282,9 +285,37 @@ const UserScreen = () => {
     }
 
   };
+  const getPropertyFn = async() => {
+    try {
+      const getAllProperties = await getAdminProperty('', 1);
+      if (getAllProperties?.data?.data) {
+        setGetProperty(getAllProperties?.data?.data);
+      }
+    } catch (error) {
+      toast.toast({
+        status: "error",
+        title: "Failed to fech Properties",
+        description: 'An error occurred while fetching Properties',
+      });
+    } 
+  }
+
   useEffect(() => {
     getUserFn();
+    getPropertyFn();
   }, [search]);
+
+useEffect(() => {
+  const counts: Record<string, number> = {};
+  table.forEach((user: any) => {
+    const filteredProperties = getProperty.filter((property) => {
+      return property.creatorID === user._id
+    }).length;
+    counts[user._id] = filteredProperties;
+  })
+
+  setPropCount(counts);
+}, [getProperty, table])
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -388,8 +419,9 @@ const UserScreen = () => {
           </Thead>
           <Tbody fontSize={".875rem"} fontWeight={400} className="robotoF">
             {table &&
-              table.map((item: any) => (
-                <Tr key={item._id} cursor={"pointer"}>
+              table.map((item: any) => {
+         
+                return <Tr key={item._id} cursor={"pointer"}>
                   <Td color={"#0E121B"} py="12px">{`${item.firstName
                     .slice(0, 1)
                     .toUpperCase()}${item.firstName.slice(
@@ -405,13 +437,13 @@ const UserScreen = () => {
                     {item.email}
                   </Td>
                   <Td color={"#525866"} py="12px">
-                    {item.phoneNumber}
+                    {item.phoneNumber || "N/A"}
                   </Td>
                   <Td color={"#525866"} py="12px">
                     {item.createdAt.split("T")[0]}
                   </Td>
                   <Td color={"#525866"} py="12px">
-                    {item.propertyCount}
+                  {propCount[item._id] ?? 0}
                   </Td>
                   <Td color={"#525866"} py="12px">
                     {item.role}
@@ -432,7 +464,7 @@ const UserScreen = () => {
                     </Menu>
                   </Td>
                 </Tr>
-              ))}
+              })}
           </Tbody>
           <UserDrawer
             isOpen={isOpen}
@@ -441,6 +473,7 @@ const UserScreen = () => {
             onClose={onClose}
             btnRef={btnRef}
             userEl={userEl}
+            propCount={propCount}
           />
         </Table>}
         {loading && (

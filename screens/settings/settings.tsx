@@ -5,10 +5,12 @@ import useToast from "@/hooks/useToast";
 import useUser from "@/hooks/useUser";
 import { Box, Flex, Input, Text, Image, useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import ResetPasswordModal from "./reset";
 import { SelectInput } from "@/components/Inputs";
 import { nigerianStates } from "@/utils/modules";
+import useUpload from "@/hooks/useUpload";
+import { ImageData } from "@/components/ImageUpload";
 
 type ValidationType = {
   [key in keyof IUsers]: (input: string) => boolean;
@@ -26,9 +28,10 @@ const validation: ValidationType = {
 };
 
 export const SettingsScreen = () => {
+  const { user: profile } = useAuth();
   const [loading, setLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+ 
   const router = useRouter();
 
   const navigateToResetPassword = () => {
@@ -95,9 +98,79 @@ export const SettingsScreen = () => {
   ];
 
   const { updateUser } = useUser();
+    const { uploadSingle } = useUpload();
   const { toast } = useToast();
+ 
 
-  const { user: profile } = useAuth();
+  const imageRef = useRef<HTMLInputElement | null>(null)
+  const pickImageHandler = () => {
+    imageRef.current?.click()
+  }
+
+  const [image, setImage] = useState<string | undefined>('');
+  const [avatarImage, setAvatarImage] = useState<string | undefined>('');
+  const validTypes = ["image/jpeg", "image/gif" ,"image/jpg", "image/png"];
+  const imageChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if(!file) {
+      toast({
+        status: "error",
+        title: "Failed to select image",
+        description: "Please select valid image file.",
+        duration: 5000,
+      })
+      return;
+    }
+    if(file.size > 2.5 * 1024 * 1024) {
+      toast({
+        status: "error",
+        title: "Image cannot be uploaded",
+        description: "Image file exceeds 2.5MB",
+        duration: 5000,
+      })
+      return;
+    }
+
+    if(!validTypes.includes(file.type)) {
+      toast({
+        status: "error",
+        title: "Invalid file type",
+        description: "Please upload a JPEG or PNG image.",
+        duration: 5000,
+      })
+      return;
+    }
+
+    const fileReader = new FileReader()
+    fileReader.onload = (event: ProgressEvent<FileReader>) => {
+      
+      const dataUrl = event.target?.result as string
+
+      const imageData: ImageData = {
+        dataUrl,
+        fileName: file.name, 
+      }
+      setImage(imageData.dataUrl)
+
+      const formData = new FormData()
+      formData.append('file', file)
+      const uploadAvatar = async () => {
+
+        try {
+          const response = await uploadSingle(formData)
+          setAvatarImage(response?.data?.data)
+        } catch(err) {
+          console.log(err)
+        }
+       
+
+      }
+
+      uploadAvatar()
+    }
+
+    fileReader.readAsDataURL(file)
+  }
 
   const datas = {
     firstName: user.firstName,
@@ -106,6 +179,7 @@ export const SettingsScreen = () => {
     email: user.email,
     phoneNumber: user.phoneNumber,
     state: user.state,
+    avatar: avatarImage,
   };
 
   const updateUserFn = async (event: FormEvent<HTMLFormElement>) => {
@@ -150,6 +224,22 @@ export const SettingsScreen = () => {
       getUserFn();
     }
   }, [profile]);
+
+  useEffect(() => {
+    setImage(profile?.avatar);
+    setAvatarImage(profile?.avatar);
+}, [profile]);
+
+let finalImage = image;
+
+if (finalImage) {
+  const isDataUrl = finalImage.startsWith("data:image");
+  const isFullUrl = finalImage.startsWith("http") || finalImage.startsWith("https");
+
+  if (!isDataUrl && !isFullUrl) {
+    finalImage = `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${finalImage}`;
+  }
+}
 
   return (
     <>
@@ -210,39 +300,25 @@ export const SettingsScreen = () => {
                   gap={"20px"}
                   h={"fit-content"}
                 >
+                      <Input display={'none'} type="file" id="avatar" accept="image/jpeg, image/png, image/jpg" name="avatar" alt={`${user.firstName}`} ref={imageRef} onChange={imageChangeHandler} />
                   <Box
                     w={"fit-content"}
                     h={"fit-content"}
                     borderRadius={"999px"}
                     overflow={"hidden"}
+                    cursor={'pointer'}
+                    onClick={pickImageHandler}
+                    border={"1px solid var(--soft200)"}
                   >
+                
                     <Image
                       width={40}
                       height={40}
                       borderRadius={"50%"}
-                      src={user.avatar || "/avatar1.png"}
+                      src={finalImage ? finalImage : finalImage === '' ? "/avatar1.png" : '/avatar1.png'}
                       alt="/"
                     />
                   </Box>
-                  {/* <Btn type={SubmitEvent}
-                    bg={"transparent"}
-                    display={"flex"}
-                    alignItems={"center"}
-                    justifyContent={"center"}
-                    w={"68px"}
-                    h={"32px"}
-                    borderRadius={"8px"}
-                    textColor={"var(--primaryBase)"}
-                    fontWeight={500}
-                    fontSize={"14px"}
-                    border={"1px solid var(--primaryBase)"}
-                    _hover={{
-                      bg: "#1A1D66",
-                      textColor: "#FFF",
-                    }}
-                  >
-                    Update
-                  </Btn> */}
                 </Flex>
               </Flex>
             </Flex>

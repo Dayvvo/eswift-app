@@ -232,7 +232,7 @@ export const BackIcon = ({ color }: { color?: string }) => {
         d="M14.0674 3.6166L8.28803 9.39595C7.6055 10.0785 7.6055 11.1953 8.28803 11.8779L14.0674 17.6572"
         stroke={color || "#FF382B"}
         strokeWidth="1.63644"
-        stroke-miterlimit="10"
+        strokeMiterlimit="10"
         strokeLinecap="round"
         strokeLinejoin="round"
       />

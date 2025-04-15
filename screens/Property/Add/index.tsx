@@ -36,7 +36,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
 
 
   
-  const initialDocValues = useMemo<R | Documents>(()=> ({
+  const initialDocValues = {
     FamilyReceipt: documents? documents.find(doc=>doc.type ==='FamilyReceipt'): null,
     SurveyPlan: documents? documents.find(doc=>doc.type ==='SurveyPlan'): null,
     Layout: documents? documents.find(doc=>doc.type ==='Layout'): null,
@@ -45,7 +45,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
     CofO: documents? documents.find(doc=>doc.type ==='CofO'): null,
     PowerOfAttorney: documents? documents.find(doc=>doc.type ==='PowerOfAttorney'): null,
     GovConsent: documents? documents.find(doc=>doc.type ==='GovConsent'): null,
-  }),[property])
+  }
 
 
   const initialValues = {
@@ -90,7 +90,6 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
       [name]: value,
     }));
   };
- 
   const handleOnblur = (
     event: ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -114,7 +113,32 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
   //   PowerOfAttorney: null,
   //   GovConsent: null,
   // });
+useEffect(() => {
+  if (property) {
+    const newInitialDocs = {
+      FamilyReceipt: property.documents?.find(doc => doc.type === 'FamilyReceipt') || null,
+      SurveyPlan: property.documents?.find(doc => doc.type === 'SurveyPlan') || null,
+      Layout: property.documents?.find(doc => doc.type === 'Layout') || null,
+      Affidavit: property.documents?.find(doc => doc.type === 'Affidavit') || null,
+      Agreement: property.documents?.find(doc => doc.type === 'Agreement') || null,
+      CofO: property.documents?.find(doc => doc.type === 'CofO') || null,
+      PowerOfAttorney: property.documents?.find(doc => doc.type === 'PowerOfAttorney') || null,
+      GovConsent: property.documents?.find(doc => doc.type === 'GovConsent') || null,
+    };
 
+    setInput((prev) => ({
+      ...prev,
+      title: property.title || "",
+      description: property.description || "",
+      state: property.state || "",
+      lga: property.lga || "",
+      address: property.address || "",
+      price: property.price?.amount || "",
+      category: property.category || "",
+      documents: newInitialDocs,
+    }));
+  }
+}, [property]);
   const handleDocumentChange = (name: string, value: File | null) => {
 
     setInput(prev=>({
@@ -129,6 +153,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
 
   const {
     images,
+    setImages,
     onChangeHandler: onChangeImage,
     error: imageError,
     deleteImage,
@@ -136,7 +161,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
   } = useImage({existingImages: property?.images});
 
   const { toast } = useToast();
-
+  
   const client = useApiUrl();
 
   const { addProperty, editProperty } = useProperty();
@@ -165,41 +190,51 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
     setShowModal((prevState) => !prevState);
   };
 
+  
   const uploadPropertyFiles = async (images: (File | string)[], documents: Documents) => {
     try {
-      const imagesFormData = new FormData();
-
-      let fileImgs = images.filter((img) => typeof(img) !=='string')
-      
-      fileImgs.map(img=>imagesFormData.append(fileImgs?.length > 1 ? "files" : "file", img));
-
-      const { data: uploadImages } =
-        fileImgs?.length > 1
-          ? await uploadMultiple(imagesFormData)
-          : fileImgs?.length ==1 ? await uploadSingle(imagesFormData): {
-            data:{ data: images}
-          };
-      
-      const resolveImagesInArray = !(Array.isArray(uploadImages?.data))
-        ? [uploadImages?.data]
-        : uploadImages?.data;
+      const fileImgs = images.filter((img): img is File => typeof img !== 'string');
+  
+      let uploadedImageUrls: string[] = [];
+      if (fileImgs.length > 0) {
+        const imagesFormData = new FormData();
+        fileImgs.forEach((img) =>
+          imagesFormData.append(fileImgs.length > 1 ? "files" : "file", img)
+        );
+  
+        const { data: uploadImages } =
+          fileImgs.length > 1
+            ? await uploadMultiple(imagesFormData)
+            : await uploadSingle(imagesFormData);
+  
+        uploadedImageUrls = Array.isArray(uploadImages?.data)
+          ? uploadImages.data
+          : [uploadImages.data];
+      }
+  
+      const existingImageUrls = images.filter((img): img is string => typeof img === 'string');
+  
+      const finalImages = [...existingImageUrls, ...uploadedImageUrls];
 
       const uploadedDocuments = Object.keys(documents).filter(
         (val) => documents[val as validDocs]
       );
-
-      let documentPayload: R[] = property?.documents?.filter(doc=> documents[doc.type as keyof Documents]).map(doc=>({document: doc?.document, type:doc.type})) || [];
-
+  
+      let documentPayload: R[] =
+        property?.documents
+          ?.filter((doc) => documents[doc.type as keyof Documents])
+          .map((doc) => ({ document: doc?.document, type: doc.type })) || [];
+  
       type validDocs = keyof typeof documents;
-
+  
       for (const key in uploadedDocuments) {
         let keyVal = uploadedDocuments[key];
         const matchingFile = documents[keyVal as validDocs];
-
-        if(matchingFile instanceof File){
-          const singleFormData = new FormData();  
-          singleFormData.append("file", matchingFile as File);
-
+  
+        if (matchingFile instanceof File) {
+          const singleFormData = new FormData();
+          singleFormData.append("file", matchingFile);
+  
           const { data: uploadImg } = await uploadSingle(singleFormData);
           if (uploadImg) {
             documentPayload.push({
@@ -208,29 +243,46 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
             });
           }
         }
-    
-
       }
-
+  
       return {
-        images: resolveImagesInArray,
+        images: finalImages,
         documents: documentPayload,
       };
     } catch (err) {
-      console.log("err", err);
+      toast({
+        status: "error",
+        description: `Failed to upload files`,
+        title: "Failed",
+        position: "top",
+        duration: 5000,
+      });
     }
   };
+  
 
   const addPropertyFn = async () => {
     setLoading(true);
     const { documents, price, images, ...rest } = propertyData;
-    const action = property? 'update' :'create';
+    const action = property ? 'update' :'create';
 
     try {
       const uploadedFiles = (await uploadPropertyFiles(images, documents as Documents)) || {
         images: [],
         documents: [],
       };
+
+      if(!uploadedFiles) {
+        toast({
+          status: "error",
+          description: `Failed to upload files`,
+          title: "Failed",
+          position: "top",
+          duration: 5000,
+        });
+        setLoading(false);
+        return;
+      }
 
       const payload = {
         ...rest,
@@ -241,19 +293,18 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
         features: features,
         ...uploadedFiles,
       };
-
       // create endpoint
+     
       (uploadedFiles && !property ) && (await addProperty(payload)); // If no error occurs, the following code runs
 
       // update endpoint
       (uploadedFiles && property ) && (await editProperty(payload, property?._id as string)); // If no error occurs, the following code runs
 
-      
-
-
       setShowModal(false);
       setInput(initialValues);
       setTouched(initialTouchedValues);
+      setFeatures(property?.features || []);
+      setImages(property?.images || []);
 
       setShowScreen(1);
 
@@ -297,7 +348,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
   return (
     <>
       <form>
-        <Modal  onClose={toggleModal} isVisible={showModal}>
+        <Modal  onClose={toggleModal} isVisible={showModal} label={property ? `Edit ${title} Property` : "Add Property"}>
           {/* {currentChildComponent} */}
           {showScreen === 1 ? (
             <AddPropertyScreenOne

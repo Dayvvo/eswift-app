@@ -17,11 +17,11 @@ type SelectInputProps = {
   label: string;
   placeholder: string;
   name: string;
-  onChange?: (event: ChangeEvent<HTMLSelectElement>) => void;
+  onChange?: (event: ChangeEvent<HTMLSelectElement>) => void | any;
   onBlur?: any;
   value?: string | string[];
   inputIsinvalid?: boolean;
-  errorMessage?: string;
+  errorMessage?: string | any;
   border?: any;
   multiple?: boolean;
   rest?: {};
@@ -39,7 +39,7 @@ type TextInputProps = {
   onBlur?: any;
   value?: string | string[];
   inputIsinvalid?: any;
-  errorMessage?: string;
+  errorMessage?: string | any;
   keyPress?: (e: React.KeyboardEvent<HTMLInputElement>) => void | null;
 };
 

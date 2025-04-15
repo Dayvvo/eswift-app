@@ -16,7 +16,9 @@ import User from "../models/User";
 import { mailGenMails } from "../utils/mails/mailgen.mail";
 import path from "path";
 import fs from "fs";
+import { checkImageArray } from "../utils/helperFunctions/generateToken";
 
+type MapDocsType = {type: string, document: string, _id?: any} 
 class PropertyController {
   //TODO: finish function
   createProperty = async (req: Request, res: Response) => {
@@ -91,7 +93,7 @@ class PropertyController {
       });
     const validate = ValidateEditProperty(req.body);
     const { value, error } = validate;
-
+ 
     if (error) {
       return res.status(400).json(error.details[0]);
     }
@@ -106,12 +108,59 @@ class PropertyController {
           message: `Property with id ${id} not found`,
         });
 
-      const updatedProperty = await Property.findByIdAndUpdate(
+        const valueImages = value.images.map((img: string) => {
+ 
+          if (img.startsWith("http") || img.startsWith("https")) {
+            return img.replace(/^.*\/uploads\//, '');
+          }  else {
+            return img
+          }
+        })
+
+        const propertyImages = property.images.map((img: string) => {
+          if (img.startsWith("http") || img.startsWith("https")) {
+            return img.replace(/^.*\/uploads\//, '');
+          }  else {
+            return img
+          }
+        })
+
+        const imagesNotInValue = propertyImages.filter((img: string) => !valueImages.includes(img))
+
+        if(imagesNotInValue.length > 0) {
+          imagesNotInValue.forEach((img: string) => {
+            propertyController.clearImage(img);
+          });
+        }
+
+        const normalizeDocPath = (docPath: string) => {
+          return docPath.replace(/^.*\/uploads\//, '').replace(/^\/+/, '');
+        };
+        
+        const valueDocuments = value.documents.map((doc: MapDocsType) =>
+          normalizeDocPath(doc.document)
+        );
+        
+        const propertyDocuments = property.documents.map((doc: MapDocsType) =>
+          normalizeDocPath(doc.document)
+        );
+        
+        const documentsNotInValue = propertyDocuments.filter(
+          (doc: string) => !valueDocuments.includes(doc)
+        );
+        
+       if(documentsNotInValue.length > 0){
+          documentsNotInValue.forEach((docs: string) => {
+            propertyController.clearImage(docs)
+          })
+       }
+ 
+        const updatedProperty = await Property.findByIdAndUpdate(
         id,
         { ...value, ownerID: ownerID },
         { new: true }
       );
-
+      
       return res.status(HttpStatusCode.Created).json({
         statusCode: 200,
         message: "Property updated",
@@ -351,43 +400,51 @@ class PropertyController {
         statusCode: 400,
         message: "Invalid ObjectId",
       });
-
+  
     try {
       const property = await Property.findById(id);
-      const deleted = await Property.deleteOne({ _id: id });
-      if (!deleted)
+      if (!property)
         return res.status(404).json({
           statusCode: 404,
           message: `Property with id ${id} not found`,
         });
-
-      if (deleted.acknowledged) {
-        if (property?.images && property?.images.length > 0) {
-          property.images.forEach((imagePath) => {
-            propertyController.clearImage(imagePath);
-          });
-        }
+  
+      const deleted = await Property.deleteOne({ _id: id });
+  
+      if (!deleted.acknowledged)
+        return res.status(500).json({
+          statusCode: 500,
+          message: "Failed to delete property",
+        });
+  
+      if (property.images && property.images.length > 0) {
+        property.images.forEach((imagePath) => {
+          propertyController.clearImage(imagePath);
+        });
       }
-
-      if (property?.documents && property.documents.length > 0) {
+  
+      if (property.documents && property.documents.length > 0) {
         property.documents.forEach((doc) => {
           if (doc.document) {
             propertyController.clearImage(doc.document);
           }
         });
       }
+  
       const user = req.user as IUserInRequest;
       await user?.decreasePropertyCount();
+  
       return res.json({
         statusCode: 200,
         message: "Successful",
       });
+  
     } catch (error: any) {
       console.error(error?.message);
-      res.status(500).send("An Error ocurred while retrieving data");
+      res.status(500).send("An Error occurred while deleting the property");
     }
   };
-
+  
   getPropertyDocs = async (req: Request, res: Response) => {
     try {
       const propsDoc = await PropertyDocs.find();

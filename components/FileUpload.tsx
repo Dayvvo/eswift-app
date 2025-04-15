@@ -52,33 +52,35 @@ const FileUpload = ({
 
   const MAX_FILE_SIZE_MB = 2.5;
 
-  const handleSelectFile = (e: any) => {
+  const openFileDialog = () => {
     selectFile.current?.click();
-    if (e.target.files) {
-      const selectedFile = e.target.files[0];
-
-      const fileSizeInMB = selectedFile.size / (1024 * 1024);
-
-      if (fileSizeInMB > MAX_FILE_SIZE_MB) {
-        toast({
-          status: "error",
-          title: "Image cannot be uploaded",
-          description: "Image file exceeds 2.5mb",
-        });
-        return;
-      }
-
-      handleFileUpload(selectedFile);
-      setShowUploadProgress(true);
-      setFile({ file: selectedFile, progress: 0 });
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setPreviewImage(reader?.result as string);
-      });
-      reader.readAsDataURL(selectedFile);
-    }
   };
-
+  const handleSelectFile = (e: any) => {
+    const selectedFile = e.target.files?.[0];
+    if (!selectedFile) return;
+  
+    const fileSizeInMB = selectedFile.size / (1024 * 1024);
+  
+    if (fileSizeInMB > MAX_FILE_SIZE_MB) {
+      toast({
+        status: "error",
+        title: "Image cannot be uploaded",
+        description: "Image file exceeds 2.5MB",
+      });
+      return;
+    }
+  
+    handleFileUpload(selectedFile);
+    setShowUploadProgress(true);
+    setFile({ file: selectedFile, progress: 0 });
+  
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreviewImage(reader.result as string);
+    };
+    reader.readAsDataURL(selectedFile);
+  };
+  
   return showUploadProgress ? (
     <>
       {file.progress === 100 ? (
@@ -95,7 +97,7 @@ const FileUpload = ({
           />
           <button
             type="button"
-            onClick={handleSelectFile}
+            onClick={openFileDialog}
             style={{
               position: "absolute",
               right: "4px",
@@ -127,6 +129,7 @@ const FileUpload = ({
       {/* Your custom styling for the input container */}
       <label
         htmlFor="fileInput"
+        onClick={openFileDialog}
         style={{
           cursor: "pointer",
           display: "block",

@@ -32,6 +32,11 @@ import { AddProperties } from "./Add";
 import { BiEdit } from "react-icons/bi";
 import { color } from "framer-motion";
 import { BackIcon } from "@/components/svg";
+import { Viewer } from '@react-pdf-viewer/core';
+import { Worker } from '@react-pdf-viewer/core';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 export const PropertyDetails = ({
   my,
@@ -70,7 +75,7 @@ export const PropertyDetails = ({
   const [verificationStatus, setVerificationStatus] = useState(
     detailsData?.verification
   );
-
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
   const { toast } = useToast();
   const router = useRouter();
 
@@ -151,7 +156,6 @@ export const PropertyDetails = ({
       const req = await verifyProperty(id, {
         verification: status,
       });
-      console.log(req);
       if (req.statusCode === 201) {
         setVerificationStatus(req.data);
         toast({
@@ -228,12 +232,9 @@ export const PropertyDetails = ({
               deletePropertyFn={deletePropertyFn}
             />
           ) : modalType === "documents" && selectedDocument ? (
-            <embed
-            src={selectedDocument}
-            width="100%"
-            height="600px"
-            type="application/pdf"
-          />
+        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+          <Viewer fileUrl={selectedDocument} plugins={[defaultLayoutPluginInstance]} />
+        </Worker>
           ) : (
             <></>
           )}
@@ -472,20 +473,6 @@ export const PropertyDetails = ({
                   </Flex>
                 ) : (
                   <Flex gap={"16px"} direction={"column"}>
-                    {/* <Btn
-                      bg={"transparent"}
-                      display={"flex"}
-                      justifyContent={"center"}
-                      alignItems={"center"}
-                      w="100%"
-                      border="1px solid var(--primaryBase)"
-                      borderRadius={"10px"}
-                      h={"40px"}
-                      textColor={"var(--primaryBase)"}
-                      onClick={toggleModal}
-                    >
-                      Resume
-                    </Btn> */}
                     <Btn
                       bg={"transparent"}
                       display={"flex"}
@@ -503,38 +490,6 @@ export const PropertyDetails = ({
                   </Flex>
                 )
               ) : (
-                // : (
-                //   <Flex gap={"16px"} direction={"column"}>
-                //     <Btn
-                //       bg={"transparent"}
-                //       display={"flex"}
-                //       justifyContent={"center"}
-                //       alignItems={"center"}
-                //       w="100%"
-                //       border="1px solid var(--primaryBase)"
-                //       borderRadius={"10px"}
-                //       h={"40px"}
-                //       textColor={"var(--primaryBase)"}
-                //       onClick={toggleModal}
-                //     >
-                //       Verify
-                //     </Btn>
-                //     <Btn
-                //       bg={"transparent"}
-                //       display={"flex"}
-                //       justifyContent={"center"}
-                //       alignItems={"center"}
-                //       w="100%"
-                //       border="1px solid var(--errorBase)"
-                //       borderRadius={"10px"}
-                //       h={"40px"}
-                //       textColor={"var(--errorBase)"}
-                //       onClick={toggleDeclineModal}
-                //     >
-                //       Decline
-                //     </Btn>
-                //   </Flex>
-                // )
                 <></>
               )}
               <Flex
@@ -567,7 +522,8 @@ export const PropertyDetails = ({
                     h={"40px"}
                     w={"42px"}
                   >
-                    <Image width={42} height={40} src={"/profile.png"} alt="" />
+                   {user.avatar.length < 1 && <Image width={42} height={40} src={"/profile.png"} alt="" />}
+                  {user.avatar.length > 0 && <Image src={user.avatar} alt="" h={'40px'} w={'50px'} borderRadius={'50%'} />}
                   </Box>
                   <Text fontWeight={500} fontSize={"18px"}>
                     {`${user.firstName} ${user.lastName}`}
@@ -605,16 +561,6 @@ export const PropertyDetails = ({
                     <Text fontSize={"14px"}>Affiliate</Text>
                   </Box>
                 </Flex>
-                {/* <Box textColor={"#626871"} fontWeight={500}>
-                  <Text
-                    mb={"4px"}
-                    textColor={"var(--soft400)"}
-                    fontSize={"12px"}
-                  >
-                    PROPERTY
-                  </Text>
-                  <Text fontSize={"14px"}>{user?.propertyCount}</Text>
-                </Box> */}
               </Flex>
             </Flex>
           </Flex>
