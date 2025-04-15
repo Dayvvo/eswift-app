@@ -25,6 +25,7 @@ export const validateSignupData = (signup: ISignupValidation) => {
     email: Joi.string().email().required(),
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
+    avatar: Joi.any().optional(),
     role: Joi.valid(
       UserRole.CLIENT,
       UserRole.AFFILIATE,
@@ -223,6 +224,7 @@ export const validateMailbody = (emailData: MailType) => {
 export const validateProfile = (userProfile: ProfileInterface) => {
   const profileSchema = Joi.object({
     firstName: Joi.string().required(),
+    avatar: Joi.any().optional(),
     lastName: Joi.string().required(),
     email: Joi.string().required(),
     address: Joi.string(),

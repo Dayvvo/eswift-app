@@ -75,6 +75,16 @@ class UserController {
       if (!user) {
         return res.status(404).json({ message: 'User not found' })
       }
+      if(process.env.NODE_ENV !== 'production') {
+        if(user) {
+          if(!user.avatar?.startsWith('http') && !user.avatar?.startsWith('https')) {
+            user.avatar = `${process.env.BACKEND_URL}/uploads/${user.avatar}`
+          } else {
+            user.avatar = user.avatar
+          }
+        }
+      }
+
       return res.status(200).json({
         message: 'Success',
         statusCode: 200,
@@ -140,7 +150,14 @@ class UserController {
       if (error) {
         return res.status(400).json(error.details[0])
       }
+
       const user = req.user! as any
+
+      const selectedUser = await User.findById(user['_id'])
+      if(!selectedUser) {
+        return res.status(404).json({ message: 'User not found' })
+      }
+      
       const userData = await User.findOneAndUpdate(
         { _id: user['_id'] },
         { ...value },

@@ -132,6 +132,16 @@ const Wrapper = ({
     setIsOpen(prevState => !prevState)
   }
 
+    let finalImage = user?.avatar
+    if(finalImage) {
+      if(!finalImage.startsWith("http") && !finalImage.startsWith("https")) {
+        finalImage = `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${user?.avatar}`
+      } else {
+        finalImage = user?.avatar
+      }
+    }
+  
+
   return (
     <Box
       w={"100%"}
@@ -228,7 +238,7 @@ const Wrapper = ({
               w={"full"}
               rowGap={"20px"}
             >
-              <Img src="/profile.png" alt="profile" />
+              <Img src={finalImage ? finalImage : "/profile.png"} alt={"profile"} borderRadius={'50%'} h={'30px'} w={'50px'}/>
               <Flex direction={"column"}>
                 <Text
                   color="#0E121B"

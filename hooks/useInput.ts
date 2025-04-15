@@ -126,6 +126,7 @@ export const useImage = ({existingImages}:{existingImages?: PropImages }) => {
     error,
     reset,
     deleteImage,
+    setImages
   };
 };
 
