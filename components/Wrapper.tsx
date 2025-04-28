@@ -28,8 +28,7 @@ const Wrapper = ({
   const { isWindow, user } = useAuth();
   const { getProfile } = useProfile();
   const navigate = useRouter() as NextRouter;
-  const router = useRouter()
-
+  const router = useRouter();
 
   const navData = [
     {
@@ -37,34 +36,36 @@ const Wrapper = ({
       icon: (color: string) => <DashboardIcon color={color} />,
       url: "/dashboard",
     },
-    ...user?.role ==='ADMIN'? [ 
-      {
-        label: "Users",
-        icon: (color: string) => <UserIcon color={color} />,
-        url: "/users",
-      },
-      {
-        label: "Property",
-        icon: (color: string) => <FiHome size={"1rem"} color={color} />,
-        url: "/property",
-      },
-      {
-        label: "Blog",
-        icon: (color: string) => <BlogIcon color={color} />,
-        url: "/blog",
-      },
-    ]:[
-      {
-        label: "Favorites",
-        icon: (color: string) => <DashboardIcon color={color} />,
-        url: "/favourites",
-      },
-      {
-        label: "Browse Properties",
-        icon: (color: string) => <FiHome size={"1rem"} color={color} />,
-        url: "/properties",
-      },
-    ],
+    ...(user?.role === "ADMIN"
+      ? [
+          {
+            label: "Users",
+            icon: (color: string) => <UserIcon color={color} />,
+            url: "/users",
+          },
+          {
+            label: "Property",
+            icon: (color: string) => <FiHome size={"1rem"} color={color} />,
+            url: "/property",
+          },
+          {
+            label: "Blog",
+            icon: (color: string) => <BlogIcon color={color} />,
+            url: "/blog",
+          },
+        ]
+      : [
+          {
+            label: "Favorites",
+            icon: (color: string) => <DashboardIcon color={color} />,
+            url: "/favourites",
+          },
+          {
+            label: "Browse Properties",
+            icon: (color: string) => <FiHome size={"1rem"} color={color} />,
+            url: "/properties",
+          },
+        ]),
     {
       label: "Settings",
       icon: (color: string) => <SettingsIcon color={color} />,
@@ -96,26 +97,33 @@ const Wrapper = ({
 
   const casedPath = `${path.slice(0, 1).toUpperCase()}${path.slice(1)}`;
 
-  const userFromLocalStorage = typeof window !=='undefined'? window?.localStorage.getItem("userData"):null;
+  const userFromLocalStorage =
+    typeof window !== "undefined"
+      ? window?.localStorage.getItem("userData")
+      : null;
 
-  const token = userFromLocalStorage? JSON.parse(userFromLocalStorage)?.token: "";
+  const token = userFromLocalStorage
+    ? JSON.parse(userFromLocalStorage)?.token
+    : "";
 
-  const userData = userFromLocalStorage ? JSON.parse(userFromLocalStorage)?.user:null;
+  const userData = userFromLocalStorage
+    ? JSON.parse(userFromLocalStorage)?.user
+    : null;
 
   useEffect(() => {
     const restrictedPaths = ["/property", "/users", "/blog"];
-    
+
     const isRestrictedPath = restrictedPaths.some((path) =>
       router.pathname.startsWith(path)
     );
-  
+
     if (isRestrictedPath && userData?.role !== "ADMIN") {
       console.log(`Unauthorized access to ${router.pathname}. Logging out...`);
       localStorage.removeItem("token");
       localStorage.removeItem("userData");
       router.push("/auth");
     }
-  
+
     // Ensure token presence to keep the user logged in
     if (!token) {
       console.log("No token found. Redirecting to /auth...");
@@ -124,47 +132,47 @@ const Wrapper = ({
       router.push("/auth");
     }
   }, [router.pathname, userData?.role, token, router]);
-  
 
-  const [ isOpen , setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const openDrawer =()=> {
-    setIsOpen(prevState => !prevState)
-  }
+  const openDrawer = () => {
+    setIsOpen((prevState) => !prevState);
+  };
 
-    let finalImage = user?.avatar
-    if(finalImage) {
-      if(!finalImage.startsWith("http") && !finalImage.startsWith("https")) {
-        finalImage = `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${user?.avatar}`
-      } else {
-        finalImage = user?.avatar
-      }
+  let finalImage = user?.avatar;
+  if (finalImage) {
+    if (!finalImage.startsWith("http") && !finalImage.startsWith("https")) {
+      finalImage = `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${user?.avatar}`;
+    } else {
+      finalImage = user?.avatar;
     }
-  
+  }
 
   return (
     <Box
       w={"100%"}
       // py={{ base: "0", lg: "10px" }}
-      h={isOpen ? '100vh' : 'auto'}
+      h={isOpen ? "100vh" : "auto"}
       overflowX={"hidden"}
-      overflowY={`${isOpen ? 'clip' : 'auto'}`}
+      overflowY={`${isOpen ? "clip" : "auto"}`}
     >
-      <Box onClick={openDrawer}
-        w={"100%"} h={"100%"}
-        display={{base:`${ isOpen ? 'block' : 'none'}`, lg: "none" }}
-        position={'absolute'}
-        bg={'#00000080'}
-        backdropFilter={'blur(6px)'}
+      <Box
+        onClick={openDrawer}
+        w={"100%"}
+        h={"100%"}
+        display={{ base: `${isOpen ? "block" : "none"}`, lg: "none" }}
+        position={"absolute"}
+        bg={"#00000080"}
+        backdropFilter={"blur(6px)"}
         zIndex={80}
       />
       <Box w={"100%"}>
         <Box
-          className={`${isOpen ? 'slideOpen' : 'slideClose'}`}
+          className={`${isOpen ? "slideOpen" : "slideClose"}`}
           borderRight={"1px solid #E1E4EA"}
-          maxW={"270px"} 
+          maxW={"270px"}
           bg={"white"}
-          pos={'fixed'}
+          pos={"fixed"}
           // top={0}
           // left={0}
           h={"100vh"}
@@ -176,8 +184,13 @@ const Wrapper = ({
           zIndex={80}
           backdropFilter={"blur(4px)"}
         >
-          <Box onClick={openDrawer}
-            display={{base:'flex',lg:'none'}} fontSize={'20px'} alignSelf={'end'} my={'8px'}>
+          <Box
+            onClick={openDrawer}
+            display={{ base: "flex", lg: "none" }}
+            fontSize={"20px"}
+            alignSelf={"end"}
+            my={"8px"}
+          >
             <IoClose />
           </Box>
           <Link href={"/"}>
@@ -199,7 +212,8 @@ const Wrapper = ({
 
               return (
                 <Link href={item.url} key={item.url}>
-                  <Box onClick={openDrawer}
+                  <Box
+                    onClick={openDrawer}
                     className="robotoF"
                     cursor={"pointer"}
                     display={"flex"}
@@ -230,7 +244,7 @@ const Wrapper = ({
               );
             })}
           </Box>
-          <Box mt={{base: "2rem", md: '5rem'}}>
+          <Box mt={{ base: "2rem", md: "5rem" }}>
             <Divider color="#E1E4EA" mb={"20px"} w="100%" />
             <Grid
               gridTemplateColumns={"1fr 2fr"}
@@ -238,14 +252,20 @@ const Wrapper = ({
               w={"full"}
               rowGap={"20px"}
             >
-              <Img src={finalImage ? finalImage : "/profile.png"} alt={"profile"} borderRadius={'50%'} h={'30px'} w={'50px'}/>
+              <Img
+                src={finalImage ? finalImage : "/profile.png"}
+                alt={"profile"}
+                borderRadius={"50%"}
+                h={"30px"}
+                w={"50px"}
+              />
               <Flex direction={"column"}>
                 <Text
                   color="#0E121B"
                   className="inter"
                   fontSize={"0.875rem"}
                   fontWeight={500}
-                  whiteSpace={'nowrap'}
+                  // whiteSpace={'nowrap'}
                 >
                   {`${user?.firstName} ${user?.lastName}`}
                 </Text>
@@ -254,7 +274,7 @@ const Wrapper = ({
                   className="inter"
                   fontSize={"0.65rem"}
                   fontWeight={400}
-                  whiteSpace={'wrap'}
+                  whiteSpace={"wrap"}
                 >
                   {`${user?.email}`}
                 </Text>
@@ -275,46 +295,46 @@ const Wrapper = ({
           </Box>
         </Box>
         <Box>
-        <Flex
-          justifyContent={"space-between"}
-          alignItems={"center"}
-          borderBottom={"1px solid #E1E4EA"}
-          // padding={"40px 30px 40px 60px"}
-          px={{ base: "12px", lg: "40px" }}
-          py={{ base: "20px", lg: "40px" }}
-          pos="relative"
-          top={'20px'}
-          left={{ base: "2px", lg: "256px" }}
-          maxW={{ base: "full", lg: "80vw" }}
-          zIndex={70}
-        >
-          <Grid gridTemplateColumns={"40px 2fr"} gap={0}>
-
-            <Flex
-              border={"1px solid #E1E4EA"}
-              borderRadius={"50%"}
-              maxW={"30px"}
-              h="30px"
-              alignItems={"center"}
-              justifyContent={"center"}
-              mt="4%"
-              display={{base:'none', lg:'flex'}}
-            >
-              <DashboardIcon />
-            </Flex>
-            <Flex onClick={openDrawer}
-              border={"1px solid #E1E4EA"}
-              borderRadius={"50%"}
-              maxW={"30px"}
-              h="30px"
-              alignItems={"center"}
-              justifyContent={"center"}
-              mt="4%"
-              display={{base:'flex', lg:'none'}}
-            >
-              <GiHamburgerMenu />
-            </Flex>
-            <Flex direction={"column"}>
+          <Flex
+            justifyContent={"space-between"}
+            alignItems={"center"}
+            borderBottom={"1px solid #E1E4EA"}
+            // padding={"40px 30px 40px 60px"}
+            px={{ base: "12px", lg: "40px" }}
+            py={{ base: "20px", lg: "40px" }}
+            pos="relative"
+            top={"20px"}
+            left={{ base: "2px", lg: "256px" }}
+            maxW={{ base: "full", lg: "80vw" }}
+            zIndex={70}
+          >
+            <Grid gridTemplateColumns={"40px 2fr"} gap={0}>
+              <Flex
+                border={"1px solid #E1E4EA"}
+                borderRadius={"50%"}
+                maxW={"30px"}
+                h="30px"
+                alignItems={"center"}
+                justifyContent={"center"}
+                mt="4%"
+                display={{ base: "none", lg: "flex" }}
+              >
+                <DashboardIcon />
+              </Flex>
+              <Flex
+                onClick={openDrawer}
+                border={"1px solid #E1E4EA"}
+                borderRadius={"50%"}
+                maxW={"30px"}
+                h="30px"
+                alignItems={"center"}
+                justifyContent={"center"}
+                mt="4%"
+                display={{ base: "flex", lg: "none" }}
+              >
+                <GiHamburgerMenu />
+              </Flex>
+              <Flex direction={"column"}>
                 <Text
                   className="robotoF"
                   color="#0E121B"
@@ -331,7 +351,7 @@ const Wrapper = ({
                 >
                   {isUser &&
                     "Overview of your favourite properties and profile settings"}
-              </Text>
+                </Text>
               </Flex>
             </Grid>
           </Flex>
@@ -341,7 +361,7 @@ const Wrapper = ({
           top={"20px"}
           left={{ base: "0px", lg: "265px" }}
           w={{ base: "full", lg: "80vw" }}
-          {...(noPadding ? {} : { px: "20px", pt:'20px',pb:'40px' })}
+          {...(noPadding ? {} : { px: "20px", pt: "20px", pb: "40px" })}
         >
           {route ? children : <></>}
         </Box>
