@@ -7,8 +7,6 @@ import useProperty from "@/hooks/useProperty";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-
-
 export type PropertyCardProps = {
   _id?: string;
   images: string[];
@@ -16,38 +14,35 @@ export type PropertyCardProps = {
   cardWidth?: any;
   title?: string;
   price?: {
-    mode?:string,
-    amount?:string
+    mode?: string;
+    amount?: string;
   };
-  category?:string;
-  verification?: 'Pending' | 'Verified' | 'Rejected';
-  features?: string[]
-  documents?: {type:string, document:string, _id?: string}[];
-  location?:string;
+  category?: string;
+  verification?: "Pending" | "Verified" | "Rejected";
+  features?: string[];
+  documents?: { type: string; document: string; _id?: string }[];
+  location?: string;
   description?: string;
   address?: string;
   email?: string;
   user?: string;
-  state?:string;
-  lga?:string;
+  state?: string;
+  lga?: string;
   userImage?: string;
   onClick?: () => void;
   verificationState?: string;
-  creatorID?:string;
+  creatorID?: string;
   isInFavorites?: boolean;
-  favoriteId?:string
+  favoriteId?: string;
 };
 
-
-
-
 export const PropertyCard = ({
-  _id:id,
-  images:image,
+  _id: id,
+  images: image,
   title,
   count,
-  price:pricing,
-  address:location,
+  price: pricing,
+  address: location,
   cardWidth,
   email,
   user,
@@ -55,7 +50,6 @@ export const PropertyCard = ({
   onClick,
   verificationState,
 }: PropertyCardProps) => {
-
   const [verificationStatus, setVerificationStatus] =
     useState(verificationState);
   const [isVerifying, setIsVerifying] = useState(false);
@@ -71,19 +65,18 @@ export const PropertyCard = ({
 
   if (finalImage) {
     const isDataUrl = finalImage.startsWith("data:image");
-    const isFullUrl = finalImage.startsWith("http") || finalImage.startsWith("https");
-  
+    const isFullUrl =
+      finalImage.startsWith("http") || finalImage.startsWith("https");
+
     if (!isDataUrl && !isFullUrl) {
       finalImage = `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${finalImage}`;
     }
   }
-  
 
   const data = {
     verification: "Verified",
   };
-  
-  
+
   const verifyPropertyFn = async () => {
     if (!id) {
       toast({
@@ -98,7 +91,7 @@ export const PropertyCard = ({
     setIsVerifying(true);
     try {
       const req = await verifyProperty(id, data);
-    
+
       if (req.statusCode === 201) {
         setVerificationStatus(data.verification);
         toast({
@@ -111,7 +104,7 @@ export const PropertyCard = ({
       }
     } catch (err) {
       toast({
-        status: 'error',
+        status: "error",
         description: "Failed to verify property",
         title: "Failed",
         position: "top",
@@ -122,22 +115,31 @@ export const PropertyCard = ({
     }
   };
 
-  const [image1]= image || []; 
+  const [image1] = image || [];
+
+  // Function to truncate text
+  const truncateText = (text: string | undefined, maxLength: number) => {
+    if (!text) return "";
+    return text.length > maxLength
+      ? text.substring(0, maxLength) + "..."
+      : text;
+  };
+
   return (
     <Box
       className="RobotoF"
       bg={"#FFF"}
-      w={{base:'100%', lg: '300px', '2xl': '320px'}}
+      w={{ base: "100%", lg: "300px", "2xl": "320px" }}
       h={"420px"}
       // pb={"1px"}
-      boxShadow={'md'}
-      border={'1px solid #262626'} 
+      boxShadow={"md"}
+      border={"1px solid #262626"}
       borderRadius={"15px"}
       overflow={"hidden"}
       cursor={"pointer"}
       onClick={onClick}
     >
-      <Flex position={"relative"} w="100%" h="60%">
+      <Flex position={"relative"} w="100%" h="200px" minH="200px" maxH="250px">
         <Text
           className="montserrat"
           position={"absolute"}
@@ -149,16 +151,12 @@ export const PropertyCard = ({
           {/* {count || null} of 3 */}
         </Text>
         <Image
-          width={'100%'}
-          minWidth={{lg:'500px'}}
+          width={"100%"}
+          height={"100%"}
+          objectFit={"cover"}
           src={`${image1}`}
           alt={"property"}
         />
-        {/* <Img
-                    width={'340px'}
-                    src={`${image}`}
-                    alt="property"
-                /> */}
       </Flex>
       <Flex
         className=""
@@ -174,8 +172,12 @@ export const PropertyCard = ({
           alignItems={"center"}
           textColor={"#000"}
         >
-          <Text fontSize={{ base: "16px", lg: "18px" }} fontWeight={600}>
-            {title}
+          <Text
+            className="robotoF"
+            fontSize={{ base: "16px", lg: "18px" }}
+            fontWeight={600}
+          >
+            {truncateText(title, 40)}
           </Text>
           <Text
             fontSize={{ base: "16px", lg: "18px" }}
@@ -220,7 +222,11 @@ export const PropertyCard = ({
             </Text>
           </Flex>
           <Box w={"1px"} h={"17px"} bg={"#DDE0E5"} />
-          <Text fontWeight={200} fontSize={{ base: "12px", lg: "14px" }}>
+          <Text
+            fontWeight={200}
+            fontSize={{ base: "12px", lg: "14px" }}
+            isTruncated
+          >
             {email}
           </Text>
         </Flex>

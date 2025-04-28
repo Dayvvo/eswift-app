@@ -40,33 +40,35 @@ export const PropertiesCard = ({
   const [favId, setFavId] = useState<string | undefined>(favoriteId);
 
   const pathName = router.pathname; // ✅ Ensure route is defined
- 
 
-    useEffect(()=>{
-        (async()=>{
-            try{
-                const { data:res } = await getFavorites();
-                
-                const favorites = {
-                    ...res,
-                    data: res?.data?.map((res:R)=>({
-                        ...res?.property,
-                        _id:res?.property?._id,
-                        favoriteId:res?._id,
-                        isFavorite:true,
-                    } as Favourite))
-                }
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data: res } = await getFavorites();
 
-                setGlobalContext &&  setGlobalContext(prev=>({
-                    ...prev,
-                    favourites:favorites?.data
-                }))
-            }
-            catch(err){
-                console.log('err',err);
-            }
-        })()
-    },[isFavorite])
+        const favorites = {
+          ...res,
+          data: res?.data?.map(
+            (res: R) =>
+              ({
+                ...res?.property,
+                _id: res?.property?._id,
+                favoriteId: res?._id,
+                isFavorite: true,
+              } as Favourite)
+          ),
+        };
+
+        setGlobalContext &&
+          setGlobalContext((prev) => ({
+            ...prev,
+            favourites: favorites?.data,
+          }));
+      } catch (err) {
+        console.log("err", err);
+      }
+    })();
+  }, [isFavorite]);
   useEffect(() => {
     const fav = globalContext.favourites.find((fav) => fav._id === _id);
     setIsFavorite(!!fav);
@@ -152,7 +154,13 @@ export const PropertiesCard = ({
         <Image width={"100%"} src={images?.[0]} alt={"property"} />
       </Flex>
 
-      <Flex className="robotoF" flexDir={"column"} gap={"16px"} w={"100%"} my={"24px"}>
+      <Flex
+        className="robotoF"
+        flexDir={"column"}
+        gap={"16px"}
+        w={"100%"}
+        my={"24px"}
+      >
         <Flex
           w={"100%"}
           h={"32px"}
@@ -167,24 +175,55 @@ export const PropertiesCard = ({
           fontWeight={500}
         >
           <MdLocationOn />
-          <Text fontSize="14px" maxW={"90%"} overflow={"hidden"} textOverflow={"ellipsis"} whiteSpace={"nowrap"}>
+          <Text
+            fontSize="14px"
+            maxW={"90%"}
+            overflow={"hidden"}
+            textOverflow={"ellipsis"}
+            whiteSpace={"nowrap"}
+            isTruncated
+          >
             {address}
           </Text>
         </Flex>
-        <Text fontSize={{ base: "20px", lg: "20px" }} fontWeight={600}>
+        <Text
+          fontSize={{ base: "16px", lg: "20px" }}
+          fontWeight={600}
+          isTruncated
+        >
           {title}
         </Text>
-        <Text h={"48px"} overflow={"hidden"} textOverflow={"ellipsis"} fontSize={"16px"} fontWeight={500} textColor={"#999999"} className="roboto">
+        <Text
+          h={"48px"}
+          overflow={"hidden"}
+          textOverflow={"ellipsis"}
+          fontSize={"16px"}
+          fontWeight={500}
+          textColor={"#999999"}
+          className="roboto"
+        >
           {description}
         </Text>
       </Flex>
 
-      <Flex w={"100%"} justifyContent={"space-between"} alignItems={"end"} gap={"10px"} className="robotoF">
+      <Flex
+        w={"100%"}
+        justifyContent={"space-between"}
+        alignItems={"end"}
+        gap={"10px"}
+        className="robotoF"
+      >
         <Flex flexDir={"column"} justifyContent={"space-between"}>
           <Text fontWeight={500} fontSize={"14px"} textColor={"#999999"}>
             Price
           </Text>
-          <Text display={"flex"} alignItems={"center"} fontSize={"20px"} fontWeight={600} textColor={"#191919"}>
+          <Text
+            display={"flex"}
+            alignItems={"center"}
+            fontSize={"20px"}
+            fontWeight={600}
+            textColor={"#191919"}
+          >
             <TbCurrencyNaira />
             {price?.amount}
           </Text>
@@ -194,7 +233,9 @@ export const PropertiesCard = ({
           {!isFavorite ? (
             <Tooltip content="Add to favorites">
               <IoIosHeartEmpty
-                onClick={() => authProtectedFn(() => addToFave(_id as string), pathName)}
+                onClick={() =>
+                  authProtectedFn(() => addToFave(_id as string), pathName)
+                }
                 cursor={"pointer"}
                 className="empty"
                 fontSize={"30px"}

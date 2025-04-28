@@ -32,7 +32,7 @@ export interface BlogPostProps {
 
 const BlogspotScreen = () => {
   const navigate = useRouter();
-const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
+  const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
 
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState<number>(1);
@@ -46,10 +46,8 @@ const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
       } else {
         console.error("Section not found!");
       }
-    }, 100); 
+    }, 100);
   }
-  
-
 
   // const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -63,8 +61,8 @@ const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
     const getBlogFn = async () => {
       setLoading(true);
       try {
-        const req = await getBlog('');
-        console.log("req", req)
+        const req = await getBlog("");
+        console.log("req", req);
         setBlogPost(req?.data);
         setLoading(false);
         console.log("req", req);
@@ -75,20 +73,22 @@ const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
 
     getBlogFn();
   }, []);
-  
+
   return (
     <Box>
       <NavBar />
-      <HeroPropsVideo
-        bg={"#00000070"}
-        click={scrollToSection}
-        header={"Blog"}
-        details={"Your Source for Real Estate Insights and Tips"}
-        buttonPos={null}
-        w={"100%"}
-        h={"100vh"}
-        video={"/PropertiesVideo.mp4"}
-      />
+      <Box pt={{ base: "10px" }}>
+        <HeroPropsVideo
+          bg={"#00000070"}
+          header={"Blog"}
+          details={"Your Source for Real Estate Insights and Tips"}
+          buttonPos={null}
+          w={"100%"}
+          h={"100vh"}
+          video={"/PropertiesVideo.mp4"}
+          click={scrollToSection}
+        />
+      </Box>
       <Background />
       <Box
         id="blogs"
