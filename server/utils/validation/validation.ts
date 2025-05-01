@@ -8,7 +8,7 @@ import {
 import { MailType } from "../interfaces/mailtype.interface";
 import { ProfileInterface } from "../interfaces/profile.interface";
 import { PaymentMode, UserRole } from "../interfaces";
-import { PropertyDocuments } from "../interfaces/types";
+import { PropertyDocuments, PropertyType } from "../interfaces/types";
 import { isValidObjectId } from "mongoose";
 
 export const validateLoginData = (login: ILoginValidation) => {
@@ -108,7 +108,10 @@ export const ValidateAddProperty = (property: IAddPropertyValidation) => {
     images: Joi.array().items(Joi.any().required()).min(1).optional(),
     // images: Joi.array().items(Joi.string().uri()).min(1).required(),
     documents: Joi.array().items(documentSchema).required(),
-    owner: Joi.string().required()
+    owner: Joi.string().required(),
+    propertyType: Joi.string()
+      .valid(...Object.values(PropertyType))
+      .required(),
   });
 
   return propertySchema.validate(property);
@@ -143,7 +146,10 @@ export const ValidateEditProperty = (property: IAddPropertyValidation) => {
     features: Joi.array().items(Joi.string().min(2).max(50)).min(1).optional(),
     images: Joi.array().items(Joi.any().required()).min(1).optional(),
     documents: Joi.array().items(documentSchema).optional(),
-    owner: Joi.string().required()
+    owner: Joi.string().required(),
+    propertyType: Joi.string()
+      .valid(...Object.values(PropertyType))
+      .required(),
   });
 
   return propertySchema.validate(property);
@@ -169,8 +175,8 @@ export const changePasswordValidation = Joi.object({
 });
 
 export const validateEmail = Joi.object({
-  email: Joi.string().email().required()
-})
+  email: Joi.string().email().required(),
+});
 
 export const customerOnboard = Joi.object({
   state: Joi.string().required(),
