@@ -23,8 +23,7 @@ const PropertiesScreen = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [fetchData, setFetchData] = useState<PropertyCardProps[]>([]);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(0);
-  const [favorites, setFavorites] = useState<string[]>([]); // Store favorite IDs
+  const [page, setPage] = useState<number>(0);// Store favorite IDs
 
   const debounce = useDebounce();
   const { getFavorites } = useProperty();
@@ -53,7 +52,7 @@ const PropertiesScreen = () => {
     const fetchFavorites = async () => {
       try {
         const { data } = await getFavorites();
-        setFavorites(data.map((fav: PropertyCardProps) => fav._id)); // Store favorite IDs
+        // setFavorites(data.map((fav: PropertyCardProps) => fav._id)); // Store favorite IDs
       } catch (error) {
         console.error("Failed to load favorites", error);
       }
