@@ -1,8 +1,5 @@
 import Btn from "@/components/Btn";
-import React, {
-  KeyboardEvent,
-  useState,
-} from "react";
+import React, { KeyboardEvent, useState } from "react";
 import {
   Box,
   Flex,
@@ -35,13 +32,15 @@ interface AddPropertyScreenOneProps {
     title: string;
     description: string;
     category: string;
-    owner:string;
+    owner: string;
+    propertyType: string;
   };
   touched: {
     owner: boolean;
     title: boolean;
     description: boolean;
     category: boolean;
+    propertyType: boolean;
   };
   setTouched: React.Dispatch<React.SetStateAction<any>>;
   setFeatures: React.Dispatch<React.SetStateAction<string[]>>;
@@ -108,13 +107,12 @@ export const AddPropertyScreenOne = ({
     setInputValue(e.target.value);
   };
 
-  const [featureErr, setFeaureErr] = useState(false);
-
   const validation = validateRequired({
     title: input.title,
     description: input.description,
     category: input.category,
-    owner:input.owner,
+    owner: input.owner,
+    propertyType: input.propertyType,
   });
 
   const nextFn = () => {
@@ -127,7 +125,7 @@ export const AddPropertyScreenOne = ({
         }
         return acc;
       }, {} as Record<string, boolean>);
-     
+
       setTouched((prev: any) => ({
         ...prev,
         ...fieldsWithErrors,
@@ -160,9 +158,18 @@ export const AddPropertyScreenOne = ({
 
   return (
     <>
-      <Box w={"100%"} px={"20px"} className="inter" maxH={"600px"}
-        overflow={"scroll"}>
-        <Flex w={"100%"} justifyContent={"space-between"} flexDir={{base: 'column', md: 'row'}}>
+      <Box
+        w={"100%"}
+        px={"20px"}
+        className="inter"
+        maxH={"600px"}
+        overflow={"scroll"}
+      >
+        <Flex
+          w={"100%"}
+          justifyContent={"space-between"}
+          flexDir={{ base: "column", md: "row" }}
+        >
           {subs.map((sub) => (
             <Flex
               key={sub?.id}
@@ -266,7 +273,6 @@ export const AddPropertyScreenOne = ({
               onChange={handleOnchange}
               onBlur={handleOnblur}
               value={input.category}
-
             >
               {["Land", "House"].map((entry) => (
                 <option value={`${entry}`} key={entry} color="var(--soft400)">
@@ -280,6 +286,50 @@ export const AddPropertyScreenOne = ({
               </FormHelperText>
             )}
           </FormControl>
+          {/*  */}
+          <FormControl w={"100%"}>
+            <FormLabel
+              fontWeight={500}
+              fontSize={"14px"}
+              textColor={"var(--strong950)"}
+            >
+              Listing Type
+            </FormLabel>
+            <Select
+              w="100%"
+              h="40px"
+              borderRadius={"10px"}
+              fontSize={14}
+              textColor={"var--(sub600)"}
+              _placeholder={{ textColor: "var--(soft400)" }}
+              placeholder="SelectListing Type"
+              name="propertyType"
+              border={
+                touched.propertyType && !validation.propertyType
+                  ? "1px solid var(--errorBase)"
+                  : "1px solid var(--soft200)"
+              }
+              onChange={handleOnchange}
+              onBlur={handleOnblur}
+              value={input.propertyType}
+            >
+              {["Project", "Property"].map((entry) => (
+                <option
+                  value={`${entry.toLocaleLowerCase()}`}
+                  key={entry}
+                  color="var(--soft400)"
+                >
+                  {entry}
+                </option>
+              ))}
+            </Select>
+            {touched.propertyType && !validation.propertyType && (
+              <FormHelperText color={"var(--errorBase)"} fontSize={"12px"}>
+                {"Select valid listing type"}
+              </FormHelperText>
+            )}
+          </FormControl>
+          {/*  */}
           <FormControl w={"100%"}>
             <FormLabel
               fontWeight={500}
@@ -305,7 +355,6 @@ export const AddPropertyScreenOne = ({
               onChange={handleOnchange}
               onBlur={handleOnblur}
               value={input.owner}
-
             >
               {OWNERS.map((owner, index) => (
                 <option value={owner} key={index} color="var(--soft400)">
@@ -364,7 +413,6 @@ export const AddPropertyScreenOne = ({
               justifyContent={"space-between"}
               borderRadius={"10px"}
             >
-          
               <Input
                 type={"text"}
                 height={"40px"}
@@ -372,10 +420,10 @@ export const AddPropertyScreenOne = ({
                 fontSize={14}
                 textColor={"var--(sub600)"}
                 _placeholder={{ textColor: "var--(soft400)" }}
-                _focusWithin={{border:'0px solid transparent'}}
+                _focusWithin={{ border: "0px solid transparent" }}
                 border={"1px solid var(--soft200)"}
-                borderLeftRadius={'8px'}
-                borderRightRadius={'0px'}
+                borderLeftRadius={"8px"}
+                borderRightRadius={"0px"}
                 value={inputValue}
                 onChange={handleTagInput}
                 onKeyDown={handleKeyPress}
@@ -389,10 +437,10 @@ export const AddPropertyScreenOne = ({
                 justifyContent={"center"}
                 alignItems={"center"}
                 onClick={handleAddTag}
-                bg={'var(--primaryBase)'}
-                borderRightRadius={'8px'}
+                bg={"var(--primaryBase)"}
+                borderRightRadius={"8px"}
               >
-                <BsPlus color='white' fontSize={'25px'} />
+                <BsPlus color="white" fontSize={"25px"} />
               </Flex>
             </Flex>
             <Flex flexWrap={"wrap"} gap={"8px"} mt={"6px"}>
