@@ -18,13 +18,17 @@ export enum PropertyVerification {
   Verified = "Verified",
   Rejected = "Rejected",
 }
+export enum PropertyType {
+  PROJECT = "project",
+  PROPERTY = "property",
+}
 export enum UserVerification {
   Pending = "Pending",
   Verified = "Verified",
   Rejected = "Rejected",
   Suspend = "Suspend",
   Resume = "Resume",
-  Unsuspend = "Unsuspend"
+  Unsuspend = "Unsuspend",
 }
 
 export interface GoogleAuthResponse {

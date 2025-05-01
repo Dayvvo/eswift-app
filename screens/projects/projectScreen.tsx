@@ -2,33 +2,36 @@ import { HeroPropsVideo } from "@/components/heroPropsVideo";
 import NavBar from "@/components/navBar";
 import {
   Box,
-  InputGroup,
-  Input,
-  InputRightElement,
+  Card,
+  CardBody,
   Grid,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Skeleton,
+  Stack,
+  Text,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { RiSearch2Line } from "react-icons/ri";
-import { PropertiesCard } from "./propertiesCard";
-import { Footer } from "@/components/footer";
-import axios from "axios";
-import Btn from "@/components/Btn";
 import { Background } from "../home/Background";
+import Btn from "@/components/Btn";
+import { RiSearch2Line } from "react-icons/ri";
 import { TextHeader } from "../home/textHeader";
-import { PropertyCardProps } from "../Property/propertyCard";
+import { Footer } from "@/components/footer";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { useDebounce } from "@/hooks/useDebounce";
-import useProperty from "@/hooks/useProperty"; // Import hook for favorites
+import { PropertyCardProps } from "../Property/propertyCard";
+import { PropertiesCard } from "../properties/propertiesCard";
+import useProperty from "@/hooks/useProperty";
 
-const PropertiesScreen = () => {
+const ProjectScreen = () => {
   const [inputValue, setInputValue] = useState<string>("");
-  const [fetchData, setFetchData] = useState<PropertyCardProps[]>([]);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(0);// Store favorite IDs
+  const [fetchData, setFetchData] = useState<PropertyCardProps[]>([]);
+  const [page, setPage] = useState<number>(0);
 
   const debounce = useDebounce();
   const { getFavorites } = useProperty();
-
-  // Fetch properties based on search and page
   useEffect(() => {
     const getPropertyFunction = async () => {
       setLoading(true);
@@ -47,12 +50,10 @@ const PropertiesScreen = () => {
     debounce(() => getPropertyFunction());
   }, [page, inputValue]);
 
-  // Fetch favorites list
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
         const { data } = await getFavorites();
-        // setFavorites(data.map((fav: PropertyCardProps) => fav._id)); // Store favorite IDs
       } catch (error) {
         console.error("Failed to load favorites", error);
       }
@@ -60,14 +61,10 @@ const PropertiesScreen = () => {
 
     fetchFavorites();
   }, []);
-
-  // Handle add/remove from favorites
-
   function scrollToSection() {
     const section = document.querySelector("#main") as HTMLElement;
     section.scrollIntoView({ behavior: "smooth" });
   }
-
   return (
     <>
       <Box>
@@ -75,9 +72,10 @@ const PropertiesScreen = () => {
         <Box pt={{ base: "10px" }}>
           <HeroPropsVideo
             bg={"#00000070"}
-            header={"Find Dream Properties"}
+            fontSize={{ base: "30px", md: "42px", lg: "72px", xl: "80px" }}
+            header={"Investment Opportunities"}
             details={
-              "Explore our extensive listings of properties in Lagos and beyond"
+              "Secure your position in our carefully curated collection of high-potential developments."
             }
             buttonPos={null}
             w={"100%"}
@@ -148,15 +146,15 @@ const PropertiesScreen = () => {
                 _hover={{ opacity: 0.5 }}
                 fontSize={{ base: "8px", lg: "14px" }}
               >
-                <RiSearch2Line /> Find Property
+                <RiSearch2Line /> Find Prjects
               </Btn>
             </InputRightElement>
           </InputGroup>
 
           <TextHeader
-            Header={"Discover a World of Possibilities"}
+            Header={"Building Tomorrow's Landmarks Today"}
             sub={
-              "Our portfolio of properties is as diverse as your dreams. Explore the following categories to find the perfect property that resonates with your vision of home"
+              "Join our portfolio of exclusive investment opportunities where premium locations meet exceptional returns. Partner with us to transform visionary projects into lasting wealth."
             }
           />
 
@@ -169,14 +167,34 @@ const PropertiesScreen = () => {
             gap={"20px"}
             placeContent={"center"}
           >
-            {fetchData.map((item) => (
-              <PropertiesCard
-                key={item?._id}
-                {...item}
-                _id={item?._id}
-                view="client"
-              />
-            ))}
+            {isLoading && !fetchData && (
+              <Stack spacing={4} p={4}>
+                <Skeleton height="40px" />
+                <Skeleton height="40px" />
+                <Skeleton height="40px" />
+              </Stack>
+            )}
+
+            {fetchData
+              .filter((project) => project.isProject)
+              .map((data) => {
+                return (
+                  <PropertiesCard
+                    key={data?._id}
+                    {...data}
+                    _id={data?._id}
+                    view="client"
+                  />
+                );
+              })}
+
+            {!isLoading && !fetchData && (
+              <Card mt={"60px"}>
+                <CardBody>
+                  <Text>No project found please try again</Text>
+                </CardBody>
+              </Card>
+            )}
           </Grid>
         </Box>
         <Footer />
@@ -185,4 +203,4 @@ const PropertiesScreen = () => {
   );
 };
 
-export default PropertiesScreen;
+export default ProjectScreen;

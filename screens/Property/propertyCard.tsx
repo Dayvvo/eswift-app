@@ -34,6 +34,8 @@ export type PropertyCardProps = {
   creatorID?: string;
   isInFavorites?: boolean;
   favoriteId?: string;
+  propertyType?: string;
+  isProject?: boolean;
 };
 
 export const PropertyCard = ({
@@ -130,16 +132,17 @@ export const PropertyCard = ({
       className="RobotoF"
       bg={"#FFF"}
       w={{ base: "100%", lg: "300px", "2xl": "320px" }}
-      h={"420px"}
-      // pb={"1px"}
+      h={"460px"}
       boxShadow={"md"}
       border={"1px solid #262626"}
       borderRadius={"15px"}
       overflow={"hidden"}
       cursor={"pointer"}
       onClick={onClick}
+      display="flex"
+      flexDirection="column"
     >
-      <Flex position={"relative"} w="100%" h="200px" minH="200px" maxH="250px">
+      <Flex position={"relative"} w="100%" h="230px" minH="230px" maxH="250px">
         <Text
           className="montserrat"
           position={"absolute"}
@@ -165,100 +168,90 @@ export const PropertyCard = ({
         px={"16px"}
         w={"100%"}
         py={"8px"}
+        flex="1"
+        justifyContent="space-between"
       >
-        <Flex
-          w={"100%"}
-          justifyContent={"space-between"}
-          alignItems={"center"}
-          textColor={"#000"}
-        >
-          <Text
-            className="robotoF"
-            fontSize={{ base: "16px", lg: "18px" }}
-            fontWeight={600}
-          >
-            {truncateText(title, 40)}
-          </Text>
-          <Text
-            fontSize={{ base: "16px", lg: "18px" }}
-            fontWeight={500}
-            display={"flex"}
+        <Box>
+          <Flex
+            w={"100%"}
+            justifyContent={"space-between"}
             alignItems={"center"}
-            flexWrap={"nowrap"}
+            textColor={"#000"}
           >
-            <TbCurrencyNaira />
-            {pricing?.amount}
-          </Text>
-        </Flex>
-        <Flex
-          alignItems={"center"}
-          gap={"4px"}
-          textColor={"#626871"}
-          fontWeight={400}
-          fontSize={"14px"}
-        >
-          <HiOutlineLocationMarker />
-          <Text
-            fontSize={{ base: "12px", lg: "14px" }}
-            width={"100%"}
-            isTruncated
-          >
-            {location}
-          </Text>
-        </Flex>
-        <Flex
-          justifyContent={"space-between"}
-          alignItems={"center"}
-          gap={"4px"}
-          textColor={"#626871"}
-          fontSize={"14px"}
-        >
-          <Flex h={"18px"} gap={"8px"} alignItems={"center"}>
-            <Box w={"18px"} h={"18px"} borderRadius={"100px"} overflow={"clip"}>
-              <Image width={18} height={18} src={`${finalImage}`} alt="/" />
-            </Box>
-            <Text fontWeight={300} fontSize={{ base: "12px", lg: "14px" }}>
-              {user}
+            <Text
+              className="robotoF"
+              fontSize={{ base: "16px", lg: "18px" }}
+              fontWeight={600}
+            >
+              {truncateText(title, 40)}
+            </Text>
+            <Text
+              fontSize={{ base: "16px", lg: "18px" }}
+              fontWeight={500}
+              display={"flex"}
+              alignItems={"center"}
+              flexWrap={"nowrap"}
+            >
+              <TbCurrencyNaira />
+              {pricing?.amount}
             </Text>
           </Flex>
-          <Box w={"1px"} h={"17px"} bg={"#DDE0E5"} />
-          <Text
-            fontWeight={200}
-            fontSize={{ base: "12px", lg: "14px" }}
-            isTruncated
+          <Flex
+            alignItems={"center"}
+            gap={"4px"}
+            textColor={"#626871"}
+            fontWeight={400}
+            fontSize={"14px"}
           >
-            {email}
-          </Text>
-        </Flex>
-        <Box w={"100%"} h={"1.5px"} bg={"#DDE0E5"} />
-        <Btn
-          m="1px"
-          bg={"#fff"}
-          textColor={"#000"}
-          fontSize={"15px"}
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          w="100%"
-          h="44px"
-          border={"1px solid #000"}
-          borderRadius={"15px"}
-          _hover={{
-            bg: "#1A1D66",
-            textColor: "#FFF",
-          }}
-          onClick={handleNavigation}
-        >
-          View
-        </Btn>
+            <HiOutlineLocationMarker />
+            <Text
+              fontSize={{ base: "12px", lg: "14px" }}
+              width={"100%"}
+              isTruncated
+            >
+              {location}
+            </Text>
+          </Flex>
+          <Flex
+            justifyContent={"space-between"}
+            alignItems={"center"}
+            gap={"4px"}
+            textColor={"#626871"}
+            fontSize={"14px"}
+          >
+            <Flex h={"18px"} gap={"8px"} alignItems={"center"}>
+              <Box
+                w={"18px"}
+                h={"18px"}
+                borderRadius={"100px"}
+                overflow={"clip"}
+              >
+                <Image width={18} height={18} src={`${finalImage}`} alt="/" />
+              </Box>
+              <Text fontWeight={300} fontSize={{ base: "12px", lg: "14px" }}>
+                {user}
+              </Text>
+            </Flex>
+            <Box w={"1px"} h={"17px"} bg={"#DDE0E5"} />
+            <Text
+              fontWeight={200}
+              fontSize={{ base: "12px", lg: "14px" }}
+              isTruncated
+            >
+              {email}
+            </Text>
+          </Flex>
+        </Box>
 
-        {/* <Btn
+        <Box>
+          <Box w={"100%"} h={"1.5px"} bg={"#DDE0E5"} mb={5} />
+          <Btn
             m="1px"
+            mb={3}
             bg={"#fff"}
             textColor={"#000"}
             fontSize={"15px"}
             display={"flex"}
-            cursor={'pointer'}
             justifyContent={"center"}
             alignItems={"center"}
             w="100%"
@@ -269,13 +262,11 @@ export const PropertyCard = ({
               bg: "#1A1D66",
               textColor: "#FFF",
             }}
-            isLoading={isVerifying}
-            loadingText="Verifying"
-            disabled={isVerifying}
-            onClick={verifyPropertyFn}
+            onClick={handleNavigation}
           >
-            verify
-          </Btn> */}
+            View
+          </Btn>
+        </Box>
       </Flex>
     </Box>
   );

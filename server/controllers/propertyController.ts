@@ -17,8 +17,9 @@ import { mailGenMails } from "../utils/mails/mailgen.mail";
 import path from "path";
 import fs from "fs";
 import { checkImageArray } from "../utils/helperFunctions/generateToken";
+import { PropertyType } from "../utils/interfaces/types";
 
-type MapDocsType = {type: string, document: string, _id?: any} 
+type MapDocsType = { type: string; document: string; _id?: any };
 class PropertyController {
   //TODO: finish function
   createProperty = async (req: Request, res: Response) => {
@@ -35,7 +36,16 @@ class PropertyController {
       //     .status(HttpStatusCode.BadRequest)
       //     .json({ message: `Invalid object Id` });
       // }
-      const propertydata = { creatorID: user["_id"], ownerID: user["_id"], ...value}
+      let isProject = false;
+      if (value.propertyType !== PropertyType.PROPERTY) {
+        isProject = true;
+      }
+      const propertydata = {
+        creatorID: user["_id"],
+        ownerID: user["_id"],
+        isProject,
+        ...value,
+      };
       const newProperty = new Property(propertydata);
       const locateInterest: any = [];
       const state = newProperty.state;
@@ -67,10 +77,15 @@ class PropertyController {
         name: `${user.firstName} ${user.lastName}`,
       }));
 
-      if(newProperty) {
-        await mailGenMails.propertyCreationEmail(emailData, newProperty.title, newProperty._id.toString(), true);
+      if (newProperty) {
+        await mailGenMails.propertyCreationEmail(
+          emailData,
+          newProperty.title,
+          newProperty._id.toString(),
+          true
+        );
       }
-     
+
       await newProperty.save();
       return res.status(HttpStatusCode.Created).json({
         statusCode: 200,
@@ -78,7 +93,7 @@ class PropertyController {
         data: newProperty,
       });
     } catch (error: any) {
-      console.log('error', error)
+      console.log("error", error);
       return res.status(500).send("An Error ocurred while retrieving data");
     }
   };
@@ -93,7 +108,7 @@ class PropertyController {
       });
     const validate = ValidateEditProperty(req.body);
     const { value, error } = validate;
- 
+
     if (error) {
       return res.status(400).json(error.details[0]);
     }
@@ -108,59 +123,64 @@ class PropertyController {
           message: `Property with id ${id} not found`,
         });
 
-        const valueImages = value.images.map((img: string) => {
- 
-          if (img.startsWith("http") || img.startsWith("https")) {
-            return img.replace(/^.*\/uploads\//, '');
-          }  else {
-            return img
-          }
-        })
+      if (value.propertyType) {
+        value.isProject = value.propertyType !== PropertyType.PROPERTY;
+      }
 
-        const propertyImages = property.images.map((img: string) => {
-          if (img.startsWith("http") || img.startsWith("https")) {
-            return img.replace(/^.*\/uploads\//, '');
-          }  else {
-            return img
-          }
-        })
-
-        const imagesNotInValue = propertyImages.filter((img: string) => !valueImages.includes(img))
-
-        if(imagesNotInValue.length > 0) {
-          imagesNotInValue.forEach((img: string) => {
-            propertyController.clearImage(img);
-          });
+      const valueImages = value.images.map((img: string) => {
+        if (img.startsWith("http") || img.startsWith("https")) {
+          return img.replace(/^.*\/uploads\//, "");
+        } else {
+          return img;
         }
+      });
 
-        const normalizeDocPath = (docPath: string) => {
-          return docPath.replace(/^.*\/uploads\//, '').replace(/^\/+/, '');
-        };
-        
-        const valueDocuments = value.documents.map((doc: MapDocsType) =>
-          normalizeDocPath(doc.document)
-        );
-        
-        const propertyDocuments = property.documents.map((doc: MapDocsType) =>
-          normalizeDocPath(doc.document)
-        );
-        
-        const documentsNotInValue = propertyDocuments.filter(
-          (doc: string) => !valueDocuments.includes(doc)
-        );
-        
-       if(documentsNotInValue.length > 0){
-          documentsNotInValue.forEach((docs: string) => {
-            propertyController.clearImage(docs)
-          })
-       }
- 
-        const updatedProperty = await Property.findByIdAndUpdate(
+      const propertyImages = property.images.map((img: string) => {
+        if (img.startsWith("http") || img.startsWith("https")) {
+          return img.replace(/^.*\/uploads\//, "");
+        } else {
+          return img;
+        }
+      });
+
+      const imagesNotInValue = propertyImages.filter(
+        (img: string) => !valueImages.includes(img)
+      );
+
+      if (imagesNotInValue.length > 0) {
+        imagesNotInValue.forEach((img: string) => {
+          propertyController.clearImage(img);
+        });
+      }
+
+      const normalizeDocPath = (docPath: string) => {
+        return docPath.replace(/^.*\/uploads\//, "").replace(/^\/+/, "");
+      };
+
+      const valueDocuments = value.documents.map((doc: MapDocsType) =>
+        normalizeDocPath(doc.document)
+      );
+
+      const propertyDocuments = property.documents.map((doc: MapDocsType) =>
+        normalizeDocPath(doc.document)
+      );
+
+      const documentsNotInValue = propertyDocuments.filter(
+        (doc: string) => !valueDocuments.includes(doc)
+      );
+
+      if (documentsNotInValue.length > 0) {
+        documentsNotInValue.forEach((docs: string) => {
+          propertyController.clearImage(docs);
+        });
+      }
+
+      const updatedProperty = await Property.findByIdAndUpdate(
         id,
         { ...value, ownerID: ownerID },
         { new: true }
       );
-      
+
       return res.status(HttpStatusCode.Created).json({
         statusCode: 200,
         message: "Property updated",
@@ -183,26 +203,30 @@ class PropertyController {
     };
 
     try {
-      const count = await Property.countDocuments(findQuery).sort({ createdAt: -1 }); ;
+      const count = await Property.countDocuments(findQuery).sort({
+        createdAt: -1,
+      });
       const properties = await Property.find(findQuery)
         .populate({ path: "ownerID", select: "role firstName lastName" })
         .limit(pageSize)
         .skip(pageSize * (page - 1));
 
       const modifiedProperties = properties.map((property) => {
-        if(process.env.NODE_ENV === "production") {
-          return {...property.toObject()}
+        if (process.env.NODE_ENV === "production") {
+          return { ...property.toObject() };
         }
 
-       return {...property.toObject(),
-        images: property.images
-          ? property.images.map((img) =>
-              img.startsWith("http")
-                ? img
-                : `${process.env.BACKEND_URL}/uploads/${img}`
-            )
-          : [],
-      }});
+        return {
+          ...property.toObject(),
+          images: property.images
+            ? property.images.map((img) =>
+                img.startsWith("http")
+                  ? img
+                  : `${process.env.BACKEND_URL}/uploads/${img}`
+              )
+            : [],
+        };
+      });
 
       return res.status(200).json({
         statusCode: 200,
@@ -219,48 +243,58 @@ class PropertyController {
   getCreatedProperties = async (req: Request, res: Response) => {
     const pageSize = 60;
     const page = Number(req.params.pageNumber) || 1;
-  
+
     const keyword = req.query.keyword as string;
     const regex = new RegExp(keyword, "i");
-  
+
     const findQuery = {
       $or: [{ title: regex }, { description: regex }, { category: regex }],
       isActive: true,
     };
-  
+
     try {
-      const count = await Property.countDocuments(findQuery).sort({ createdAt: -1 });
-  
+      const count = await Property.countDocuments(findQuery).sort({
+        createdAt: -1,
+      });
+
       const user = req?.user as IUser;
-  
+
       // Fetch user's favorite properties (if logged in)
-      const matchingFavorites = await Favourite.find(user ? { user: user._id } : {})
+      const matchingFavorites = await Favourite.find(
+        user ? { user: user._id } : {}
+      )
         .select("property _id") // Get both `property` and `favoriteId`
         .lean();
-  
+
       // Create a map of propertyId -> favoriteId
       const favoriteMap = new Map(
-        matchingFavorites.map((fav) => [fav.property.toString(), fav._id.toString()])
+        matchingFavorites.map((fav) => [
+          fav.property.toString(),
+          fav._id.toString(),
+        ])
       );
-  
+
       // Fetch properties with pagination
       const properties = await Property.find(findQuery)
         .lean()
         .limit(pageSize)
         .skip(pageSize * (page - 1));
-  
+
       // Add favorite status & ID to each property
       const modifiedProperties = properties.map((property) => ({
         ...property,
-        images: process.env.NODE_ENV === "production"
-          ? property.images
-          : property.images.map((img) =>
-              img.startsWith("http") ? img : `${process.env.BACKEND_URL}/uploads/${img}`
-            ),
+        images:
+          process.env.NODE_ENV === "production"
+            ? property.images
+            : property.images.map((img) =>
+                img.startsWith("http")
+                  ? img
+                  : `${process.env.BACKEND_URL}/uploads/${img}`
+              ),
         isInFavorites: favoriteMap.has(property._id.toString()), // Check if it's a favorite
         favoriteId: favoriteMap.get(property._id.toString()) || null, // Get favoriteId if available
       }));
-  
+
       return res.status(200).json({
         statusCode: 200,
         message: "Property List",
@@ -272,62 +306,64 @@ class PropertyController {
       res.status(500).send("An Error occurred while retrieving data");
     }
   };
-  
 
   getPropertyById = async (req: Request, res: Response) => {
     const id = req.params.id;
     if (!isValidObjectId(id))
-        return res.status(400).json({
-            statusCode: 400,
-            message: "Invalid ObjectId",
-        });
+      return res.status(400).json({
+        statusCode: 400,
+        message: "Invalid ObjectId",
+      });
 
     const user = req.user as any;
     const userId = user?._id as string;
 
     try {
-        const property = await Property.findById(id).lean();
-        if (!property)
-            return res.status(404).json({
-                statusCode: 404,
-                message: `Property with id ${id} not found`,
-            });
-
-        // Find if the property exists in the user's favorites and get the favorite ID
-        const favorite = await Favourite.findOne({
-            user: userId,
-            property: id,
-        }).select("_id").lean();
-
-        const isInFavorites = !!favorite; // Convert to boolean
-        const favoriteId = favorite?._id || null; // Get the favorite ID if it exists
-
-        if (process.env.NODE_ENV !== "production") {
-            if (property.images && Array.isArray(property.images)) {
-                property.images = property.images.map((image) =>
-                    image.startsWith("http") ? image : `${process.env.BACKEND_URL}/uploads/${image}`
-                );
-            }
-
-            if (property.documents && Array.isArray(property.documents)) {
-                property.documents = property.documents.map((docs) => ({
-                    ...docs,
-                    document: docs.document.startsWith("http")
-                        ? docs.document
-                        : `${process.env.BACKEND_URL}/uploads${docs.document}`,
-                }));
-            }
-        }
-        return res.json({
-            statusCode: 200,
-            message: "Successful",
-            data: { ...property, isInFavorites, favoriteId },
+      const property = await Property.findById(id).lean();
+      if (!property)
+        return res.status(404).json({
+          statusCode: 404,
+          message: `Property with id ${id} not found`,
         });
-    } catch (error: any) {
-        res.status(500).send("An Error occurred while retrieving data");
-    }
-};
 
+      // Find if the property exists in the user's favorites and get the favorite ID
+      const favorite = await Favourite.findOne({
+        user: userId,
+        property: id,
+      })
+        .select("_id")
+        .lean();
+
+      const isInFavorites = !!favorite; // Convert to boolean
+      const favoriteId = favorite?._id || null; // Get the favorite ID if it exists
+
+      if (process.env.NODE_ENV !== "production") {
+        if (property.images && Array.isArray(property.images)) {
+          property.images = property.images.map((image) =>
+            image.startsWith("http")
+              ? image
+              : `${process.env.BACKEND_URL}/uploads/${image}`
+          );
+        }
+
+        if (property.documents && Array.isArray(property.documents)) {
+          property.documents = property.documents.map((docs) => ({
+            ...docs,
+            document: docs.document.startsWith("http")
+              ? docs.document
+              : `${process.env.BACKEND_URL}/uploads${docs.document}`,
+          }));
+        }
+      }
+      return res.json({
+        statusCode: 200,
+        message: "Successful",
+        data: { ...property, isInFavorites, favoriteId },
+      });
+    } catch (error: any) {
+      res.status(500).send("An Error occurred while retrieving data");
+    }
+  };
 
   isActiveSwitch = async (req: Request, res: Response) => {
     const id = req.params.id;
@@ -400,7 +436,7 @@ class PropertyController {
         statusCode: 400,
         message: "Invalid ObjectId",
       });
-  
+
     try {
       const property = await Property.findById(id);
       if (!property)
@@ -408,21 +444,21 @@ class PropertyController {
           statusCode: 404,
           message: `Property with id ${id} not found`,
         });
-  
+
       const deleted = await Property.deleteOne({ _id: id });
-  
+
       if (!deleted.acknowledged)
         return res.status(500).json({
           statusCode: 500,
           message: "Failed to delete property",
         });
-  
+
       if (property.images && property.images.length > 0) {
         property.images.forEach((imagePath) => {
           propertyController.clearImage(imagePath);
         });
       }
-  
+
       if (property.documents && property.documents.length > 0) {
         property.documents.forEach((doc) => {
           if (doc.document) {
@@ -430,21 +466,20 @@ class PropertyController {
           }
         });
       }
-  
+
       const user = req.user as IUserInRequest;
       await user?.decreasePropertyCount();
-  
+
       return res.json({
         statusCode: 200,
         message: "Successful",
       });
-  
     } catch (error: any) {
       console.error(error?.message);
       res.status(500).send("An Error occurred while deleting the property");
     }
   };
-  
+
   getPropertyDocs = async (req: Request, res: Response) => {
     try {
       const propsDoc = await PropertyDocs.find();
