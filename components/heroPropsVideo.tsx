@@ -13,6 +13,7 @@ interface HeroProps {
   h: string | number;
   video: string;
   click: () => void;
+  fontSize?: any;
 }
 
 export const HeroPropsVideo: React.FC<HeroProps> = ({
@@ -23,6 +24,7 @@ export const HeroPropsVideo: React.FC<HeroProps> = ({
   buttonPos,
   h,
   w,
+  fontSize,
   click,
 }) => {
   return (
@@ -48,7 +50,10 @@ export const HeroPropsVideo: React.FC<HeroProps> = ({
       >
         <Text
           className="antic"
-          fontSize={{ base: "40px", md: "72px", lg: "100px" }}
+          // fontSize={{ base: "40px", md: "72px", lg: "100px" }}
+          fontSize={
+            fontSize ? fontSize : { base: "40px", md: "72px", lg: "100px" }
+          }
           fontWeight={400}
           maxW={"1000px"}
         >
