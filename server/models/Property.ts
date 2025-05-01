@@ -1,9 +1,10 @@
-import mongoose, { Schema } from 'mongoose'
+import mongoose, { Schema } from "mongoose";
 import {
   PropertyDocuments,
+  PropertyType,
   PropertyVerification,
-} from '../utils/interfaces/types'
-import { IProperty, PropertyOwner } from '../utils/interfaces'
+} from "../utils/interfaces/types";
+import { IProperty, PropertyOwner } from "../utils/interfaces";
 
 const DocumentSchema = new Schema({
   type: {
@@ -15,7 +16,7 @@ const DocumentSchema = new Schema({
     type: String,
     required: true,
   },
-})
+});
 
 const PropertySchema = new mongoose.Schema<IProperty>(
   {
@@ -31,10 +32,10 @@ const PropertySchema = new mongoose.Schema<IProperty>(
     address: {
       type: String,
     },
-    state:{
+    state: {
       type: String,
     },
-    lga:{
+    lga: {
       type: String,
     },
     features: {
@@ -53,12 +54,12 @@ const PropertySchema = new mongoose.Schema<IProperty>(
     },
     creatorID: {
       type: Schema.Types.ObjectId,
-      ref: 'user',
+      ref: "user",
       required: true,
     },
     ownerID: {
       type: Schema.Types.ObjectId,
-      ref: 'user',
+      ref: "user",
       required: true,
     },
     documents: [DocumentSchema],
@@ -71,10 +72,19 @@ const PropertySchema = new mongoose.Schema<IProperty>(
       enum: Object.values(PropertyVerification),
       default: PropertyVerification.Pending,
     },
+    isProject: {
+      type: Boolean,
+      default: false,
+    },
+    propertyType: {
+      type: String,
+      enum: Object.values(PropertyType),
+      default: PropertyType.PROPERTY
+    }
   },
   { timestamps: true }
-)
+);
 
-const Property = mongoose.model('property', PropertySchema)
+const Property = mongoose.model("property", PropertySchema);
 
-export default Property
+export default Property;
