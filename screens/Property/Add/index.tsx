@@ -1,5 +1,12 @@
 import { AxiosResponse } from "axios";
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Modal } from "../../../components/modal";
 import useProperty from "@/hooks/useProperty";
 import { useImage } from "@/hooks/useInput";
@@ -26,39 +33,67 @@ export type Documents = {
   [K in DocumentTypes]: File | null;
 };
 
-
-export const AddProperties = ({showModal, setShowModal, property}:{showModal:boolean, setShowModal:Dispatch<SetStateAction<boolean>>, property?:PropertyCardProps }) => {
+export const AddProperties = ({
+  showModal,
+  setShowModal,
+  property,
+}: {
+  showModal: boolean;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  property?: PropertyCardProps;
+}) => {
   const [loading, setLoading] = useState(false);
   const [showScreen, setShowScreen] = useState(1);
   const [users, setUsers] = useState<User[]>([]);
 
-  const { title, description, state, lga, address, price, category, documents, features:existingFeatures } = property || { documents:[] };
+  const {
+    title,
+    description,
+    state,
+    lga,
+    address,
+    price,
+    category,
+    documents,
+    features: existingFeatures,
+    propertyType,
+  } = property || { documents: [] };
 
-
-  
   const initialDocValues = {
-    FamilyReceipt: documents? documents.find(doc=>doc.type ==='FamilyReceipt'): null,
-    SurveyPlan: documents? documents.find(doc=>doc.type ==='SurveyPlan'): null,
-    Layout: documents? documents.find(doc=>doc.type ==='Layout'): null,
-    Affidavit: documents? documents.find(doc=>doc.type ==='Affidavit'): null,
-    Agreement: documents? documents.find(doc=>doc.type ==='Agreement'): null,
-    CofO: documents? documents.find(doc=>doc.type ==='CofO'): null,
-    PowerOfAttorney: documents? documents.find(doc=>doc.type ==='PowerOfAttorney'): null,
-    GovConsent: documents? documents.find(doc=>doc.type ==='GovConsent'): null,
-  }
-
+    FamilyReceipt: documents
+      ? documents.find((doc) => doc.type === "FamilyReceipt")
+      : null,
+    SurveyPlan: documents
+      ? documents.find((doc) => doc.type === "SurveyPlan")
+      : null,
+    Layout: documents ? documents.find((doc) => doc.type === "Layout") : null,
+    Affidavit: documents
+      ? documents.find((doc) => doc.type === "Affidavit")
+      : null,
+    Agreement: documents
+      ? documents.find((doc) => doc.type === "Agreement")
+      : null,
+    CofO: documents ? documents.find((doc) => doc.type === "CofO") : null,
+    PowerOfAttorney: documents
+      ? documents.find((doc) => doc.type === "PowerOfAttorney")
+      : null,
+    GovConsent: documents
+      ? documents.find((doc) => doc.type === "GovConsent")
+      : null,
+  };
 
   const initialValues = {
     title: title || "",
-    description: description ||  "",
-    state: state ||  "",
-    lga:  lga || "",
+    description: description || "",
+    state: state || "",
+    lga: lga || "",
     address: address || "",
-    price: price?.amount ||  "",
+    price: price?.amount || "",
     category: category || "",
-    documents: initialDocValues ,
-    owner :'ESWIFT',
-  }
+    documents: initialDocValues,
+    owner: "ESWIFT",
+    propertyType: propertyType || "property",
+  };
 
   const initialTouchedValues = {
     title: false,
@@ -68,14 +103,14 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
     address: false,
     price: false,
     category: false,
-    owner:false,
-  }
+    owner: false,
+    propertyType: false,
+  };
 
   const [inputs, setInput] = useState(initialValues);
 
   const [features, setFeatures] = useState<string[]>(existingFeatures || []);
 
- 
   const [touched, setTouched] = useState(initialTouchedValues);
 
   const handleOnchange = (
@@ -102,7 +137,7 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
       [name]: true,
     }));
   };
-  
+
   // const [documents, setDocuments] = useState<Documents>({
   //   FamilyReceipt: null,
   //   SurveyPlan: null,
@@ -113,42 +148,50 @@ export const AddProperties = ({showModal, setShowModal, property}:{showModal:boo
   //   PowerOfAttorney: null,
   //   GovConsent: null,
   // });
-useEffect(() => {
-  if (property) {
-    const newInitialDocs = {
-      FamilyReceipt: property.documents?.find(doc => doc.type === 'FamilyReceipt') || null,
-      SurveyPlan: property.documents?.find(doc => doc.type === 'SurveyPlan') || null,
-      Layout: property.documents?.find(doc => doc.type === 'Layout') || null,
-      Affidavit: property.documents?.find(doc => doc.type === 'Affidavit') || null,
-      Agreement: property.documents?.find(doc => doc.type === 'Agreement') || null,
-      CofO: property.documents?.find(doc => doc.type === 'CofO') || null,
-      PowerOfAttorney: property.documents?.find(doc => doc.type === 'PowerOfAttorney') || null,
-      GovConsent: property.documents?.find(doc => doc.type === 'GovConsent') || null,
-    };
+  useEffect(() => {
+    if (property) {
+      const newInitialDocs = {
+        FamilyReceipt:
+          property.documents?.find((doc) => doc.type === "FamilyReceipt") ||
+          null,
+        SurveyPlan:
+          property.documents?.find((doc) => doc.type === "SurveyPlan") || null,
+        Layout:
+          property.documents?.find((doc) => doc.type === "Layout") || null,
+        Affidavit:
+          property.documents?.find((doc) => doc.type === "Affidavit") || null,
+        Agreement:
+          property.documents?.find((doc) => doc.type === "Agreement") || null,
+        CofO: property.documents?.find((doc) => doc.type === "CofO") || null,
+        PowerOfAttorney:
+          property.documents?.find((doc) => doc.type === "PowerOfAttorney") ||
+          null,
+        GovConsent:
+          property.documents?.find((doc) => doc.type === "GovConsent") || null,
+      };
 
-    setInput((prev) => ({
-      ...prev,
-      title: property.title || "",
-      description: property.description || "",
-      state: property.state || "",
-      lga: property.lga || "",
-      address: property.address || "",
-      price: property.price?.amount || "",
-      category: property.category || "",
-      documents: newInitialDocs,
-    }));
-  }
-}, [property]);
+      setInput((prev) => ({
+        ...prev,
+        title: property.title || "",
+        description: property.description || "",
+        state: property.state || "",
+        lga: property.lga || "",
+        address: property.address || "",
+        price: property.price?.amount || "",
+        category: property.category || "",
+        documents: newInitialDocs,
+        propertyType: property.propertyType || "property",
+      }));
+    }
+  }, [property]);
   const handleDocumentChange = (name: string, value: File | null) => {
-
-    setInput(prev=>({
+    setInput((prev) => ({
       ...prev,
       documents: {
         ...prev.documents,
-        [name]: value
-      }
-    }))
-
+        [name]: value,
+      },
+    }));
   };
 
   const {
@@ -158,10 +201,10 @@ useEffect(() => {
     error: imageError,
     deleteImage,
     reset: imageReset,
-  } = useImage({existingImages: property?.images});
+  } = useImage({ existingImages: property?.images });
 
   const { toast } = useToast();
-  
+
   const client = useApiUrl();
 
   const { addProperty, editProperty } = useProperty();
@@ -183,58 +226,65 @@ useEffect(() => {
     features: features,
     owner: inputs.owner,
     images,
-    documents:inputs.documents,
+    documents: inputs.documents,
+    propertyType: inputs.propertyType,
   };
 
   const toggleModal = () => {
     setShowModal((prevState) => !prevState);
   };
 
-  
-  const uploadPropertyFiles = async (images: (File | string)[], documents: Documents) => {
+  const uploadPropertyFiles = async (
+    images: (File | string)[],
+    documents: Documents
+  ) => {
     try {
-      const fileImgs = images.filter((img): img is File => typeof img !== 'string');
-  
+      const fileImgs = images.filter(
+        (img): img is File => typeof img !== "string"
+      );
+
       let uploadedImageUrls: string[] = [];
       if (fileImgs.length > 0) {
         const imagesFormData = new FormData();
         fileImgs.forEach((img) =>
           imagesFormData.append(fileImgs.length > 1 ? "files" : "file", img)
         );
-  
+
         const { data: uploadImages } =
           fileImgs.length > 1
             ? await uploadMultiple(imagesFormData)
             : await uploadSingle(imagesFormData);
-  
+
         uploadedImageUrls = Array.isArray(uploadImages?.data)
           ? uploadImages.data
           : [uploadImages.data];
       }
-  
-      const existingImageUrls = images.filter((img): img is string => typeof img === 'string');
-  
+
+      const existingImageUrls = images.filter(
+        (img): img is string => typeof img === "string"
+      );
+
       const finalImages = [...existingImageUrls, ...uploadedImageUrls];
 
       const uploadedDocuments = Object.keys(documents).filter(
         (val) => documents[val as validDocs]
       );
-  
+
       let documentPayload: R[] =
         property?.documents
           ?.filter((doc) => documents[doc.type as keyof Documents])
           .map((doc) => ({ document: doc?.document, type: doc.type })) || [];
-  
+
       type validDocs = keyof typeof documents;
-  
+
       for (const key in uploadedDocuments) {
         let keyVal = uploadedDocuments[key];
         const matchingFile = documents[keyVal as validDocs];
-  
+
         if (matchingFile instanceof File) {
           const singleFormData = new FormData();
           singleFormData.append("file", matchingFile);
-  
+
           const { data: uploadImg } = await uploadSingle(singleFormData);
           if (uploadImg) {
             documentPayload.push({
@@ -244,7 +294,7 @@ useEffect(() => {
           }
         }
       }
-  
+
       return {
         images: finalImages,
         documents: documentPayload,
@@ -259,20 +309,22 @@ useEffect(() => {
       });
     }
   };
-  
 
   const addPropertyFn = async () => {
     setLoading(true);
     const { documents, price, images, ...rest } = propertyData;
-    const action = property ? 'update' :'create';
+    const action = property ? "update" : "create";
 
     try {
-      const uploadedFiles = (await uploadPropertyFiles(images, documents as Documents)) || {
+      const uploadedFiles = (await uploadPropertyFiles(
+        images,
+        documents as Documents
+      )) || {
         images: [],
         documents: [],
       };
 
-      if(!uploadedFiles) {
+      if (!uploadedFiles) {
         toast({
           status: "error",
           description: `Failed to upload files`,
@@ -294,11 +346,13 @@ useEffect(() => {
         ...uploadedFiles,
       };
       // create endpoint
-     
-      (uploadedFiles && !property ) && (await addProperty(payload)); // If no error occurs, the following code runs
+
+      uploadedFiles && !property && (await addProperty(payload)); // If no error occurs, the following code runs
 
       // update endpoint
-      (uploadedFiles && property ) && (await editProperty(payload, property?._id as string)); // If no error occurs, the following code runs
+      uploadedFiles &&
+        property &&
+        (await editProperty(payload, property?._id as string)); // If no error occurs, the following code runs
 
       setShowModal(false);
       setInput(initialValues);
@@ -307,7 +361,6 @@ useEffect(() => {
       setImages(property?.images || []);
 
       setShowScreen(1);
-
 
       toast({
         status: "success",
@@ -329,7 +382,6 @@ useEffect(() => {
     }
   };
 
-  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -348,7 +400,11 @@ useEffect(() => {
   return (
     <>
       <form>
-        <Modal  onClose={toggleModal} isVisible={showModal} label={property ? `Edit ${title} Property` : "Add Property"}>
+        <Modal
+          onClose={toggleModal}
+          isVisible={showModal}
+          label={property ? `Edit ${title} Property` : "Add Property"}
+        >
           {/* {currentChildComponent} */}
           {showScreen === 1 ? (
             <AddPropertyScreenOne
@@ -359,7 +415,6 @@ useEffect(() => {
               setTouched={setTouched}
               features={features}
               setFeatures={setFeatures}
-              
               onClick={() => setShowScreen(2)}
             />
           ) : showScreen === 2 ? (

@@ -19,7 +19,7 @@ import { SearchIcon } from "../../components/svg";
 import useProperty from "@/hooks/useProperty";
 import { useApiUrl } from "../../hooks/useApi";
 import { PropertyCard, PropertyCardProps } from "./propertyCard";
-import { DocumentTypes, } from "@/utils/types";
+import { DocumentTypes } from "@/utils/types";
 import { IoFilter } from "react-icons/io5";
 import { AddProperties } from "./Add";
 import useUser from "@/hooks/useUser";
@@ -32,7 +32,7 @@ interface User {
   email: string;
   phoneNumber: number;
   avatar: any;
-  role:string
+  role: string;
 }
 
 export type Documents = {
@@ -49,14 +49,11 @@ export const PropertyScreen = () => {
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
 
+  const { getAdminProperty } = useProperty();
 
-  const {  getAdminProperty } = useProperty();
-
- 
   const toggleModal = () => {
     setShowModal((prevState) => !prevState);
   };
-
 
   const getPropertyFunction = async () => {
     setLoading(true);
@@ -91,8 +88,8 @@ export const PropertyScreen = () => {
       const res: any = await getUser("");
       setUsers(res?.data?.data);
     } catch (error) {
-     console.log(error);
-    } 
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -105,12 +102,8 @@ export const PropertyScreen = () => {
 
   return (
     <>
-      <AddProperties showModal={showModal} setShowModal={setShowModal}  />
-      <Box
-        className="robotoF"
-        px={{ base: "16px", lg: "20px" }}
-        width={'100%'}
-      >
+      <AddProperties showModal={showModal} setShowModal={setShowModal} />
+      <Box className="robotoF" px={{ base: "16px", lg: "20px" }} width={"100%"}>
         <Flex
           mb={"24px"}
           // mt={"10px"}
@@ -123,7 +116,7 @@ export const PropertyScreen = () => {
           bg="white"
           mt="2em"
         >
-          <Flex w={{base:"100%", lg: '60%', xl: '100%'}}>
+          <Flex w={{ base: "100%", lg: "60%", xl: "100%" }}>
             <InputGroup
               display={"flex"}
               alignItems={"center"}
@@ -216,9 +209,9 @@ export const PropertyScreen = () => {
 
         {/* Scrollable Property Cards Container */}
         <Box
-          // overflowY={{ xl: "auto" }}
-          // height={{ xl: "520px" }}
-          // mt={4}
+        // overflowY={{ xl: "auto" }}
+        // height={{ xl: "520px" }}
+        // mt={4}
         >
           {loading && (
             <Stack>
@@ -238,15 +231,15 @@ export const PropertyScreen = () => {
                 base: "repeat(1, 1fr)",
                 md: "repeat(2, 1fr)",
                 xl: "repeat(3, 1fr)",
-                '2xl': "repeat(4, 1fr)",
+                "2xl": "repeat(4, 1fr)",
               }}
               gap={{ base: "24px", lg: "28px" }}
-              paddingY={'2rem'}
+              paddingY={"2rem"}
               // paddingBottom={{ base: "20rem", lg: "3rem" }}
             >
               {propertyEl.map((property, index) => {
                 const user = users.find((u) => u._id === property?.creatorID);
-            
+
                 return (
                   <PropertyCard
                     key={index}
@@ -282,9 +275,8 @@ export const PropertyScreen = () => {
           justifyContent={{ base: "center", md: "space-between" }}
           mt={{ base: "14px", md: "10px" }}
           gap={{ base: "1rem", md: "0rem" }}
-          px={'20px'}
-          py={'20px'}
-
+          px={"20px"}
+          py={"20px"}
         >
           <Text
             fontSize={"14px"}
