@@ -143,6 +143,9 @@ export const PropertiesCard = ({
       border={"1px solid #262626"}
       overflow={"hidden"}
       cursor={"pointer"}
+      display="flex"
+      flexDirection="column"
+      minH="550px"
     >
       <Flex
         position={"relative"}
@@ -160,6 +163,7 @@ export const PropertiesCard = ({
         gap={"16px"}
         w={"100%"}
         my={"24px"}
+        flex="1"
       >
         <Flex
           w={"100%"}
@@ -212,6 +216,7 @@ export const PropertiesCard = ({
         alignItems={"end"}
         gap={"10px"}
         className="robotoF"
+        mt="auto"
       >
         <Flex flexDir={"column"} justifyContent={"space-between"}>
           <Text fontWeight={500} fontSize={"14px"} textColor={"#999999"}>
