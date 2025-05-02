@@ -60,7 +60,7 @@ export const PropertyCard = ({
   const router = useRouter();
 
   const handleNavigation = () => {
-    router.push("/property/" + id);
+    router.push("/listing/" + id);
   };
 
   let finalImage = userImage;

@@ -5,16 +5,11 @@ import {
   Card,
   CardBody,
   Grid,
-  Input,
-  InputGroup,
-  InputRightElement,
   Skeleton,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import { Background } from "../home/Background";
-import Btn from "@/components/Btn";
-import { RiSearch2Line } from "react-icons/ri";
 import { TextHeader } from "../home/textHeader";
 import { Footer } from "@/components/footer";
 import { useEffect, useState } from "react";
@@ -25,7 +20,6 @@ import { PropertiesCard } from "../properties/propertiesCard";
 import useProperty from "@/hooks/useProperty";
 
 const ProjectScreen = () => {
-  const [inputValue, setInputValue] = useState<string>("");
   const [isLoading, setLoading] = useState<boolean>(false);
   const [fetchData, setFetchData] = useState<PropertyCardProps[]>([]);
   const [page, setPage] = useState<number>(0);
@@ -37,7 +31,7 @@ const ProjectScreen = () => {
       setLoading(true);
       try {
         const { data } = await axios.get(
-          `/api/property?keyword=${inputValue}&PageNumber=${page}`
+          `/api/property?keyword=${""}&PageNumber=${page}`
         );
         setFetchData(data?.data);
       } catch (error) {
@@ -48,7 +42,7 @@ const ProjectScreen = () => {
     };
 
     debounce(() => getPropertyFunction());
-  }, [page, inputValue]);
+  }, [page]);
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -95,62 +89,6 @@ const ProjectScreen = () => {
           alignItems={"center"}
           gap={"20px"}
         >
-          <InputGroup
-            display={"flex"}
-            alignItems={"center"}
-            border={"1px"}
-            borderRadius={"10px"}
-            bg={"#E2EDF3"}
-            borderColor={"#26262630"}
-            _focusWithin={{ border: "1.5px solid #3170A6" }}
-            cursor={"search"}
-            fontSize={{ base: 12, lg: 14 }}
-            textColor={"var--(sub600)"}
-            maxW="1020px"
-            h={{ base: "52px", lg: "80px" }}
-            className="urbanist"
-            overflow={"hidden"}
-          >
-            <Input
-              w={"80%"}
-              h={"100%"}
-              _placeholder={{
-                textColor: "#666666",
-                fontSize: { base: "10px", md: "14px", lg: "20px" },
-              }}
-              border={"none"}
-              _focusVisible={"none"}
-              type="search"
-              placeholder="Search for a property by title, description or category"
-              value={inputValue}
-              onChange={(e: any) => setInputValue(e.target.value)}
-            />
-            <InputRightElement
-              pointerEvents="none"
-              w={"fit-content"}
-              h={"max-content"}
-              mt={{ base: 2.5, lg: 4 }}
-              mx={{ base: 1, lg: 3 }}
-              zIndex={30}
-            >
-              <Btn
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                W={{ base: "60px", lg: "148px" }}
-                h={{ base: "32px", lg: "48px" }}
-                bg={"#3170A6"}
-                borderRadius={"8px"}
-                textColor={"white"}
-                gap={"8px"}
-                _hover={{ opacity: 0.5 }}
-                fontSize={{ base: "8px", lg: "14px" }}
-              >
-                <RiSearch2Line /> Find Prjects
-              </Btn>
-            </InputRightElement>
-          </InputGroup>
-
           <TextHeader
             Header={"Building Tomorrow's Landmarks Today"}
             sub={
