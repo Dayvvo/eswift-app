@@ -44,7 +44,6 @@ export const TruncatedText = ({
           fontSize={".75rem"}
         >
           {isExpanded ? " Read Less" : " Read More"}
-          {text.length} {displayText.length}
         </Text>
       )}
     </div>
