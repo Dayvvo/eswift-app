@@ -1,6 +1,7 @@
 import { Text } from "@chakra-ui/react";
 import { useState } from "react";
 import DOMPurify from "dompurify";
+
 export const TruncatedText = ({
   text,
   maxLength,
@@ -12,23 +13,15 @@ export const TruncatedText = ({
 
   if (!text) return null;
 
-  const splitText = text.split(" ");
-
-  let truncatedText = "";
-
-  if (splitText.length > maxLength) {
-    truncatedText = `${splitText.slice(0, maxLength).join(" ")} ${
-      isExpanded ? "" : "..."
-    }`;
-  } else {
-    truncatedText = splitText.join(" ");
-  }
-
-  const fullText = splitText.join(" ");
+  const shouldTruncate = text.length > maxLength;
+  const displayText = isExpanded
+    ? text
+    : shouldTruncate
+    ? text.slice(0, maxLength) + "..."
+    : text;
 
   return (
     <div>
-      {" "}
       <Text
         className="mulish"
         fontWeight={400}
@@ -36,10 +29,10 @@ export const TruncatedText = ({
         fontSize={".75rem"}
         mt="20px"
         dangerouslySetInnerHTML={{
-          __html: DOMPurify.sanitize(isExpanded ? fullText : truncatedText),
+          __html: DOMPurify.sanitize(displayText),
         }}
       />
-      {splitText.length > maxLength && (
+      {shouldTruncate && (
         <Text
           as={"span"}
           mt="-3px"
@@ -50,7 +43,8 @@ export const TruncatedText = ({
           color={"#1A1D66"}
           fontSize={".75rem"}
         >
-          {isExpanded ? "Read Less" : "Read More"}
+          {isExpanded ? " Read Less" : " Read More"}
+          {text.length} {displayText.length}
         </Text>
       )}
     </div>
