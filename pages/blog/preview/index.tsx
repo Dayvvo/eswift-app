@@ -22,7 +22,8 @@ const PreviewBlog = () => {
   useEffect(() => {
     // const parsedImage = localStorage.getItem("headerImage");
     const storedImage = localStorage.getItem("headerImage")?.toString() || null;
-    const storedImageFile = localStorage.getItem("headerImageFile")?.toString() || null;
+    const storedImageFile =
+      localStorage.getItem("headerImageFile")?.toString() || null;
 
     if (storedImage) {
       setHeaderImage(storedImage);
@@ -66,7 +67,7 @@ const PreviewBlog = () => {
     introduction: introValue,
     body: bodyValue,
     body_image: bodyImageFile,
-    conclusion: conclusionValue
+    conclusion: conclusionValue,
   };
 
   const addBlogFn = async () => {
@@ -89,11 +90,11 @@ const PreviewBlog = () => {
         localStorage.removeItem("bodyImageFile");
       }
       console.log("req", req);
-    } catch (err) {
-      // console.log("error calling post", err);
+    } catch (err: any) {
+      console.log("error calling post", err?.response?.data);
       toast({
         status: "error",
-        description: "Failed to create blog post",
+        description: err?.response?.data || "Failed to create blog post",
         title: "Failed",
         position: "top",
         duration: 5000,
@@ -150,29 +151,6 @@ const PreviewBlog = () => {
       </Flex>
       <Box my="20px">
         {headerImage && <Img src={headerImage} alt="header-img" w="full" />}
-
-        <Box
-          bgColor={"rgba(243, 121, 32, 0.10)"}
-          py={"39px"}
-          textAlign={"center"}
-        >
-          <Text
-            fontWeight={700}
-            className="mulish"
-            color={"#4D4D4D"}
-            fontSize={"1.5rem"}
-          >
-            Areas and Aspect of Real Estate
-          </Text>
-          <Text
-            fontWeight={400}
-            className="mulish"
-            color={"#9D9D9E"}
-            fontSize={".99rem"}
-          >
-            March 10, 2024
-          </Text>
-        </Box>
       </Box>
       <Box mt="50px">
         <Text

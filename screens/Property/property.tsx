@@ -17,7 +17,6 @@ import { useEffect, useState } from "react";
 import { BsPlus } from "react-icons/bs";
 import { SearchIcon } from "../../components/svg";
 import useProperty from "@/hooks/useProperty";
-import { useApiUrl } from "../../hooks/useApi";
 import { PropertyCard, PropertyCardProps } from "./propertyCard";
 import { DocumentTypes } from "@/utils/types";
 import { IoFilter } from "react-icons/io5";
@@ -177,7 +176,7 @@ export const PropertyScreen = () => {
                 textColor: "#FFF",
               }}
             >
-              <Text fontSize={"14px"}>Add Property</Text>
+              <Text fontSize={"14px"}>Add Listing</Text>
               <BsPlus className="icon" />
             </Btn>
             <Btn

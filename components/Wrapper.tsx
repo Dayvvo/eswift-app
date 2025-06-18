@@ -26,7 +26,7 @@ const Wrapper = ({
   const isUser = "An overview of activities, verify users and properties.";
 
   const { isWindow, user } = useAuth();
-  const { getProfile } = useProfile();
+
   const navigate = useRouter() as NextRouter;
   const router = useRouter();
 
@@ -44,9 +44,9 @@ const Wrapper = ({
             url: "/users",
           },
           {
-            label: "Property",
+            label: "Listing",
             icon: (color: string) => <FiHome size={"1rem"} color={color} />,
-            url: "/property",
+            url: "/listing",
           },
           {
             label: "Blog",
