@@ -221,9 +221,15 @@ const BlogScreen = () => {
                     key={index}
                     bgColor={"#fff"}
                     maxW={{ base: "100%", sm: "340px" }}
-                    boxShadow={
-                      "0px 17.579px 52.738px 0px rgba(133, 133, 133, 0.10)"
-                    }
+                    borderTopRadius={"12px"}
+                    // boxShadow={
+                    //   "0px 17.579px 52.738px 0px rgba(133, 133, 133, 0.10)"
+                    // }
+                    // boxShadow="0 6px 18px rgba(0, 0, 0, 0.06)"
+                    boxShadow="0 8px 30px rgba(0, 0, 0, 0.1)"
+                    // boxShadow="4px 4px 10px rgba(0, 0, 0, 0.1), -4px -4px 10px rgba(255, 255, 255, 0.6)"
+                    // border={"1px solid #E1E4EA"}
+                    // borderRadius={"12px"}
                     display="flex"
                     flexDirection="column" // Ensure the content stacks vertically
                     flexBasis={1}
@@ -238,6 +244,7 @@ const BlogScreen = () => {
                       mb={{ base: "20px", lg: "40px" }}
                     >
                       <Image
+                        style={{ borderRadius: "12px 12px 0 0" }}
                         width={1000}
                         height={1000}
                         src={item.header_image || "/blogdumy.png"}
@@ -253,7 +260,7 @@ const BlogScreen = () => {
                       justifyContent="space-between"
                     >
                       {/* Flex and justify space-between ensure the buttons stay at the bottom */}
-                      <Box flex={1} p="20px 25px">
+                      <Box flex={1} p="20px 10px">
                         <Text
                           className="mulish"
                           fontWeight={700}
@@ -274,7 +281,7 @@ const BlogScreen = () => {
                       /> */}
                         <TruncatedText
                           text={item.introduction}
-                          maxLength={10}
+                          maxLength={50}
                         />
                         <Text
                           className="mulish"
@@ -290,7 +297,8 @@ const BlogScreen = () => {
                           justify={"space-between"}
                           gap={"6px"}
                           mt="auto"
-                          p="10px"
+                          py="20px"
+                          px="10px"
                         >
                           <Btn
                             bgColor="#6AFFB0"
