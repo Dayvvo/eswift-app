@@ -24,6 +24,8 @@ import useToast from "@/hooks/useToast";
 import { useDebounce } from "@/hooks/useDebounce";
 import Pagination from "@/components/Pagination";
 import { Modal } from "@/components/modal";
+import { TruncatedText } from "@/components/TruncatedText";
+import Image from "next/image";
 // import { useAppContext } from "@/context";
 
 interface BlogPostProps {
@@ -98,7 +100,7 @@ const BlogScreen = () => {
   const deleteBlogFn = async (blogPostId: any) => {
     try {
       const req = (await deleteBlog(blogPostId)) as any;
-    
+
       // if(req.statusCode)
       // const req = (await addBlog(data)) as any;
       if (req.data?.statusCode === 200) {
@@ -109,7 +111,7 @@ const BlogScreen = () => {
           position: "top",
           duration: 5000,
         });
-        setShowModal(false)
+        setShowModal(false);
         setBlogPost((prevBlogPost) =>
           prevBlogPost.filter((post) => post._id !== blogPostId)
         );
@@ -130,7 +132,7 @@ const BlogScreen = () => {
 
   return (
     <>
-      <Flex gap={"20px"} mt={'20px'}>
+      <Flex gap={"20px"} mt={"20px"}>
         <InputGroup>
           <InputLeftElement onClick={getBlogFn}>
             <SearchIcon />
@@ -159,7 +161,7 @@ const BlogScreen = () => {
         </Box>
       </Flex>
       {loading && (
-        <Stack marginTop={'50px'}>
+        <Stack marginTop={"50px"}>
           <Skeleton height="40px" />
           <Skeleton height="40px" />
           <Skeleton height="40px" />
@@ -167,71 +169,100 @@ const BlogScreen = () => {
       )}
       {!loading && blogPost?.length > 0 && (
         <>
-        <SimpleGrid columns={{base:1, md:2, lg:3}} spacing={5} mt="20px">
-          {currentBlogsInView.map((item, index) => {
-            const dateString = new Date(item.createdAt);
-            const formattedDate = dateString.toLocaleDateString("en-US", {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            });
-            return (
-              <Box key={index}>
-                <Modal onClose={toggleModal} isVisible={showModal} label={`Delete ${selectedBlog?.title}`}>
+          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={5} mt="20px">
+            {currentBlogsInView.map((item, index) => {
+              const dateString = new Date(item.createdAt);
+              const formattedDate = dateString.toLocaleDateString("en-US", {
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              });
+              return (
+                <Box key={index}>
+                  <Modal
+                    onClose={toggleModal}
+                    isVisible={showModal}
+                    label={`Delete ${selectedBlog?.title}`}
+                  >
                     <Box className="robotoF">
-                      <Text>Are you sure you want to delete <strong>{selectedBlog?.title}</strong> blog post?</Text>
-                      <HStack justify={'center'} mt='15px'>
-                        <Btn bgColor="#6AFFB0"
-                        borderRadius={"50px"}
+                      <Text>
+                        Are you sure you want to delete{" "}
+                        <strong>{selectedBlog?.title}</strong> blog post?
+                      </Text>
+                      <HStack justify={"center"} mt="15px">
+                        <Btn
+                          bgColor="#6AFFB0"
+                          borderRadius={"50px"}
                           className="urbanist"
                           fontWeight={400}
                           fontSize={".937rem"}
                           w="144px"
                           h="28px"
-                        onClick={() => deleteBlogFn(selectedBlog?._id)}
-                          >Yes</Btn>
-                        <Btn bgColor="#FF5764"      
-                        borderRadius={"50px"}
+                          onClick={() => deleteBlogFn(selectedBlog?._id)}
+                        >
+                          Yes
+                        </Btn>
+                        <Btn
+                          bgColor="#FF5764"
+                          borderRadius={"50px"}
                           className="urbanist"
                           fontWeight={400}
                           fontSize={".937rem"}
                           w="144px"
-                          h="28px" onClick={toggleModal}>No</Btn>
+                          h="28px"
+                          onClick={toggleModal}
+                        >
+                          No
+                        </Btn>
                       </HStack>
                     </Box>
-                </Modal>
-                <Box
-                  key={index}
-                  bgColor={"#fff"}
-                  maxW={{base:'100%',sm:"340px"}}
-                  boxShadow={
-                    "0px 17.579px 52.738px 0px rgba(133, 133, 133, 0.10)"
-                  }
-                  display="flex"
-                  flexDirection="column" // Ensure the content stacks vertically
-                  flexBasis={1}
-                >
-                  <Box w="100%" borderRadius={"7px 7px 0 0"}>
-                    <Img src={item.header_image} alt={item.title} w="100%" />
-                  </Box>
+                  </Modal>
                   <Box
-                    flex="1"
-                    // p="10px"
+                    key={index}
+                    bgColor={"#fff"}
+                    maxW={{ base: "100%", sm: "340px" }}
+                    boxShadow={
+                      "0px 17.579px 52.738px 0px rgba(133, 133, 133, 0.10)"
+                    }
                     display="flex"
-                    flexDirection="column"
-                    justifyContent="space-between"
+                    flexDirection="column" // Ensure the content stacks vertically
+                    flexBasis={1}
                   >
-                    {/* Flex and justify space-between ensure the buttons stay at the bottom */}
-                    <Box flex={1} p="20px 25px">
-                      <Text
-                        className="mulish"
-                        fontWeight={700}
-                        color={"#4D4D4D"}
-                        fontSize={".937rem"}
-                      >
-                        {item.title}
-                      </Text>
-                      <Text
+                    {/* <Box w="100%" borderRadius={"7px 7px 0 0"}>
+                      <Img src={item.header_image} alt={item.title} w="100%" />
+                    </Box> */}
+                    <Flex
+                      position={"relative"}
+                      w="100%"
+                      h={{ base: "280px", lg: "306px" }}
+                      mb={{ base: "20px", lg: "40px" }}
+                    >
+                      <Image
+                        width={1000}
+                        height={1000}
+                        src={item.header_image || "/blogdumy.png"}
+                        alt={"project"}
+                      />
+                      {/* <Img src={picture} alt={title} w="100%" /> */}
+                    </Flex>
+                    <Box
+                      flex="1"
+                      // p="10px"
+                      display="flex"
+                      flexDirection="column"
+                      justifyContent="space-between"
+                    >
+                      {/* Flex and justify space-between ensure the buttons stay at the bottom */}
+                      <Box flex={1} p="20px 25px">
+                        <Text
+                          className="mulish"
+                          fontWeight={700}
+                          color={"#4D4D4D"}
+                          fontSize={".937rem"}
+                        >
+                          {item.title}
+                        </Text>
+                        {/* <Text
                         className="mulish"
                         fontWeight={400}
                         color={"#797979"}
@@ -240,61 +271,65 @@ const BlogScreen = () => {
                         dangerouslySetInnerHTML={{
                           __html: DOMPurify.sanitize(item.introduction),
                         }}
-                      />
-                      <Text
-                        className="mulish"
-                        fontWeight={400}
-                        color={"#797979"}
-                        fontSize={".75rem"}
-                      >
-                        {formattedDate}
-                      </Text>
+                      /> */}
+                        <TruncatedText
+                          text={item.introduction}
+                          maxLength={10}
+                        />
+                        <Text
+                          className="mulish"
+                          fontWeight={400}
+                          color={"#797979"}
+                          fontSize={".75rem"}
+                        >
+                          {formattedDate}
+                        </Text>
+                      </Box>
+                      {isAdmin === "ADMIN" && (
+                        <Flex
+                          justify={"space-between"}
+                          gap={"6px"}
+                          mt="auto"
+                          p="10px"
+                        >
+                          <Btn
+                            bgColor="#6AFFB0"
+                            borderRadius={"50px"}
+                            className="robotoF"
+                            cursor={"pointer"}
+                            fontWeight={400}
+                            fontSize={".937rem"}
+                            w="144px"
+                            h="28px"
+                            onClick={() =>
+                              route.push(`/blog/edit?blogId=${item._id}`)
+                            }
+                          >
+                            Edit
+                          </Btn>
+                          <Btn
+                            bgColor="#FF5764"
+                            borderRadius={"50px"}
+                            className="robotoF"
+                            fontWeight={400}
+                            fontSize={".937rem"}
+                            w="144px"
+                            h="28px"
+                            onClick={() => {
+                              setSelectedBlog(item);
+                              toggleModal();
+                            }}
+                          >
+                            Delete
+                          </Btn>
+                        </Flex>
+                      )}
                     </Box>
-                    {isAdmin === "ADMIN" && (
-                      <Flex
-                        justify={"space-between"}
-                        gap={"6px"}
-                        mt="auto"
-                        p="10px"
-                      >
-                        <Btn
-                          bgColor="#6AFFB0"
-                          borderRadius={"50px"}
-                          className="robotoF"
-                          cursor={"pointer"}
-                          fontWeight={400}
-                          fontSize={".937rem"}
-                          w="144px"
-                          h="28px"
-                          onClick={() =>
-                            route.push(`/blog/edit?blogId=${item._id}`)
-                          }
-                        >
-                          Edit
-                        </Btn>
-                        <Btn
-                          bgColor="#FF5764"
-                          borderRadius={"50px"}
-                          className="robotoF"
-                          fontWeight={400}
-                          fontSize={".937rem"}
-                          w="144px"
-                          h="28px"
-                          onClick={() => {
-                            setSelectedBlog(item);
-                            toggleModal();
-                          }}
-                        >
-                          Delete
-                        </Btn>
-                      </Flex>
-                    )}
                   </Box>
-                </Box>  
-             </Box>
-            );
-          })}
-        </SimpleGrid>
+                </Box>
+              );
+            })}
+          </SimpleGrid>
         </>
       )}
       {blogPost?.length > totalCount && (
