@@ -1,22 +1,32 @@
 import { Box, Flex, Text, Image } from "@chakra-ui/react";
 import Link from "next/link";
-import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaTwitter,
+} from "react-icons/fa";
 
 export const Footer = () => {
   const socials = [
     {
       id: 1,
-      page: "",
+      page: "https://www.instagram.com/eswiftpropertymart.ng?igsh=MXY3ZzgzOGR1cjlsag==",
       logo: <FaInstagram />,
     },
+    // {
+    //   id: 2,
+    //   page: "",
+    //   logo: <FaLinkedinIn />,
+    // },
     {
-      id: 2,
-      page: "",
-      logo: <FaLinkedinIn />,
+      id: 4,
+      logo: <FaTwitter />,
+      page: "https://twitter.com/eswift_Property?t=Ac0xwiRebkmLTwvqMQPm2A&s=09",
     },
     {
       id: 3,
-      page: "",
+      page: "https://web.facebook.com/profile.php?id=61554985060096#",
       logo: <FaFacebookF />,
     },
   ];
@@ -54,26 +64,26 @@ export const Footer = () => {
     },
   ];
 
-  const LegalLink = [
+  const LegalLink: { id: number; Navigator: string; Link: string }[] = [
     {
       id: 1,
       Navigator: "Legal Disclaimer",
-      Link: "",
+      Link: "#",
     },
     {
       id: 2,
       Navigator: "Terms and Conditions",
-      Link: "",
+      Link: "#",
     },
     {
       id: 3,
       Navigator: "Cookies Policy",
-      Link: "",
+      Link: "#",
     },
   ];
 
-  const phone = 'O8066895363' as string;
-  const whatsappContact = '08059112878' as string;
+  const phone = "O8066895363" as string;
+  const whatsappContact = "08059112878" as string;
   return (
     <>
       <Box
@@ -128,14 +138,19 @@ export const Footer = () => {
                 textColor={"var(--TextCol)"}
                 w={"180px"}
               >
-                Opposite Royal, Bird Hotel, at Ijapo Estate, Akure
+                <Link
+                  href="https://maps.google.com/maps/place/e-Swift+PropertyMart,+18+Owo+Avenue,+opposite+Royal+Bird+Hotel,+Ijapo+Estate,+Akure/@7.2651259,5.2161311,17z/"
+                  target="_blank"
+                >
+                  Opposite Royal, Bird Hotel, at Ijapo Estate, Akure
+                </Link>
               </Text>
             </Box>
             <Box mb={2} className="roboto">
               <Text fontWeight={500} fontSize={"16px"} textColor={"#1A1D66"}>
                 Email
               </Text>
-              <Link href="mailto:">
+              <Link href="mailto:eswiftpropertymart@gmail.com">
                 <Text
                   fontWeight={400}
                   fontSize={"16px"}
@@ -156,9 +171,20 @@ export const Footer = () => {
                 fontSize={"16px"}
                 textColor={"var(--TextCol)"}
               >
-                Call <Text as='span'><Link href={`tel:${phone}`}>{phone}</Link></Text> <br />
+                Call{" "}
+                <Text as="span">
+                  <Link href={`tel:+2348066895363`}>{phone}</Link>
+                </Text>{" "}
+                <br />
                 Whatsapp <br />
-                {whatsappContact}
+                <Text as="span">
+                  <Link
+                    href={`https://wa.me/message/GI7M6PJK4RGPL1`}
+                    target="_blank"
+                  >
+                    {whatsappContact}
+                  </Link>
+                </Text>
               </Text>
             </Box>
           </Box>
@@ -172,7 +198,7 @@ export const Footer = () => {
             <Image src={"/footer.png"} alt="logo" w={"175px"} h={"130px"} />
             <Flex w={"fit-content"} gap={"30px"} alignItems={"center"}>
               {socials.map((item) => (
-                <Link href={`${item.page}`} key={item?.id}>
+                <Link href={`${item.page}`} key={item?.id} target="_blank">
                   <Box
                     display={"flex"}
                     justifyContent={"center"}

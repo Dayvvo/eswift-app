@@ -18,7 +18,7 @@ import {
 import { MdArrowOutward } from "react-icons/md";
 import Link from "next/link";
 import { Background } from "../home/Background";
-import { FaEnvelope, FaLinkedin } from "react-icons/fa";
+import { FaEnvelope, FaLinkedin, FaTwitter, FaWhatsapp } from "react-icons/fa";
 import { BsTelephoneFill } from "react-icons/bs";
 import { FaLocationDot, FaFacebookF } from "react-icons/fa6";
 import { BiLogoInstagramAlt } from "react-icons/bi";
@@ -40,37 +40,52 @@ const ContactScreen = () => {
       id: 1,
       icon: <FaEnvelope />,
       title: "e-Swiftpropertmart",
-      navigate: "mailto:ewiftpropertymart",
+      navigate: "mailto:eswiftpropertymart@gmail.com",
     },
     {
       id: 2,
       icon: <BsTelephoneFill />,
-      title: "(+234) 805-911-2878",
-      navigate: "tel:+2348059112878",
+      title: "(+234) 806-689-5363",
+      navigate: "tel:+2348066895363",
+    },
+    {
+      id: 7,
+      icon: <FaWhatsapp />,
+      title: "WhatsApp",
+      navigate: "https://wa.me/message/GI7M6PJK4RGPL1",
     },
     {
       id: 3,
       icon: <FaLocationDot />,
       title: "Main Headquarters",
-      navigate: "",
+      navigate:
+        "https://maps.google.com/maps/place/e-Swift+PropertyMart,+18+Owo+Avenue,+opposite+Royal+Bird+Hotel,+Ijapo+Estate,+Akure/@7.2651259,5.2161311,17z/",
     },
     {
       id: 4,
       icon: <BiLogoInstagramAlt />,
       title: "Instagram",
-      navigate: "",
+      navigate:
+        "https://www.instagram.com/eswiftpropertymart.ng?igsh=MXY3ZzgzOGR1cjlsag==",
     },
     {
       id: 5,
       icon: <FaFacebookF />,
       title: "Facebook",
-      navigate: "",
+      navigate: "https://web.facebook.com/profile.php?id=61554985060096#",
     },
+    // {
+    //   id: 6,
+    //   icon: <FaLinkedin />,
+    //   title: "LinkedIn",
+    //   navigate: "",
+    // },
     {
-      id: 6,
-      icon: <FaLinkedin />,
-      title: "LinkedIn",
-      navigate: "",
+      id: 8,
+      icon: <FaTwitter />,
+      title: "Twitter",
+      navigate:
+        "https://twitter.com/eswift_Property?t=Ac0xwiRebkmLTwvqMQPm2A&s=09",
     },
   ];
 
@@ -271,7 +286,17 @@ const ContactScreen = () => {
                 _hover={{ bg: "#3170A690" }}
               >
                 <Flex w={"100%"} justifyContent={"end"}>
-                  <Link href={item?.navigate}>
+                  <Link
+                    href={item?.navigate}
+                    target={
+                      item?.navigate.startsWith("http") ? "_blank" : "_self"
+                    }
+                    rel={
+                      item?.navigate.startsWith("http")
+                        ? "noopener noreferrer"
+                        : undefined
+                    }
+                  >
                     <Box fontSize={"26px"}>
                       <MdArrowOutward />
                     </Box>
