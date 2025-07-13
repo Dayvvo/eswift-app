@@ -664,7 +664,7 @@ const ContactScreen = () => {
                 display={"flex"}
                 justifyContent={"center"}
                 alignItems={"center"}
-                W={{ base: "60px", lg: "191px" }}
+                w={{ base: "60px", lg: "191px" }}
                 h={{ base: "32px", lg: "52px" }}
                 bg={isAgree ? "#3170A6" : "#ccc"}
                 borderRadius={"6px"}
