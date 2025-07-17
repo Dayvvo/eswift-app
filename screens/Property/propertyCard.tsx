@@ -142,7 +142,7 @@ export const PropertyCard = ({
       display="flex"
       flexDirection="column"
     >
-      <Flex position={"relative"} w="100%" h="230px" minH="230px" maxH="250px">
+      <Flex position={"relative"} w="100%" h="260px" minH="260px" maxH="270px">
         <Text
           className="montserrat"
           position={"absolute"}
@@ -182,8 +182,9 @@ export const PropertyCard = ({
               className="robotoF"
               fontSize={{ base: "16px", lg: "18px" }}
               fontWeight={600}
+              noOfLines={1}
             >
-              {truncateText(title, 40)}
+              {title}
             </Text>
             <Text
               fontSize={{ base: "16px", lg: "18px" }}
@@ -193,7 +194,7 @@ export const PropertyCard = ({
               flexWrap={"nowrap"}
             >
               <TbCurrencyNaira />
-              {pricing?.amount}
+              {Number(pricing?.amount)?.toLocaleString()}
             </Text>
           </Flex>
           <Flex
@@ -207,7 +208,7 @@ export const PropertyCard = ({
             <Text
               fontSize={{ base: "12px", lg: "14px" }}
               width={"100%"}
-              isTruncated
+              noOfLines={1}
             >
               {location}
             </Text>
@@ -226,7 +227,12 @@ export const PropertyCard = ({
                 borderRadius={"100px"}
                 overflow={"clip"}
               >
-                <Image width={18} height={18} src={`${finalImage}`} alt="/" />
+                <Image
+                  width={18}
+                  height={18}
+                  src={`${finalImage || "/avatar1.png"}`}
+                  alt="/"
+                />
               </Box>
               <Text fontWeight={300} fontSize={{ base: "12px", lg: "14px" }}>
                 {user}
@@ -236,7 +242,7 @@ export const PropertyCard = ({
             <Text
               fontWeight={200}
               fontSize={{ base: "12px", lg: "14px" }}
-              isTruncated
+              noOfLines={1}
             >
               {email}
             </Text>
