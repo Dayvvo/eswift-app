@@ -23,7 +23,7 @@ const PropertiesScreen = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const [fetchData, setFetchData] = useState<PropertyCardProps[]>([]);
   const [isLoading, setLoading] = useState<boolean>(false);
-  const [page, setPage] = useState<number>(0);// Store favorite IDs
+  const [page, setPage] = useState<number>(0); // Store favorite IDs
 
   const debounce = useDebounce();
   const { getFavorites } = useProperty();
@@ -139,7 +139,7 @@ const PropertiesScreen = () => {
                 display={"flex"}
                 justifyContent={"center"}
                 alignItems={"center"}
-                W={{ base: "60px", lg: "148px" }}
+                w={{ base: "60px", lg: "148px" }}
                 h={{ base: "32px", lg: "48px" }}
                 bg={"#3170A6"}
                 borderRadius={"8px"}
