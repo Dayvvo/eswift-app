@@ -1,24 +1,12 @@
 import { HeroPropsVideo } from "@/components/heroPropsVideo";
 import NavBar from "@/components/navBar";
-import {
-  Box,
-  Grid,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Grid, Text } from "@chakra-ui/react";
 import { BlogCard } from "./blogsCard";
 import { useEffect, useState } from "react";
 import useBlog from "@/hooks/useBlog";
 import { Background } from "../home/Background";
 import { LoadMore } from "@/components/LoadMore";
 import { Footer } from "@/components/footer";
-import { useRouter } from "next/router";
 
 export interface BlogPostProps {
   _id: any;
@@ -31,7 +19,6 @@ export interface BlogPostProps {
 }
 
 const BlogspotScreen = () => {
-  const navigate = useRouter();
   const [blogPost, setBlogPost] = useState<BlogPostProps[]>([]);
 
   const [loading, setLoading] = useState(false);
@@ -49,23 +36,13 @@ const BlogspotScreen = () => {
     }, 100);
   }
 
-  // const { isOpen, onOpen, onClose } = useDisclosure();
-
-  // useEffect(() => {
-  //   if (blogPost && blogPost?.length === 0) {
-  //     onOpen();
-  //   }
-  // }, [blogPost, onOpen]);
-
   useEffect(() => {
     const getBlogFn = async () => {
       setLoading(true);
       try {
         const req = await getBlog("");
-        console.log("req", req);
         setBlogPost(req?.data);
         setLoading(false);
-        console.log("req", req);
       } catch (error) {
         setLoading(false);
       }
