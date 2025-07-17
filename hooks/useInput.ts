@@ -1,4 +1,6 @@
 import { useState, ChangeEvent } from "react";
+import useToast from "./useToast";
+
 export const useInputText = (validation: (input: string) => boolean) => {
   const [input, setInput] = useState("");
   const [isTouch, setIsTouch] = useState<boolean | null>(null);
@@ -68,15 +70,48 @@ export const useInputNumber = (
   };
 };
 
-export type PropImages = (File|string)[]
+export type PropImages = (File | string)[];
 
-export const useImage = ({existingImages}:{existingImages?: PropImages }) => {
-  const [images, setImages] = useState<PropImages>( existingImages || []);
+// const validate_ladsacape_image = (file: File): Promise<void> => {
+//   return new Promise((resolve, reject) => {
+//     const img = new Image();
+
+//     img.onload = function () {
+//       const { width, height } = img;
+
+//       if (width > height) {
+//         resolve();
+//       } else {
+//         reject(new Error("Image must be landscape"));
+//       }
+//     };
+//     img.onerror = function () {
+//       reject(new Error("Image must be landscape"));
+//     };
+
+//     img.src = URL.createObjectURL(file);
+//   });
+// };
+
+export const useImage = ({
+  existingImages,
+}: {
+  existingImages?: PropImages;
+}) => {
+  const { toast } = useToast();
+  const [images, setImages] = useState<PropImages>(existingImages || []);
   const [error, setError] = useState<string | null>(null);
-  const validFileTypes: string[] = ["image/jpeg", "image/png", "image/gif", "image/png"];
-  const maxFileSize: number = 5 * 1024 * 1024;
+  const validFileTypes: string[] = [
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/png",
+  ];
+  const maxFileSize: number = 12 * 1024 * 1024;
 
-  const onChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeHandler = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (
       event.target instanceof HTMLInputElement &&
       event.target.type === "file"
@@ -93,19 +128,53 @@ export const useImage = ({existingImages}:{existingImages?: PropImages }) => {
                 ", "
               )} are supported.`
             );
+            toast({
+              status: "error",
+              title: "Image Upload Required",
+              description: `Invalid file type for '${
+                file.name
+              }'. ${validFileTypes.join(", ")} are supported.`,
+              position: "top",
+              duration: 1500,
+            });
             continue;
           }
           if (file.size > maxFileSize) {
             setError(
-              `File '${file.name}' exceeds maximum size of ${maxFileSize}MB`
+              `File '${file.name}' exceeds maximum size of ${maxFileSize / 1024 / 1024}MB`
             );
+            toast({
+              status: "error",
+              title: "Image Upload Required",
+              description: `File '${file.name}' exceeds maximum size of ${maxFileSize / 1024 / 1024}MB`,
+              position: "top",
+              duration: 1500,
+            });
             continue;
           }
+
+          // try {
+          //   await validate_ladsacape_image(file);
+          //   newImages.push(file);
+          // } catch (error: any) {
+          //   toast({
+          //     status: "error",
+          //     title: "Image Upload Required",
+          //     description: error.message || "Invalid image format",
+          //     position: "top",
+          //     duration: 1500,
+          //   });
+          //   setError(error.message);
+          //   continue;
+          // }
+
           newImages.push(file);
         }
 
-        setImages([...images, ...newImages]);
-        setError(null);
+        if (newImages.length > 0) {
+          setImages([...images, ...newImages]);
+          setError(null);
+        }
       }
     }
   };
@@ -126,7 +195,7 @@ export const useImage = ({existingImages}:{existingImages?: PropImages }) => {
     error,
     reset,
     deleteImage,
-    setImages
+    setImages,
   };
 };
 
