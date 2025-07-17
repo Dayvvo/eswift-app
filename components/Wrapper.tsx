@@ -118,7 +118,6 @@ const Wrapper = ({
     );
 
     if (isRestrictedPath && userData?.role !== "ADMIN") {
-      console.log(`Unauthorized access to ${router.pathname}. Logging out...`);
       localStorage.removeItem("token");
       localStorage.removeItem("userData");
       router.push("/auth");
@@ -126,7 +125,6 @@ const Wrapper = ({
 
     // Ensure token presence to keep the user logged in
     if (!token) {
-      console.log("No token found. Redirecting to /auth...");
       localStorage.removeItem("token");
       localStorage.removeItem("userData");
       router.push("/auth");
@@ -265,7 +263,7 @@ const Wrapper = ({
                   className="inter"
                   fontSize={"0.875rem"}
                   fontWeight={500}
-                  // whiteSpace={'nowrap'}
+                  noOfLines={1}
                 >
                   {`${user?.firstName} ${user?.lastName}`}
                 </Text>
@@ -274,7 +272,7 @@ const Wrapper = ({
                   className="inter"
                   fontSize={"0.65rem"}
                   fontWeight={400}
-                  whiteSpace={"wrap"}
+                  noOfLines={1}
                 >
                   {`${user?.email}`}
                 </Text>
