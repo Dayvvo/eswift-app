@@ -188,7 +188,7 @@ export const PropertyDetails = ({
     try {
       const req = await deleteProperty(id); // If no error occurs, the following code runs
 
-      router.push("/property");
+      router.push("/listing");
       toast({
         status: "success",
         description: "Property deleted",

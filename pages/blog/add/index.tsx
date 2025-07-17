@@ -23,8 +23,6 @@ const modules = {
 };
 
 const AddBlog = () => {
-  const [headerImage, setHeaderImage] = useState<File | undefined>();
-  const [bodyImage, setBodyImage] = useState<File | undefined>();
   const [introValue, setIntroValue] = useState("");
   const [articleTitle, setArticleTitle] = useState("");
   const [bodyValue, setBodyValue] = useState("");
@@ -42,27 +40,6 @@ const AddBlog = () => {
     localStorage.setItem("bodyImageFile", bodyImageFile);
   }, [bodyImageFile]);
 
-
-  // const imageChangeHandler = (
-  //   e: ChangeEvent<HTMLInputElement>,
-  //   setImage: any
-  // ) => {
-  //   if (e.target.files && e.target.files.length > 0) {
-  //     const file = e.target.files[0];
-
-  //     console.log('file', file)
-  //     setImage(file);
-
-  //     if (file) {
-  //       const reader = new FileReader();
-  //       reader.onload = (event: ProgressEvent<FileReader>) => {
-  //         const dataUrl = event.target?.result as string;
-  //         localStorage.setItem("headerImage", dataUrl);
-  //       };
-  //       reader.readAsDataURL(file);
-  //     }
-  //   }
-  // };
   
   const previewData = {
     articleTitle: articleTitle,

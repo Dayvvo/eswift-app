@@ -36,7 +36,13 @@ import useToast from "@/hooks/useToast";
 import { PropertyCardProps } from "../Property/propertyCard";
 import useProperty from "@/hooks/useProperty";
 
-const AddUser = ({ close, setTable }: { close: () => void,  setTable: React.Dispatch<React.SetStateAction<any>>;  }) => {
+const AddUser = ({
+  close,
+  setTable,
+}: {
+  close: () => void;
+  setTable: React.Dispatch<React.SetStateAction<any>>;
+}) => {
   const toast = useToast();
 
   const [userData, setUserData] = useState({
@@ -46,7 +52,6 @@ const AddUser = ({ close, setTable }: { close: () => void,  setTable: React.Disp
     lastName: "",
     role: "CLIENT",
   });
-
 
   const [loading, setLoading] = React.useState<boolean>(false);
 
@@ -111,14 +116,17 @@ const AddUser = ({ close, setTable }: { close: () => void,  setTable: React.Disp
         setLoading(true);
         const res = await addUser(userData);
 
-        setTable((prev: any) => [ {
-          email: res.data.email,
-          firstName: res.data.firstName,
-          lastName: res.data.lastName,
-          createdAt: new Date().toISOString(),
-          phoneNumber: res.data.phoneNumber,
-          role: res.data.role,
-        }, ...prev]);
+        setTable((prev: any) => [
+          {
+            email: res.data.email,
+            firstName: res.data.firstName,
+            lastName: res.data.lastName,
+            createdAt: new Date().toISOString(),
+            phoneNumber: res.data.phoneNumber,
+            role: res.data.role,
+          },
+          ...prev,
+        ]);
         setUserData({
           email: "",
           firstName: "",
@@ -132,11 +140,12 @@ const AddUser = ({ close, setTable }: { close: () => void,  setTable: React.Disp
         });
         return res;
       } catch (err: any) {
-        
         toast.toast({
           status: "error",
           title: "Error creating user",
-          description: err?.response?.data?.message ||'An error occurred while creating user please try again!',
+          description:
+            err?.response?.data?.message ||
+            "An error occurred while creating user please try again!",
         });
       } finally {
         setLoading(false);
@@ -231,7 +240,6 @@ const AddUser = ({ close, setTable }: { close: () => void,  setTable: React.Disp
           value={userData.role}
           onChange={handleChange}
         >
-
           <option value="AGENT">AGENT</option>
           <option value="AFFILIATE">AFFILIATE</option>
           <option value="ADMIN">ADMIN</option>
@@ -261,13 +269,13 @@ const UserScreen = () => {
   const [search, setSearch] = useState<string>("");
   const [verify, setVerify] = useState("Pending");
   const [loading, setLoading] = useState(false);
-   const [getProperty, setGetProperty] = useState<PropertyCardProps[]>([]);
-  const [propCount, setPropCount] = useState<Record<string, number>>({})
+  const [getProperty, setGetProperty] = useState<PropertyCardProps[]>([]);
+  const [propCount, setPropCount] = useState<Record<string, number>>({});
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
   const { getUser, getUserById } = useUser();
-    const { getAdminProperty } = useProperty();
+  const { getAdminProperty } = useProperty();
   const getUserFn = async () => {
     setLoading(true);
     try {
@@ -278,16 +286,15 @@ const UserScreen = () => {
       toast.toast({
         status: "error",
         title: "Failed to fech users",
-        description: 'An error occurred while fetching users',
+        description: "An error occurred while fetching users",
       });
     } finally {
       setLoading(false);
     }
-
   };
-  const getPropertyFn = async() => {
+  const getPropertyFn = async () => {
     try {
-      const getAllProperties = await getAdminProperty('', 1);
+      const getAllProperties = await getAdminProperty("", 1);
       if (getAllProperties?.data?.data) {
         setGetProperty(getAllProperties?.data?.data);
       }
@@ -295,27 +302,27 @@ const UserScreen = () => {
       toast.toast({
         status: "error",
         title: "Failed to fech Properties",
-        description: 'An error occurred while fetching Properties',
+        description: "An error occurred while fetching Properties",
       });
-    } 
-  }
+    }
+  };
 
   useEffect(() => {
     getUserFn();
     getPropertyFn();
   }, [search]);
 
-useEffect(() => {
-  const counts: Record<string, number> = {};
-  table.forEach((user: any) => {
-    const filteredProperties = getProperty.filter((property) => {
-      return property.creatorID === user._id
-    }).length;
-    counts[user._id] = filteredProperties;
-  })
+  useEffect(() => {
+    const counts: Record<string, number> = {};
+    table.forEach((user: any) => {
+      const filteredProperties = getProperty.filter((property) => {
+        return property.creatorID === user._id;
+      }).length;
+      counts[user._id] = filteredProperties;
+    });
 
-  setPropCount(counts);
-}, [getProperty, table])
+    setPropCount(counts);
+  }, [getProperty, table]);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -381,115 +388,121 @@ useEffect(() => {
             </MenuList>
           </Menu>
         </Flex>
-        <Btn className="robotoF" onClick={() => setShowModal(true)}
-          fontSize={'.875rem'}
+        <Btn
+          className="robotoF"
+          onClick={() => setShowModal(true)}
+          fontSize={".875rem"}
           fontWeight={500}
         >
           Add User
         </Btn>
         <Modal onClose={toggleModal} isVisible={showModal} label="Add User">
-          <AddUser close={toggleModal} setTable={setTable}/>
+          <AddUser close={toggleModal} setTable={setTable} />
         </Modal>
       </Flex>
       <TableContainer mt="30px">
-       {!loading && table.length > 0 && <Table size="sm">
-          <Thead>
-            <Tr bgColor={"#F5F7FA"}>
-              {[
-                "Full Name",
-                "Email",
-                "Phone No.",
-                "Date Created",
-                "Property",
-                "User Type",
-                "Action",
-              ].map((item, key) => (
-                <Th key={key} textTransform={"none"} p="8px">
-                  <Text
-                    className="robotoF"
-                    color={"#525866"}
-                    fontWeight={400}
-                    fontSize={".875rem"}
-                  >
-                    {item}
-                  </Text>
-                </Th>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody fontSize={".875rem"} fontWeight={400} className="robotoF">
-            {table &&
-              table.map((item: any) => {
-         
-                return <Tr key={item._id} cursor={"pointer"}>
-                  <Td color={"#0E121B"} py="12px">{`${item.firstName
-                    .slice(0, 1)
-                    .toUpperCase()}${item.firstName.slice(
-                    1,
-                    item.firstName.length
-                  )} ${item.lastName
-                    .slice(0, 1)
-                    .toUpperCase()}${item.lastName.slice(
-                    1,
-                    item.lastName.length
-                  )}`}</Td>
-                  <Td color={"#525866"} py="12px">
-                    {item.email}
-                  </Td>
-                  <Td color={"#525866"} py="12px">
-                    {item.phoneNumber || "N/A"}
-                  </Td>
-                  <Td color={"#525866"} py="12px">
-                    {item.createdAt.split("T")[0]}
-                  </Td>
-                  <Td color={"#525866"} py="12px">
-                  {propCount[item._id] ?? 0}
-                  </Td>
-                  <Td color={"#525866"} py="12px">
-                    {item.role}
-                  </Td>
-                  <Td color={"#525866"} py="12px">
-                    <Menu>
-                      <MenuButton
-                        as={"button"}
-                        className="robotoF"
-                        onClick={() => openDrawer(item._id)}
-                      >
-                        <ActionIcon />
-                      </MenuButton>
-                      <MenuList>
-                        <MenuItem>Edit</MenuItem>
-                        <MenuItem>Delete</MenuItem>
-                      </MenuList>
-                    </Menu>
-                  </Td>
-                </Tr>
-              })}
-          </Tbody>
-          <UserDrawer
-            isOpen={isOpen}
-            verify={verify}
-            setVerify={setVerify}
-            onClose={onClose}
-            btnRef={btnRef}
-            userEl={userEl}
-            propCount={propCount}
-          />
-        </Table>}
+        {!loading && table.length > 0 && (
+          <Table size="sm">
+            <Thead>
+              <Tr bgColor={"#F5F7FA"}>
+                {[
+                  "Full Name",
+                  "Email",
+                  "Phone No.",
+                  "Date Created",
+                  "Property",
+                  "User Type",
+                  "Action",
+                ].map((item, key) => (
+                  <Th key={key} textTransform={"none"} p="8px">
+                    <Text
+                      className="robotoF"
+                      color={"#525866"}
+                      fontWeight={400}
+                      fontSize={".875rem"}
+                    >
+                      {item}
+                    </Text>
+                  </Th>
+                ))}
+              </Tr>
+            </Thead>
+            <Tbody fontSize={".875rem"} fontWeight={400} className="robotoF">
+              {table &&
+                table.map((item: any) => {
+                  return (
+                    <Tr key={item._id} cursor={"pointer"}>
+                      <Td color={"#0E121B"} py="12px">{`${item.firstName
+                        .slice(0, 1)
+                        .toUpperCase()}${item.firstName.slice(
+                        1,
+                        item.firstName.length
+                      )} ${item.lastName
+                        .slice(0, 1)
+                        .toUpperCase()}${item.lastName.slice(
+                        1,
+                        item.lastName.length
+                      )}`}</Td>
+                      <Td color={"#525866"} py="12px">
+                        {item.email}
+                      </Td>
+                      <Td color={"#525866"} py="12px">
+                        {item.phoneNumber || "N/A"}
+                      </Td>
+                      <Td color={"#525866"} py="12px">
+                        {item.createdAt.split("T")[0]}
+                      </Td>
+                      <Td color={"#525866"} py="12px">
+                        {propCount[item._id] ?? 0}
+                      </Td>
+                      <Td color={"#525866"} py="12px">
+                        {item.role}
+                      </Td>
+                      <Td color={"#525866"} py="12px">
+                        <Menu>
+                          <MenuButton
+                            as={"button"}
+                            className="robotoF"
+                            onClick={() => openDrawer(item._id)}
+                          >
+                            <ActionIcon />
+                          </MenuButton>
+                          <MenuList>
+                            <MenuItem>Edit</MenuItem>
+                            <MenuItem>Delete</MenuItem>
+                          </MenuList>
+                        </Menu>
+                      </Td>
+                    </Tr>
+                  );
+                })}
+            </Tbody>
+          </Table>
+        )}
+
+        <UserDrawer
+          isOpen={isOpen}
+          verify={verify}
+          setVerify={setVerify}
+          onClose={onClose}
+          btnRef={btnRef}
+          userEl={userEl}
+          propCount={propCount}
+        />
         {loading && (
-        <Stack spacing={4} mt="30px">
-          <Skeleton height='30px' />
-          <Skeleton height='30px' />
-          <Skeleton height='30px' />
-        </Stack>
-      )}
-      {table.length === 0 && !loading && (
-        <Container>
-          <Text fontSize={".875rem"} color={"#525866"} mt="30px">
-            No user found
-          </Text>
-        </Container>
-      )}
+          <Stack spacing={4} mt="30px">
+            <Skeleton height="30px" />
+            <Skeleton height="30px" />
+            <Skeleton height="30px" />
+          </Stack>
+        )}
+        {table.length === 0 && !loading && (
+          <Container>
+            <Text fontSize={".875rem"} color={"#525866"} mt="30px">
+              No user found
+            </Text>
+          </Container>
+        )}
       </TableContainer>
     </Box>
   );

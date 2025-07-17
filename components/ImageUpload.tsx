@@ -23,14 +23,12 @@ const ImageUpload = ({
   const [image, setImage] = useState<ImageData | null>(null);
   const { uploadSingle } = useUpload();
   const { toast } = useToast();
-  const MAX_FILE_SIZE_MB = 2.5;
-  const validTypes = ["image/jpeg", "image/gif" ,"image/jpg", "image/png"];
+  const MAX_FILE_SIZE_MB = 12 * 1024 * 1024;
+  const validTypes = ["image/jpeg", "image/gif", "image/jpg", "image/png"];
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-
-      const fileSizeInMB = file.size / (1024 * 1024);
 
       const validFiletype = validTypes.includes(file.type);
       if (!validFiletype) {
@@ -43,11 +41,11 @@ const ImageUpload = ({
         e.target.value = "";
         return;
       }
-      if (fileSizeInMB > MAX_FILE_SIZE_MB) {
+      if (file.size > MAX_FILE_SIZE_MB) {
         toast({
           status: "error",
           title: "Image cannot be uploaded",
-          description: "Image file exceeds 2.5MB",
+          description: `Image file exceeds ${MAX_FILE_SIZE_MB / 1024 / 1024}MB`,
           duration: 5000,
         });
         e.target.value = "";
@@ -74,7 +72,7 @@ const ImageUpload = ({
           try {
             const req = await uploadSingle(formData);
             setImageFile(req?.data?.data);
-      
+
             // Check if setImageUrl is defined before calling it
             // if (setImageUrl) {
             //   setImageUrl(req?.data?.data);
@@ -85,7 +83,6 @@ const ImageUpload = ({
         };
 
         uploadImage();
-
       };
       reader.readAsDataURL(file);
     }
@@ -94,24 +91,32 @@ const ImageUpload = ({
   return (
     <>
       <Flex
-      as="label"
-      htmlFor="headerImage"
-      direction="column"
-      align="center"
-      justify="center"
-      w={{ base: "100%",lg: '700px' }}
-      maxH="200px"
-      borderRadius="7px"
-      overflow="hidden"
-      position="relative"
-      bg="rgba(46, 196, 182, 0.10)"
-      cursor="pointer"
-      _hover={{ bg: "rgba(46, 196, 182, 0.15)" }}
+        as="label"
+        htmlFor="headerImage"
+        direction="column"
+        align="center"
+        justify="center"
+        w={{ base: "100%", lg: "700px" }}
+        maxH="200px"
+        borderRadius="7px"
+        overflow="hidden"
+        position="relative"
+        bg="rgba(46, 196, 182, 0.10)"
+        cursor="pointer"
+        _hover={{ bg: "rgba(46, 196, 182, 0.15)" }}
       >
         {image ? (
-          <img src={ image?.dataUrl } alt="header-img" style={{ width: "100%" }} />
+          <img
+            src={image?.dataUrl}
+            alt="header-img"
+            style={{ width: "100%" }}
+          />
         ) : initialImageUrl ? (
-          <img src={ initialImageUrl } alt="header-img" style={{ width: "100%" }} />
+          <img
+            src={initialImageUrl}
+            alt="header-img"
+            style={{ width: "100%" }}
+          />
         ) : (
           <div
             // "

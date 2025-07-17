@@ -77,7 +77,6 @@ export const AddPropertyScreenThree = ({
   const [dragging, setDragging] = useState<boolean>(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 
-  console.log("images", images);
 
   const imageInputRef = useRef<HTMLInputElement | null>(null);
   const handleImageClickHadler = () => {

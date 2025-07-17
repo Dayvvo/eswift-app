@@ -13,7 +13,7 @@ export const SectionThree = () => {
       location: "Lagos, Nigeria",
     },
     {
-      id: 1,
+      id: 2,
       title: "Efficient and Reliable",
       review:
         "e-Swift made buying my first home a breeze! The app's interface is sleek and modern, making it easy to navigate. I appreciated the personalized recommendations based on my preferences. The real-time updates on new listings and price changes kept me ahead of the game. Excellent customer service, too! Thanks, eSwift, for making homeownership a reality!",
@@ -21,7 +21,7 @@ export const SectionThree = () => {
       location: "Lagos, Nigeria",
     },
     {
-      id: 1,
+      id: 3,
       title: "Trusted Advisors",
       review:
         "e-Swift exceeded my expectations in every way! The app's advanced search features and high-quality photos made it easy to find the perfect property. The team's expertise and guidance were invaluable during the buying process. I've already recommended e-Swift to friends and family. If you're looking for a seamless real estate experience, look no further than e-Swift!",
