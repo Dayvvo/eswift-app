@@ -156,16 +156,22 @@ const NavBar = () => {
             {token ? (
               <>
                 <Menu>
-                  <MenuButton>
-                    <Btn
+                  <MenuButton
+                    px="8px"
+                    py="2px"
+                    color="#3170A6"
+                    bg={"transparent"}
+                    fontSize={"28px"}
+                  >
+                    {/* <Btn
                       px="8px"
                       py="2px"
                       color="#3170A6"
                       bg={"transparent"}
                       fontSize={"28px"}
-                    >
-                      <CiMenuKebab />
-                    </Btn>
+                    > */}
+                    <CiMenuKebab />
+                    {/* </Btn> */}
                   </MenuButton>
                   <MenuList
                     border={"1px solid #E1E4EA"}
