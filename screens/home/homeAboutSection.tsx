@@ -66,7 +66,7 @@ export const AboutSection = () => {
                 className="robotoF"
                 flexDir={"column"}
                 alignItems={"center"}
-                justifyContent={'center'}
+                justifyContent={"center"}
                 // _hover={{ bg: "#3170A690" }}
               >
                 {/* <Flex w={"100%"} justifyContent={"end"}>
@@ -153,7 +153,7 @@ export const Stats = () => {
       title: "Happy Customers",
     },
     {
-      id: 1,
+      id: 3,
       statistic: "16",
       title: "Happy Customers",
     },
