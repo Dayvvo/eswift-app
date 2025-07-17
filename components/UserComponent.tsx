@@ -23,8 +23,7 @@ import React, { useEffect, useState } from "react";
 import { ActionIcon, FilterIcon, SearchIcon } from "./svg";
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { useApiUrl } from "@/hooks/useApi";
-import moment from 'moment';
-
+import moment from "moment";
 
 interface Users {
   id: number;
@@ -36,120 +35,27 @@ interface Users {
   property: string;
   role: string;
   action: HTMLButtonElement;
-
-
 }
 
 const UserComponent = () => {
-  // const tableData = [
-  //   {
-  //     name: "Oronnaye Ayomide"
-  //     email: "oronnayeayomide@gmail.com",
-  //     phoneNum: "09094631170",
-  //     dateCreated: "12 September 2024",
-  //     property: "Nil",
-  //     userType: "Buyer",
-  //     action: <ActionIcon />,
-  //   },
-  //   {
-  //     name: "Opeyemi Adeyemi",
-  //     email: "oronnayeayomide@gmail.com",
-  //     phoneNum: "09094631170",
-  //     dateCreated: "12 September 2024",
-  //     property: "10",
-  //     userType: "Seller",
-  //     action: <ActionIcon />,
-  //   },
-  //   {
-  //     name: "Anigboro Napoleon",
-  //     email: "anigboronapoleon@gmail.com",
-  //     phoneNum: "09094631170",
-  //     dateCreated: "12 September 2024",
-  //     property: "8",
-  //     userType: "Affiliate",
-  //     action: <ActionIcon />,
-  //   },
-  //   {
-  //     name: "Anigboro Napoleon",
-  //     email: "anigboronapoleon@gmail.com",
-  //     phoneNum: "09094631170",
-  //     dateCreated: "12 September 2024",
-  //     property: "5",
-  //     userType: "Affiliate",
-  //     action: <ActionIcon />,
-  //   },
-  //   {
-  //     name: "Oronnaye Ayomide",
-  //     email: "oronnayeayomide@gmail.com",
-  //     phoneNum: "09094631170",
-  //     dateCreated: "12 September 2024",
-  //     property: "Nil",
-  //     userType: "Buyer",
-  //     action: <ActionIcon />,
-  //   },
-  //   {
-  //     name: "Oronnaye Ayomide",
-  //     email: "oronnayeayomide@gmail.com",
-  //     phoneNum: "09094631170",
-  //     dateCreated: "12 September 2024",
-  //     property: "Nil",
-  //     userType: "Buyer",
-  //     action: <ActionIcon />,
-  //   },
-  //   {
-  //     name: "Oronnaye Ayomide",
-  //     email: "oronnayeayomide@gmail.com",
-  //     phoneNum: "09094631170",
-  //     dateCreated: "12 September 2024",
-  //     property: "Nil",
-  //     userType: "Buyer",
-  //     action: <ActionIcon />,
-  //   },
-  //   {
-  //     name: "Oronnaye Ayomide",
-  //     email: "oronnayeayomide@gmail.com",
-  //     phoneNum: "09094631170",
-  //     dateCreated: "12 September 2024",
-  //     property: "Nil",
-  //     userType: "Buyer",
-  //     action: <ActionIcon />,
-  //   },
-  //   {
-  //     name: "Oronnaye Ayomide",
-  //     email: "oronnayeayomide@gmail.com",
-  //     phoneNum: "09094631170",
-  //     dateCreated: "12 September 2024",
-  //     property: "Nil",
-  //     userType: "Buyer",
-  //     action: <ActionIcon />,
-  //   },
-  // ];
-
-
   const [userData, setUserData] = useState<Users[]>([]);
   const [error, setError] = useState<boolean>(false);
 
   const client = useApiUrl();
-  
-  useEffect(()=>{
-    client.get('/user/users') 
-      .then(
-        (res:AxiosResponse<unknown, any>) => {
-          console.log(res?.data)
-          const response = res as AxiosResponse<{data: Users[]}>
-          const users = response?.data?.data;
-          setUserData(users)
-        }
-      )
-      .catch(
-        (err:AxiosError)=> {
-          console.log(err)
-          setError(true);
-        }
-      )
-  },[])
 
-
+  useEffect(() => {
+    client
+      .get("/user/users")
+      .then((res: AxiosResponse<unknown, any>) => {
+        const response = res as AxiosResponse<{ data: Users[] }>;
+        const users = response?.data?.data;
+        setUserData(users);
+      })
+      .catch((err: AxiosError) => {
+        console.log(err);
+        setError(true);
+      });
+  }, []);
 
   return (
     <Box>
@@ -207,7 +113,7 @@ const UserComponent = () => {
                 "Property",
                 "User Type",
                 "Action",
-              ].map((item,key) => (
+              ].map((item, key) => (
                 <Th key={key} textTransform={"none"} p="8px">
                   <Text
                     className="robotoF"
@@ -221,16 +127,26 @@ const UserComponent = () => {
               ))}
             </Tr>
           </Thead>
-          <Tbody fontSize={'.875rem'} fontWeight={400} className="robotoF">
+          <Tbody fontSize={".875rem"} fontWeight={400} className="robotoF">
             {userData.map((item, key) => (
               <Tr key={key}>
-                <Td color={'#0E121B'} py='12px'>{item?.firstName} {item?.lastName}</Td>
-                <Td color={'#525866'} py='12px'>{item?.email}</Td>
-                <Td color={'#525866'} py='12px'>{item?.phoneNumber}</Td>
-                <Td color={'#525866'} py='12px'>{moment(item?.createdAt).format('D MMM, YYYY')}</Td>
-                <Td color={'#525866'} py='12px'></Td>
-                <Td color={'#525866'} py='12px'>{item?.role}</Td>
-                <Td color={'#525866'} py='12px'>
+                <Td color={"#0E121B"} py="12px">
+                  {item?.firstName} {item?.lastName}
+                </Td>
+                <Td color={"#525866"} py="12px">
+                  {item?.email}
+                </Td>
+                <Td color={"#525866"} py="12px">
+                  {item?.phoneNumber}
+                </Td>
+                <Td color={"#525866"} py="12px">
+                  {moment(item?.createdAt).format("D MMM, YYYY")}
+                </Td>
+                <Td color={"#525866"} py="12px"></Td>
+                <Td color={"#525866"} py="12px">
+                  {item?.role}
+                </Td>
+                <Td color={"#525866"} py="12px">
                   <Menu>
                     <MenuButton as={"button"} className="robotoF">
                       <ActionIcon />
@@ -254,4 +170,3 @@ export default UserComponent;
 function setData(users: any) {
   throw new Error("Function not implemented.");
 }
-
