@@ -13,17 +13,17 @@ import { NextParsedUrlQuery } from "next/dist/server/request-meta";
 import path from "path";
 
 import indexRoutes from "./routes/indexRoutes";
+dotenv.config();
 
 const app = express();
 const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOSTName || "localhost";
 const port = dev ? 5500 : (3000 as number);
 
-console.log("dev mode", process.env["NODE_ENV"]);
+// console.log("dev mode", process.env["NODE_ENV"]);
 
 const nextApp = next({ dev, hostname, port });
 const handle = nextApp.getRequestHandler();
-dotenv.config();
 
 nextApp.prepare().then(() => {
   let config = new appConfig();
@@ -49,14 +49,25 @@ nextApp.prepare().then(() => {
   // Init Middlewarezx
   app.use(logger("dev"));
 
-  app.use(express.json());
+  // app.use(express.json());
+
+  app.use(
+    express.json({
+      limit: "5mb",
+    })
+  );
 
   app.use(cors());
 
   app.use(express.urlencoded({ extended: false }));
   // Serve static files from the "uploads" folder
-  app.use("/uploads", express.static("/mnt/volume/uploads"));
-  app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+  // app.use("/uploads", express.static("/mnt/volume/uploads"));
+  // app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+  const uploadsPath = dev
+    ? path.join(__dirname, "uploads")
+    : "/mnt/volume/uploads";
+  app.use("/uploads", express.static(uploadsPath));
 
   app.use(cookieParser());
 
@@ -127,12 +138,6 @@ nextApp.prepare().then(() => {
       req.query as NextParsedUrlQuery
     );
   });
-
-  app.use(
-    express.json({
-      limit: "5mb",
-    })
-  );
 
   const PORT = port;
 
