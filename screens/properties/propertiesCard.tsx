@@ -230,7 +230,7 @@ export const PropertiesCard = ({
             textColor={"#191919"}
           >
             <TbCurrencyNaira />
-            {price?.amount}
+            {Number(price?.amount)?.toLocaleString()}
           </Text>
         </Flex>
 
