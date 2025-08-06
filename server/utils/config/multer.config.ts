@@ -19,7 +19,7 @@ const fileFilter = (_req: any, file: Express.Multer.File, cb: Function) => {
 const multerConfig = multer({
   storage:  multer.memoryStorage(),
   fileFilter,
-  limits: { fileSize: 6 * 1024 * 1024 } // 6MB file size limit
+  limits: { fileSize: 20 * 1024 * 1024 } // 20MB file size limit
 });
 
 export default multerConfig;
