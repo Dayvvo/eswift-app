@@ -33,12 +33,13 @@ const FileInputComponent = ({
     let fileList = e.target.files;
 
     let file: File | null = null;
+    const maxFileSize: number = 20 * 1024 * 1024;
 
     const isValidFile = (file: File) => {
       let validationErr = "";
       if (file.type !== "application/pdf") {
         validationErr = "Invalid File type";
-      } else if (file.size / (1024 * 1024) > 6) {
+      } else if (file.size > maxFileSize) {
         validationErr = "File is too large";
       }
 
@@ -54,7 +55,8 @@ const FileInputComponent = ({
 
     if (fileList?.length) {
       file = fileList[0] as File;
-      !isValidFile(file) && onChange(name, file);
+      const validationError = isValidFile(file);
+      !validationError && onChange(name, file);
     }
   };
 

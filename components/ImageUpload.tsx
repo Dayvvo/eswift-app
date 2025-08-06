@@ -23,7 +23,7 @@ const ImageUpload = ({
   const [image, setImage] = useState<ImageData | null>(null);
   const { uploadSingle } = useUpload();
   const { toast } = useToast();
-  const MAX_FILE_SIZE_MB = 12 * 1024 * 1024;
+  const MAX_FILE_SIZE_MB = 20 * 1024 * 1024;
   const validTypes = ["image/jpeg", "image/gif", "image/jpg", "image/png"];
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {

@@ -71,9 +71,6 @@ export const AddPropertyScreenThree = ({
     },
   ];
 
-  const validfileTypes: string[] = ["image/jpeg", "image/png", "image/gif"];
-  const maxFileSize: number = 5 * 1024 * 1024;
-
   const [dragging, setDragging] = useState<boolean>(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
 

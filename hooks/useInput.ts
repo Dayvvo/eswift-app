@@ -107,7 +107,7 @@ export const useImage = ({
     "image/gif",
     "image/png",
   ];
-  const maxFileSize: number = 12 * 1024 * 1024;
+  const maxFileSize: number = 20 * 1024 * 1024;
 
   const onChangeHandler = async (
     event: React.ChangeEvent<HTMLInputElement>
