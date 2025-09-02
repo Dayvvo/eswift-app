@@ -26,7 +26,7 @@ import { useAppContext } from "@/context";
 import { R } from "@/utils/types";
 import { PropertyCard, PropertyCardProps } from "./propertyCard";
 import { useRouter } from "next/router";
-import { SuspendState, DeleteProperty } from "./VerificationState";
+import { SuspendState, DeleteProperty, VerifyState, DeclineState, SoldState } from "./VerificationState";
 import useToast from "@/hooks/useToast";
 import { AddProperties } from "./Add";
 import { BiEdit } from "react-icons/bi";
@@ -49,6 +49,10 @@ export const PropertyDetails = ({
 }) => {
   type activeModalType =
     | "suspend"
+    | "Pending"
+    | "Verified"
+    | "Rejected"
+    | "Sold"
     | "delete"
     | "gallery"
     | "documents"
@@ -160,6 +164,7 @@ export const PropertyDetails = ({
       const req = await verifyProperty(id, {
         verification: status,
       });
+      
       if (req.statusCode === 201) {
         setVerificationStatus(req.data);
         toast({
@@ -170,13 +175,13 @@ export const PropertyDetails = ({
           duration: 1000,
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       toast({
         status: "error",
-        description: "Failed to perform action",
+        description: err.response.data.message || "Failed to perform action",
         title: "Failed",
         position: "top",
-        duration: 1000,
+        duration: 1500,
       });
     } finally {
       setIsVerifying(false);
@@ -197,13 +202,14 @@ export const PropertyDetails = ({
         duration: 1000,
       });
       setIsVerifying(false);
-    } catch (err) {
+    } catch (err: any) {
+      console.log("err", err.response.data.message)
       toast({
         status: "error",
-        description: "Failed to delete property",
+        description: err.response.data.message || "Failed to delete property",
         title: "Failed",
         position: "top",
-        duration: 1000,
+        duration: 1500,
       });
       setIsVerifying(false);
       console.log("err", err);
@@ -223,11 +229,23 @@ export const PropertyDetails = ({
       >
         <ModalOverlay />
         <ModalContent>
-          {modalType === "suspend" ? (
-            <SuspendState
+          {modalType === "Verified" ? (
+            <VerifyState
               verifyPropertyFn={verifyPropertyFn}
               isVerifying={isVerifying}
               toggleModal={toggleModal}
+            />
+          ) : modalType === "Rejected" ? (
+            <DeclineState
+              toggleModal={toggleModal}
+              isVerifying={isVerifying}
+              verifyPropertyFn={verifyPropertyFn}
+            />
+          ) : modalType === "Sold" ? (
+            <SoldState
+              toggleModal={toggleModal}
+              isVerifying={isVerifying}
+              verifyPropertyFn={verifyPropertyFn}
             />
           ) : modalType === "delete" ? (
             <DeleteProperty
@@ -484,9 +502,9 @@ export const PropertyDetails = ({
                           borderRadius={"10px"}
                           h={"40px"}
                           textColor={"var(--primaryBase)"}
-                          onClick={() => openModal("suspend")}
+                          onClick={() => openModal("Verified")}
                         >
-                          Suspend
+                          Verify
                         </Btn>
                         <Btn
                           bg={"transparent"}
@@ -498,13 +516,32 @@ export const PropertyDetails = ({
                           borderRadius={"10px"}
                           h={"40px"}
                           textColor={"var(--errorBase)"}
-                          onClick={() => openModal("delete")}
+                          onClick={() => openModal("Rejected")}
                         >
-                          Delete
+                          Reject
                         </Btn>
                       </Flex>
                     ) : (
                       <Flex gap={"16px"} direction={"column"}>
+
+                     {(verificationStatus === "Verified" || verificationStatus === "Sold") && <Box>
+                      {verificationStatus === "Sold" ? 
+                      <Text color={"#10B981"}>Sold</Text>
+                      : <Btn
+                          bg={"transparent"}
+                          display={"flex"}
+                          justifyContent={"center"}
+                          alignItems={"center"}
+                          w="100%"
+                          border={"1px solid #10B981"}
+                          borderRadius={"10px"}
+                          h={"40px"}
+                          textColor={"#10B981"}
+                          onClick={() => openModal("Sold")}
+                        >
+                          Sold
+                        </Btn>}
+                        </Box>}
                         <Btn
                           bg={"transparent"}
                           display={"flex"}
@@ -628,7 +665,7 @@ export const PropertyDetails = ({
                     title={property?.title}
                     price={property?.price}
                     address={property?.address}
-                    verificationState={property?.verificationState}
+                    verificationState={property?.verification}
                     userImage={user?.avatar || "/"}
                     email={user?.email}
                     user={user?.firstName}

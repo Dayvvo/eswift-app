@@ -524,7 +524,7 @@ const DashboardScreen = () => {
                     title={property?.title}
                     price={property?.price}
                     address={property?.address}
-                    verificationState={property?.verificationState}
+                    verificationState={property?.verification}
                     userImage={user?.avatar || "/"}
                     email={user?.email}
                     user={user?.firstName}

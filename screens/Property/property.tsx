@@ -222,9 +222,6 @@ export const PropertyScreen = () => {
 
           {!loading && propertyEl?.length > 0 && (
             <Grid
-              // mt={4}
-              // maxHeight={'400px'}
-              // overflow={'scroll'}
               w={"fit-content"}
               templateColumns={{
                 base: "repeat(1, 1fr)",
@@ -234,7 +231,6 @@ export const PropertyScreen = () => {
               }}
               gap={{ base: "24px", lg: "28px" }}
               paddingY={"2rem"}
-              // paddingBottom={{ base: "20rem", lg: "3rem" }}
             >
               {propertyEl.map((property, index) => {
                 const user = users.find((u) => u._id === property?.creatorID);
@@ -247,7 +243,7 @@ export const PropertyScreen = () => {
                     title={property?.title}
                     price={property?.price}
                     address={property?.address}
-                    verificationState={property?.verificationState}
+                    verificationState={property?.verification}
                     userImage={user?.avatar || "/"}
                     email={user?.email}
                     user={user?.firstName}
