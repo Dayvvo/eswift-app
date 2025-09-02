@@ -17,7 +17,7 @@ import { mailGenMails } from "../utils/mails/mailgen.mail";
 import path from "path";
 import fs from "fs";
 import { checkImageArray } from "../utils/helperFunctions/generateToken";
-import { PropertyType } from "../utils/interfaces/types";
+import { PropertyType, PropertyVerification } from "../utils/interfaces/types";
 
 type MapDocsType = { type: string; document: string; _id?: any };
 class PropertyController {
@@ -398,12 +398,7 @@ class PropertyController {
   verifyProperty = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { verification } = req.body;
-    const allowedVerificationStatuses = [
-      "pending",
-      "verified",
-      "rejected",
-      "suspend",
-    ];
+    const allowedVerificationStatuses = Object.values(PropertyVerification)
     if (!allowedVerificationStatuses.includes(verification)) {
       return res.status(400).json({ message: "Invalid verification status" });
     }

@@ -6,6 +6,9 @@ import {
   Input,
   InputRightElement,
   Grid,
+  Card,
+  CardBody,
+  Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
@@ -36,7 +39,7 @@ const PropertiesScreen = () => {
         const { data } = await axios.get(
           `/api/property?keyword=${inputValue}&PageNumber=${page}`
         );
-        setFetchData(data?.data);
+        setFetchData(data?.data?.filter((item: any) => item?.verification === "Verified"));
       } catch (error) {
         console.log(error);
       } finally {
@@ -177,7 +180,23 @@ const PropertiesScreen = () => {
                 view="client"
               />
             ))}
+            {/* {fetchData.map((item) => (
+              <PropertiesCard
+                key={item?._id}
+                {...item}
+                _id={item?._id}
+                view="client"
+              />
+            ))} */}
           </Grid>
+
+          {!isLoading && fetchData?.length === 0 && (
+            <Card>
+              <CardBody>
+                <Text>No property available or reload</Text>
+              </CardBody>
+            </Card>
+          )}
         </Box>
         <Footer />
       </Box>

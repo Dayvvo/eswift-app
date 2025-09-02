@@ -18,7 +18,7 @@ export type PropertyCardProps = {
     amount?: string;
   };
   category?: string;
-  verification?: "Pending" | "Verified" | "Rejected";
+  verification?: "Pending" | "Verified" | "Rejected" | "Sold";
   features?: string[];
   documents?: { type: string; document: string; _id?: string }[];
   location?: string;
@@ -145,13 +145,17 @@ export const PropertyCard = ({
       <Flex position={"relative"} w="100%" h="260px" minH="260px" maxH="270px">
         <Text
           className="montserrat"
+          bg={verificationState === "Sold" ? "#10B981" : verificationState === "Rejected" ? ("var(--errorBase)") : "#1A1D66"}
+          px={"10px"}
+          borderRadius={"5px"}
           position={"absolute"}
           m={4}
-          fontSize={"18px"}
+          fontSize={"14px"}
           fontWeight={700}
           textColor={"#FFF"}
         >
           {/* {count || null} of 3 */}
+          {verificationState}
         </Text>
         <Image
           width={"100%"}
@@ -246,7 +250,9 @@ export const PropertyCard = ({
             >
               {email}
             </Text>
+    
           </Flex>
+          {/* <Text color={"#10B981"}>Sold</Text> */}
         </Box>
 
         <Box>

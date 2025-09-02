@@ -69,12 +69,8 @@ const useProperty = () => {
 
   const verifyProperty = useCallback(
     async (id: any, data: VerificationProps) => {
-      try {
         const res = await putMutation(`/property/${id}/verify`, data);
         return res as any;
-      } catch (err: any) {
-        throw new err();
-      }
       // return res
     },
     [token]
@@ -82,18 +78,15 @@ const useProperty = () => {
   
   const deleteProperty = useCallback(
     async (id: string) => {
-      try {
         const res = await delProperty(`/property/${id}`);
         return res as any;
-      } catch (err: any) {
-        throw new err();
-      }
+      
       // return res
     },
     [token]
   );
   
-  const getAdminProperty = async (inputValue: string, page: number) => {
+  const getAdminProperty = useCallback(async (inputValue: string, page: number) => {
     try {
       const res = await query(
         `/property/admin?keyword=${inputValue}&PageNumber={${page}}`
@@ -103,7 +96,7 @@ const useProperty = () => {
       throw new err();
     }
     // return res
-  };
+  }, [token]);
   
   const propertyCreator = useCallback(
     async (userId: string) => {

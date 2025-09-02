@@ -33,7 +33,7 @@ const ProjectScreen = () => {
         const { data } = await axios.get(
           `/api/property?keyword=${""}&PageNumber=${page}`
         );
-        setFetchData(data?.data);
+        setFetchData(data?.data?.filter((item: any) => item?.verification === "Verified" && item?.isProject));
       } catch (error) {
         console.log(error);
       } finally {
@@ -114,7 +114,6 @@ const ProjectScreen = () => {
             )}
 
             {fetchData
-              .filter((project) => project.isProject)
               .map((data) => {
                 return (
                   <PropertiesCard
@@ -126,7 +125,7 @@ const ProjectScreen = () => {
                 );
               })}
 
-            {!isLoading && !fetchData && (
+            {!isLoading && fetchData?.length === 0 && (
               <Card mt={"60px"}>
                 <CardBody>
                   <Text>No project found please try again</Text>
