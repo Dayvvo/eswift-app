@@ -1,6 +1,6 @@
 import User from "../../models/User";
 import { NextFunction, Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import jwt, { TokenExpiredError } from "jsonwebtoken";
 import { IUser, UserRole } from "../interfaces";
 
 export const isAuth = async (
@@ -33,6 +33,9 @@ export const isAuth = async (
       next();
     } catch (error: any) {
       // console.error(error["message"]);
+      if (error instanceof TokenExpiredError) {
+        return res.status(401).json({ message: "Token expired, please logout and login again" });
+      }
       return res.status(401).json({ message: "Not authorized, invalid token" });
     }
   } else {

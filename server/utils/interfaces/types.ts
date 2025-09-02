@@ -17,6 +17,7 @@ export enum PropertyVerification {
   Pending = "Pending",
   Verified = "Verified",
   Rejected = "Rejected",
+  Sold = "Sold",
 }
 export enum PropertyType {
   PROJECT = "project",
