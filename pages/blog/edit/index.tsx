@@ -155,6 +155,7 @@ const EditBlog = () => {
         <ImageUpload
           initialImageUrl={blogDetails?.header_image}
           setImageFile={setHeaderImageFile}
+          title={articleTitle || blogDetails?.title}
         />
       </Flex>
       <Flex align={"center"} justify={"space-between"} mb="20px">
@@ -190,6 +191,7 @@ const EditBlog = () => {
         <ImageUpload
           initialImageUrl={blogDetails?.body_image}
           setImageFile={setBodyImageFile}
+          title={articleTitle || blogDetails?.title}
         />
       </Flex>
       <Flex align={"center"} justify={"space-between"} mb="20px">

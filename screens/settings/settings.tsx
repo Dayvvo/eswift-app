@@ -3,7 +3,7 @@ import useAuth, { IUsers } from "@/hooks/useAuth";
 import { useInputSettings } from "@/hooks/useInput";
 import useToast from "@/hooks/useToast";
 import useUser from "@/hooks/useUser";
-import { Box, Flex, Input, Text, Image, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, Input, Text, useDisclosure } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useRef, useState } from "react";
 import ResetPasswordModal from "./reset";
@@ -11,6 +11,7 @@ import { SelectInput } from "@/components/Inputs";
 import { nigerianStates } from "@/utils/modules";
 import useUpload from "@/hooks/useUpload";
 import { ImageData } from "@/components/ImageUpload";
+import Image from "next/image";
 
 type ValidationType = {
   [key in keyof IUsers]: (input: string) => boolean;
@@ -121,11 +122,11 @@ export const SettingsScreen = () => {
       })
       return;
     }
-    if(file.size > 2.5 * 1024 * 1024) {
+    if(file.size > 10 * 1024 * 1024) {
       toast({
         status: "error",
         title: "Image cannot be uploaded",
-        description: "Image file exceeds 2.5MB",
+        description: "Image file exceeds 10MB",
         duration: 5000,
       })
       return;
@@ -154,6 +155,7 @@ export const SettingsScreen = () => {
 
       const formData = new FormData()
       formData.append('file', file)
+      formData.append('title', user.email)
       const uploadAvatar = async () => {
 
         try {
@@ -230,16 +232,6 @@ export const SettingsScreen = () => {
     setAvatarImage(profile?.avatar);
 }, [profile]);
 
-let finalImage = image;
-
-if (finalImage) {
-  const isDataUrl = finalImage.startsWith("data:image");
-  const isFullUrl = finalImage.startsWith("http") || finalImage.startsWith("https");
-
-  if (!isDataUrl && !isFullUrl) {
-    finalImage = `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${finalImage}`;
-  }
-}
 
   return (
     <>
@@ -301,24 +293,28 @@ if (finalImage) {
                   h={"fit-content"}
                 >
                       <Input display={'none'} type="file" id="avatar" accept="image/jpeg, image/png, image/jpg" name="avatar" alt={`${user.firstName}`} ref={imageRef} onChange={imageChangeHandler} />
-                  <Box
-                    w={"fit-content"}
-                    h={"fit-content"}
-                    borderRadius={"999px"}
-                    overflow={"hidden"}
-                    cursor={'pointer'}
-                    onClick={pickImageHandler}
-                    border={"1px solid var(--soft200)"}
-                  >
-                
-                    <Image
-                      width={40}
-                      height={40}
-                      borderRadius={"50%"}
-                      src={finalImage ? finalImage : finalImage === '' ? "/avatar1.png" : '/avatar1.png'}
-                      alt="/"
-                    />
-                  </Box>
+                          <Box
+                            borderRadius={"50%"}
+                            overflow={"hidden"}
+                            cursor={'pointer'}
+                            onClick={pickImageHandler}
+                            border={"1px solid var(--soft200)"}
+                            width="150px"
+                            height="150px"
+                          >
+                            <Image
+                              width={300}
+                              height={300}
+                              style={{ 
+                                borderRadius: "50%",
+                                objectFit: "cover", // This ensures the image fills the circle properly
+                                width: "100%",
+                                height: "100%"
+                              }}
+                              src={image ? image : '/avatar1.png'}
+                              alt="Profile"
+                            />
+                      </Box>
                 </Flex>
               </Flex>
             </Flex>

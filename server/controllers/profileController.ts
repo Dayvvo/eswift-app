@@ -5,8 +5,42 @@ import { IUserInRequest } from "../utils/interfaces";
 import { clearImage } from "../utils/helperFunctions/generateToken";
 import path from "path";
 import fs from "fs";
+import { google } from 'googleapis';
+import dotenv from "dotenv";
+dotenv.config();
 
 class ProfileController {
+
+  private drive: any;
+  constructor() {
+    this.initializeGoogDrive();
+  }
+
+  private initializeGoogDrive() {
+    const oauth2Client = new google.auth.OAuth2(process.env["CLIENT_ID"], process.env["CLIENT_SECRET"], process.env["redirect_uri"]);
+    oauth2Client.setCredentials({refresh_token: process.env["GOOGLE_REFRESH_TOKEN"]});
+    this.drive = google.drive({version: "v3", auth: oauth2Client});
+  }
+
+  private getDriveFileId(url: string) {
+    const regex = /\/d\/([a-zA-Z0-9_-]+)|id=([a-zA-Z0-9_-]+)/;
+    const match = url.match(regex);
+    return match ? match[1] || match[2] : null;
+  };
+
+  
+  private async deleteDriveFile(fileId: string): Promise<boolean> {
+    console.log("fileId", fileId);
+    try {
+      await this.drive.files.delete({
+        fileId: fileId,
+      });
+      return true;
+    } catch (error) {
+      console.error(" __ERROR FROM THE SERVER __ ", error);
+      return false;
+    }
+  };
   createProfile = async (req: Request, res: Response) => {
     try {
       const { error, value } = validateProfile(req.body);
@@ -56,15 +90,23 @@ class ProfileController {
           message: 'User not find'
         })
       }
-      const stripUploadsPrefix = (img: string | undefined | null): string => {
-        if (!img) return "";
-        return img.replace(/^.*\/uploads\//, '');
-      };
-    let profileImage = stripUploadsPrefix(selectedUser?.avatar);
-    let valueProfileImage = stripUploadsPrefix(value.avatar);
+    //   const stripUploadsPrefix = (img: string | undefined | null): string => {
+    //     if (!img) return "";
+    //     return img.replace(/^.*\/uploads\//, '');
+    //   };
+    // let profileImage = stripUploadsPrefix(selectedUser?.avatar);
+    // let valueProfileImage = stripUploadsPrefix(value.avatar);
   
-    if(profileImage && profileImage !== valueProfileImage) {
-      profileController.clearImage(profileImage); 
+    // if(profileImage && profileImage !== valueProfileImage) {
+    //   profileController.clearImage(profileImage); 
+    // }
+
+    if (selectedUser?.avatar) {
+      const existingAvatarId = this.getDriveFileId(selectedUser.avatar);
+      const newAvatarId = this.getDriveFileId(value.avatar);
+      if (existingAvatarId && newAvatarId && existingAvatarId !== newAvatarId) {
+        this.deleteDriveFile(existingAvatarId);
+      }
     }
 
       const userProfile = await Profile.findOneAndUpdate(

@@ -250,6 +250,8 @@ export const AddProperties = ({
           imagesFormData.append(fileImgs.length > 1 ? "files" : "file", img)
         );
 
+        imagesFormData.append("title", propertyData.title)
+
         const { data: uploadImages } =
           fileImgs.length > 1
             ? await uploadMultiple(imagesFormData)
@@ -284,6 +286,7 @@ export const AddProperties = ({
         if (matchingFile instanceof File) {
           const singleFormData = new FormData();
           singleFormData.append("file", matchingFile);
+          singleFormData.append("title", propertyData.title)
 
           const { data: uploadImg } = await uploadSingle(singleFormData);
           if (uploadImg) {

@@ -5,7 +5,7 @@ import {
   Box,
   Flex,
   Text,
-  Image,
+  // Image,
   Grid,
   Stack,
   Skeleton,
@@ -25,7 +25,7 @@ import useToast from "@/hooks/useToast";
 import useAuth from "@/hooks/useAuth";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { FaCheckCircle } from "react-icons/fa";
-
+import Image from "next/image";
 export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [favoritesUpdated, setFavoritesUpdated] = useState(false);
@@ -212,7 +212,7 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
           >
             {detailsData?.images?.map((image, index) => (
               <Box
-                key={index}
+                key={image}
                 h="74px"
                 borderRadius="6px"
                 cursor="pointer"
@@ -221,15 +221,11 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
                 onClick={() => handleImageClick(index)}
               >
                 <Image
-                  h="100%"
-                  w="100%"
+                  width={1000}
+                  height={1000}
                   src={image}
-                  alt=""
-                  borderRadius="6px"
-                  objectFit="cover"
-                  border={
-                    index === selectedImageIndex ? "2px solid #335CFF" : "none"
-                  }
+                  alt={"property image"}
+                  style={{ borderRadius: "6px", objectFit: "cover", width: "100%", height: "100%", border: index === selectedImageIndex ? "2px solid #335CFF" : "none" }}
                 />
               </Box>
             ))}
@@ -253,11 +249,11 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
                 h={{ base: "auto", lg: "507px" }}
               >
                 <Image
-                  w={"100%"}
-                  h={"100%"}
+                  width={1000}
+                  height={1000}
+                  style={{ borderRadius: "10px", objectFit: "cover", width: "100%", height: "100%" }}
                   src={detailsData?.images[selectedImageIndex]}
                   alt={``}
-                  borderRadius={"10px"}
                 />
               </Box>
               {detailsData?.images.length > 1 && (
@@ -266,15 +262,16 @@ export const PropertyDetails = ({ clientView }: { clientView?: boolean }) => {
                   h={{ base: "auto", lg: "507px" }}
                 >
                   <Image
-                    w={"100%"}
-                    h={"100%"}
+                  
+                    width={1000}
+                    height={1000}
+                    style={{ borderRadius: "10px", objectFit: "cover", width: "100%", height: "100%" }}
                     src={
                       selectedImageIndex - 1 >= 0
                         ? detailsData?.images[selectedImageIndex - 1]
                         : detailsData?.images[selectedImageIndex + 1]
                     }
                     alt={``}
-                    borderRadius={"10px"}
                   />
                 </Box>
               )}

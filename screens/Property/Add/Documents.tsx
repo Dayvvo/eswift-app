@@ -255,7 +255,7 @@ export const AddPropertyScreenFour = ({
         <Flex flexDir={"column"} gap={"16px"} w="100%" py={"20px"}>
           {values.map((object, key) => (
             <FileInputComponent
-              key={key}
+              key={object.name}
               uploaded={documents[object.val as DocumentTypes] as File}
               onChange={onChangeFileName}
               name={object.val}

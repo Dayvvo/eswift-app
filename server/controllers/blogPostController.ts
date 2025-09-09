@@ -4,8 +4,44 @@ import { validateBlogPostData } from "../utils/validation";
 import { IUserInRequest } from "../utils/interfaces";
 import path from "path";
 import fs from "fs";
+import { google } from 'googleapis';
+import dotenv from "dotenv";
+dotenv.config();
 
 class BlogPostController {
+
+  private drive: any;
+
+  constructor() {
+    this.initializeGoogleDrive();
+  };
+
+  private async initializeGoogleDrive() {
+    const oauth2Client = new google.auth.OAuth2(process.env["CLIENT_ID"], process.env["CLIENT_SECRET"], process.env["redirect_url"]);
+    oauth2Client.setCredentials({refresh_token: process.env["GOOGLE_REFRESH_TOKEN"]})
+
+    this.drive = google.drive({version: "v3", auth: oauth2Client});
+  };
+
+  private getDriveFileId(url: string) {
+    const regex = /\/d\/([a-zA-Z0-9_-]+)|id=([a-zA-Z0-9_-]+)/;
+    const match = url.match(regex);
+    return match ? match[1] || match[2] : null;
+  };
+
+  
+  private async deleteDriveFile(fileId: string): Promise<boolean> {
+    console.log("fileId", fileId);
+    try {
+      await this.drive.files.delete({
+        fileId: fileId,
+      });
+      return true;
+    } catch (error) {
+      console.error(" __ERROR FROM THE SERVER __ ", error);
+      return false;
+    }
+  };
   createBlogPost = async (req: Request, res: Response) => {
     try {
       const { error, value } = validateBlogPostData(req.body);
@@ -42,24 +78,42 @@ class BlogPostController {
         });
       }
 
-    const stripUploadsPrefix = (img: string | undefined | null): string => {
-      if (!img) return "";
-      return img.replace(/^.*\/uploads\//, '');
-    };
+    // const stripUploadsPrefix = (img: string | undefined | null): string => {
+    //   if (!img) return "";
+    //   return img.replace(/^.*\/uploads\//, '');
+    // };
     
-    let blogHeaderImage = stripUploadsPrefix(blog?.header_image);
-    let valueHeaderImage = stripUploadsPrefix(value.header_image);
+    // let blogHeaderImage = stripUploadsPrefix(blog?.header_image);
+    // let valueHeaderImage = stripUploadsPrefix(value.header_image);
     
-    if (blogHeaderImage && blogHeaderImage !== valueHeaderImage) {
-      blogPostController.clearImage(blogHeaderImage); // clear by filename only
+    // if (blogHeaderImage && blogHeaderImage !== valueHeaderImage) {
+    //   blogPostController.clearImage(blogHeaderImage); // clear by filename only
+    // }
+
+    //   let blogBodyImage = stripUploadsPrefix(blog.body_image);
+    //   let valueBodyImage = stripUploadsPrefix(value.body_image);
+      
+    //   if (blogBodyImage && blogBodyImage !== valueBodyImage) {
+    //     blogPostController.clearImage(blogBodyImage);
+    //   }
+
+    if (blog.header_image) {
+      const existingHeaderImageId = this.getDriveFileId(blog.header_image);
+      const newHeaderImageId = this.getDriveFileId(value.header_image);
+      if (existingHeaderImageId && newHeaderImageId && existingHeaderImageId !== newHeaderImageId) {
+        this.deleteDriveFile(existingHeaderImageId);
+      }
     }
 
-      let blogBodyImage = stripUploadsPrefix(blog.body_image);
-      let valueBodyImage = stripUploadsPrefix(value.body_image);
-      
-      if (blogBodyImage && blogBodyImage !== valueBodyImage) {
-        blogPostController.clearImage(blogBodyImage);
+    if (blog.body_image) {
+      const existingBodyImageId = this.getDriveFileId(blog.body_image);
+      const newBodyImageId = this.getDriveFileId(value.body_image);
+      if (existingBodyImageId && newBodyImageId && existingBodyImageId !== newBodyImageId) {
+        this.deleteDriveFile(existingBodyImageId);
       }
+    }
+
+    // const existingHeaderImageId = this.getDriveFileId(blog.header_image)
 
       const blogPost = await BlogPost.findOneAndUpdate(
         { _id: req.params.blogPostId },
@@ -168,10 +222,18 @@ class BlogPostController {
       });
 
       if (deletedBlogpost.acknowledged) {
-        if (blogpost?.header_image)
-          blogPostController.clearImage(blogpost.header_image);
-        if (blogpost?.body_image)
-          blogPostController.clearImage(blogpost.body_image);
+
+        if (blogpost?.header_image) {
+          const headerImageId = this.getDriveFileId(blogpost.header_image)
+          // blogPostController.clearImage(blogpost.header_image);
+          if (headerImageId) this.deleteDriveFile(headerImageId);
+        }
+        
+        if (blogpost?.body_image) {
+          const bodyImageId = this.getDriveFileId(blogpost.body_image)
+          // blogPostController.clearImage(blogpost.body_image);
+          if (bodyImageId) this.deleteDriveFile(bodyImageId);
+        }
       }
       return res.status(200).json({
         statusCode: 200,

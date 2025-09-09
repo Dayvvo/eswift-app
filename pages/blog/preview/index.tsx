@@ -89,7 +89,7 @@ const PreviewBlog = () => {
         localStorage.removeItem("headerImageFile");
         localStorage.removeItem("bodyImageFile");
       }
-      console.log("req", req);
+      // console.log("req", req);
     } catch (err: any) {
       console.log("error calling post", err?.response?.data);
       toast({

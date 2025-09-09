@@ -18,9 +18,42 @@ import path from "path";
 import fs from "fs";
 import { checkImageArray } from "../utils/helperFunctions/generateToken";
 import { PropertyType, PropertyVerification } from "../utils/interfaces/types";
-
+import { google } from 'googleapis';
+import dotenv from "dotenv";
+dotenv.config();
 type MapDocsType = { type: string; document: string; _id?: any };
 class PropertyController {
+  private drive: any;
+  constructor() {
+    this.initializeGoogDrive();
+  };
+
+  private initializeGoogDrive() {
+    const oauth2Client = new google.auth.OAuth2(process.env["CLIENT_ID"], process.env["CLIENT_SECRET"], process.env["redirect_uri"]);
+    oauth2Client.setCredentials({refresh_token: process.env["GOOGLE_REFRESH_TOKEN"]});
+    this.drive = google.drive({version: "v3", auth: oauth2Client});
+  };
+
+  private getDriveFileId(url: string) {
+    const regex = /\/d\/([a-zA-Z0-9_-]+)|id=([a-zA-Z0-9_-]+)/;
+    const match = url.match(regex);
+    return match ? match[1] || match[2] : null;
+  };
+
+  
+  private async deleteDriveFile(fileId: string): Promise<boolean> {
+    console.log("fileId", fileId);
+    try {
+      await this.drive.files.delete({
+        fileId: fileId,
+      });
+      return true;
+    } catch (error) {
+      console.error(" __ERROR FROM THE SERVER __ ", error);
+      return false;
+    }
+  };
+
   //TODO: finish function
   createProperty = async (req: Request, res: Response) => {
     const validate = ValidateAddProperty(req.body);
@@ -127,52 +160,63 @@ class PropertyController {
         value.isProject = value.propertyType !== PropertyType.PROPERTY;
       }
 
-      const valueImages = value.images.map((img: string) => {
-        if (img.startsWith("http") || img.startsWith("https")) {
-          return img.replace(/^.*\/uploads\//, "");
-        } else {
-          return img;
-        }
-      });
+      let existingImageIds: string[] = []
+      let newImageIds: string[] = []
 
-      const propertyImages = property.images.map((img: string) => {
-        if (img.startsWith("http") || img.startsWith("https")) {
-          return img.replace(/^.*\/uploads\//, "");
-        } else {
-          return img;
-        }
-      });
+      if (property.images) {
+        property.images.forEach((img: string) => {
+          const imageId = this.getDriveFileId(img);
+          if (imageId) {
+            existingImageIds.push(imageId);
+          }
 
-      const imagesNotInValue = propertyImages.filter(
-        (img: string) => !valueImages.includes(img)
-      );
-
-      if (imagesNotInValue.length > 0) {
-        imagesNotInValue.forEach((img: string) => {
-          propertyController.clearImage(img);
-        });
+        })
       }
 
-      const normalizeDocPath = (docPath: string) => {
-        return docPath.replace(/^.*\/uploads\//, "").replace(/^\/+/, "");
+      if (value.images) {
+        value.images.forEach((img: string) => {
+          const imageId = this.getDriveFileId(img);
+          if (imageId) {
+            newImageIds.push(imageId);
+          }
+        })
       };
+      const imagesToDelete = existingImageIds.filter((existingId) => !newImageIds.includes(existingId))
+      
+      if (imagesToDelete && imagesToDelete.length > 0) {
+        imagesToDelete.forEach((imageId) => {
+          this.deleteDriveFile(imageId);
+        })
+      }
 
-      const valueDocuments = value.documents.map((doc: MapDocsType) =>
-        normalizeDocPath(doc.document)
-      );
+      
+      let existingDocumentIds: string[] = [];
+      let newDocumentIds: string[] = [];
 
-      const propertyDocuments = property.documents.map((doc: MapDocsType) =>
-        normalizeDocPath(doc.document)
-      );
+      if (property.documents) {
+        property.documents.forEach((doc: any) => {
+          const documentId = this.getDriveFileId(doc.document);
+          if (documentId) {
+            existingDocumentIds.push(documentId);
+          }
+        })
+      }
 
-      const documentsNotInValue = propertyDocuments.filter(
-        (doc: string) => !valueDocuments.includes(doc)
-      );
+      if (value.documents) {
+        value.documents.forEach((doc: any) => {
+          const documentId = this.getDriveFileId(doc.document);
+          if (documentId) {
+            newDocumentIds.push(documentId);
+          }
+        })
+      }
 
-      if (documentsNotInValue.length > 0) {
-        documentsNotInValue.forEach((docs: string) => {
-          propertyController.clearImage(docs);
-        });
+      const documentsToDelete = existingDocumentIds.filter((existingId) => !newDocumentIds.includes(existingId))
+
+      if (documentsToDelete && documentsToDelete.length > 0) {
+        documentsToDelete.forEach((documentId) => {
+          this.deleteDriveFile(documentId);
+        })
       }
 
       const updatedProperty = await Property.findByIdAndUpdate(
@@ -210,28 +254,11 @@ class PropertyController {
         .populate({ path: "ownerID", select: "role firstName lastName" })
         .limit(pageSize)
         .skip(pageSize * (page - 1));
-
-      const modifiedProperties = properties.map((property) => {
-        if (process.env.NODE_ENV === "production") {
-          return { ...property.toObject() };
-        }
-
-        return {
-          ...property.toObject(),
-          images: property.images
-            ? property.images.map((img) =>
-                img.startsWith("http")
-                  ? img
-                  : `${process.env.BACKEND_URL}/uploads/${img}`
-              )
-            : [],
-        };
-      });
-
+      
       return res.status(200).json({
         statusCode: 200,
         message: "Property List",
-        data: modifiedProperties,
+        data: properties,
         pagination: { page, pages: Math.ceil(count / pageSize), count },
       });
     } catch (err: any) {
@@ -337,24 +364,6 @@ class PropertyController {
       const isInFavorites = !!favorite; // Convert to boolean
       const favoriteId = favorite?._id || null; // Get the favorite ID if it exists
 
-      if (process.env.NODE_ENV !== "production") {
-        if (property.images && Array.isArray(property.images)) {
-          property.images = property.images.map((image) =>
-            image.startsWith("http")
-              ? image
-              : `${process.env.BACKEND_URL}/uploads/${image}`
-          );
-        }
-
-        if (property.documents && Array.isArray(property.documents)) {
-          property.documents = property.documents.map((docs) => ({
-            ...docs,
-            document: docs.document.startsWith("http")
-              ? docs.document
-              : `${process.env.BACKEND_URL}/uploads${docs.document}`,
-          }));
-        }
-      }
       return res.json({
         statusCode: 200,
         message: "Successful",
@@ -450,14 +459,18 @@ class PropertyController {
 
       if (property.images && property.images.length > 0) {
         property.images.forEach((imagePath) => {
-          propertyController.clearImage(imagePath);
+          // propertyController.clearImage(imagePath);
+          const imageId = this.getDriveFileId(imagePath);
+          if (imageId) this.deleteDriveFile(imageId);
         });
       }
 
       if (property.documents && property.documents.length > 0) {
         property.documents.forEach((doc) => {
           if (doc.document) {
-            propertyController.clearImage(doc.document);
+            // propertyController.clearImage(doc.document);
+            const docId = this.getDriveFileId(doc.document);
+            if (docId) this.deleteDriveFile(docId);
           }
         });
       }

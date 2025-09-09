@@ -70,7 +70,7 @@ const FavouriteScreen = ()=>{
                         display={'flex'}
                         justifyContent={'center'}
                         alignItems={'center'}
-                        W={{base:'60px',lg:'148px'}}
+                        w={{base:'60px',lg:'148px'}}
                         h={{base:'32px'}}
                         bg={'#3170A6'}
                         borderRadius={'8px'}

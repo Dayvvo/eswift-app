@@ -93,7 +93,7 @@ const AddBlog = () => {
         </Text>
         <Box width={{base: '100%', xl: 'initial'}}>
       
-        <ImageUpload onImageChange={headerImageChange} setImageFile={setHeaderImageFile} />
+        <ImageUpload onImageChange={headerImageChange} setImageFile={setHeaderImageFile} title={articleTitle} />
         </Box>
       </Flex>
       <Flex 
@@ -148,7 +148,7 @@ const AddBlog = () => {
           Body Image
         </Text>
         <Box width={{base: '100%', xl: 'initial'}}>
-        <ImageUpload onImageChange={bodyImageChange} setImageFile={setBodyImageFile} />
+        <ImageUpload onImageChange={bodyImageChange} setImageFile={setBodyImageFile} title={articleTitle} />
         </Box>
       </Flex>
       <Flex align={{ base: 'start', xl: "center" }} justify={"space-between"} mb="20px"   flexDirection={{ base: 'column', xl: 'row' }}>

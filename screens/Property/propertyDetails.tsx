@@ -6,7 +6,7 @@ import {
   GridItem,
   SimpleGrid,
   Text,
-  Image,
+  // Image,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -20,6 +20,7 @@ import { BsDot } from "react-icons/bs";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { FaRegImages } from "react-icons/fa";
+import Image from "next/image";
 import useProperty from "@/hooks/useProperty";
 import { useEffect, useState } from "react";
 import { useAppContext } from "@/context";
@@ -226,9 +227,11 @@ export const PropertyDetails = ({
         closeOnOverlayClick={true}
         onClose={toggleModal}
         isOpen={activeModal}
+        size={"2xl"}
+        // h={"100vh"}
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent h={modalType === "documents" ? "70vh" : "auto"}>
           {modalType === "Verified" ? (
             <VerifyState
               verifyPropertyFn={verifyPropertyFn}
@@ -254,12 +257,17 @@ export const PropertyDetails = ({
               deletePropertyFn={deletePropertyFn}
             />
           ) : modalType === "documents" && selectedDocument ? (
-            <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
-              <Viewer
-                fileUrl={selectedDocument}
-                plugins={[defaultLayoutPluginInstance]}
-              />
-            </Worker>
+            // <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+            //   <Viewer
+            //     fileUrl={selectedDocument}
+            //     plugins={[defaultLayoutPluginInstance]}
+            //   />
+            // </Worker>
+            <iframe
+              src={selectedDocument}
+              width="100%"
+              height="100%"
+            ></iframe>
           ) : (
             <></>
           )}
@@ -309,15 +317,19 @@ export const PropertyDetails = ({
                 h={"max-content"}
               >
                 {detailsData?.images.map((item: any, index: any) => (
-                  <GridItem rowSpan={index === 0 ? 2 : 1} key={index}>
-                    <Image
-                      w={"100%"}
-                      h={"100%"}
+                  <GridItem rowSpan={index === 0 ? 2 : 1} key={item}>
+                    <Box overflow={"hidden"} borderRadius={"10px"} maxH={"65vh"} h={{base: "300px", lg: "100%"}}>        
+                   <Image
+                      width={1000}
+                      height={1000}
+                      style={{ borderRadius: "10px", objectFit: "cover", width: "100%", height: "100%" }}
+                      // h={"100%"}
                       src={item}
-                      alt={`Image ${index + 1}`}
-                      maxHeight={"65vh"}
+                      alt={`Image`}
+                      // maxHeight={"65vh"}
                       objectFit="cover"
-                    />
+                    /></Box>
+
                   </GridItem>
                 ))}
               </Grid>
@@ -593,8 +605,9 @@ export const PropertyDetails = ({
                       >
                         {user.avatar.length < 1 && (
                           <Image
-                            width={42}
-                            height={40}
+                          style={{ borderRadius: "50%", objectFit: "cover", width: "100%", height: "100%" }}
+                          height={100}
+                          width={100}
                             src={"/profile.png"}
                             alt=""
                           />
@@ -602,10 +615,10 @@ export const PropertyDetails = ({
                         {user.avatar.length > 0 && (
                           <Image
                             src={user.avatar}
-                            alt=""
-                            h={"40px"}
-                            w={"50px"}
-                            borderRadius={"50%"}
+                            alt="avatar"
+                            style={{ borderRadius: "50%", objectFit: "cover", width: "100%", height: "100%" }}
+                            height={100}
+                            width={100}
                           />
                         )}
                       </Box>
@@ -659,7 +672,7 @@ export const PropertyDetails = ({
               {getProperty.map((property, index) => {
                 return (
                   <PropertyCard
-                    key={index}
+                    key={property?._id}
                     _id={property?._id}
                     images={property?.images}
                     title={property?.title}

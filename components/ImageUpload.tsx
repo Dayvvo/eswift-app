@@ -3,6 +3,7 @@ import { PlusIcon, UploadIcon } from "./svg";
 import { Flex, Text } from "@chakra-ui/react";
 import useUpload from "@/hooks/useUpload";
 import useToast from "@/hooks/useToast";
+import Image from 'next/image';
 
 export interface ImageData {
   dataUrl: string;
@@ -14,17 +15,21 @@ const ImageUpload = ({
   setImageFile,
   // setImageUrl,
   initialImageUrl,
+  title,
 }: {
   onImageChange?: (image: ImageData) => void;
   setImageFile?: any;
   // setImageUrl?: (url: string) => void;
   initialImageUrl?: string;
+  title: string;
 }) => {
   const [image, setImage] = useState<ImageData | null>(null);
   const { uploadSingle } = useUpload();
   const { toast } = useToast();
   const MAX_FILE_SIZE_MB = 20 * 1024 * 1024;
   const validTypes = ["image/jpeg", "image/gif", "image/jpg", "image/png"];
+
+  console.log("initialImageUrl", initialImageUrl);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -67,6 +72,7 @@ const ImageUpload = ({
 
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("title", title);
 
         const uploadImage = async () => {
           try {
@@ -108,14 +114,16 @@ const ImageUpload = ({
         {image ? (
           <img
             src={image?.dataUrl}
-            alt="header-img"
+            alt="image"
             style={{ width: "100%" }}
           />
         ) : initialImageUrl ? (
-          <img
+          <Image
             src={initialImageUrl}
-            alt="header-img"
+            alt="image"
             style={{ width: "100%" }}
+            width={1000}
+            height={1000}
           />
         ) : (
           <div

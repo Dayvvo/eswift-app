@@ -4,22 +4,15 @@ import useToast from "@/hooks/useToast";
 import {
   Box,
   Flex,
-  FormControl,
-  FormHelperText,
-  FormLabel,
   Input,
-  InputGroup,
-  InputLeftElement,
-  Menu,
-  Select,
   Text,
-  Textarea,
-  Image,
+  // Image,
 } from "@chakra-ui/react";
-import { ChangeEvent, ReactNode, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import { RiUploadCloud2Line } from "react-icons/ri";
+import Image from "next/image";
 
 interface ButtonFunction {
   next: () => void;
@@ -132,7 +125,7 @@ export const AddPropertyScreenThree = ({
 
   return (
     <>
-      <Box w={"100%"} px={"20px"} className="inter"        maxH={"600px"}
+      <Box w={"100%"} px={"20px"} className="inter" maxH={"600px"}
         overflow={"scroll"}>
         <Flex w={"100%"} justifyContent={"space-between"} flexDir={{base: 'column', md: 'row'}}>
           {subs.map((sub) => (
@@ -275,7 +268,7 @@ export const AddPropertyScreenThree = ({
           >
             {images.map((image: any, index: number) => (
               <Box
-                key={index}
+                key={image}
                 h="74px"
                 borderRadius="6px"
                 flexShrink="0"
@@ -284,12 +277,13 @@ export const AddPropertyScreenThree = ({
                 // onClick={() => handleImageClick(index)}
               >
                 <Image
-                  h="100%"
-                  w="100%"
+                  height={1000}
+                  width={1000}
+                  style={{ borderRadius: "6px", objectFit: "cover", width: "100%", height: "100%" }}
                   src={typeof(image) ==='string'?image: URL.createObjectURL(image)}
-                  alt={image.name}
-                  borderRadius="6px"
-                  objectFit="cover"
+                  alt={image}
+                  // borderRadius="6px"
+                  // objectFit="cover"
                 />
                 <Box
                   position={"absolute"}

@@ -62,6 +62,7 @@ export const BlogCard = ({
           {/* <Img src={picture} alt={title} w="100%" /> */}
         </Flex>
         <Flex
+          // laph
           className="roboto"
           flexDir={"column"}
           gap={"10px"}

@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Text, Tooltip } from "@chakra-ui/react";
+import { Box, Flex, Text, Tooltip } from "@chakra-ui/react";
 import { TbCurrencyNaira } from "react-icons/tb";
 import router from "next/router";
 import { MdLocationOn } from "react-icons/md";
@@ -12,6 +12,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { useAppContext } from "@/context";
 import { Dispatch, SetStateAction, useState, useEffect } from "react";
 import { R } from "@/utils/types";
+import Image from 'next/image';
 interface PropertiesCardProps extends PropertyCardProps {
   view?: "client" | "admin";
   isInFavorites?: boolean;
@@ -154,7 +155,13 @@ export const PropertiesCard = ({
         borderRadius={"10px"}
         overflow={"hidden"}
       >
-        <Image width={"100%"} src={images?.[0]} alt={"property"} />
+        <Image
+          width={1000}
+          height={1000}
+          src={images?.[0]}
+          alt={"property"}
+        />
+        {/* <Image width={"100%"} src={images?.[0]} alt={"property"} /> */}
       </Flex>
 
       <Flex

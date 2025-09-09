@@ -142,36 +142,36 @@ class UserController {
     }
   }
 
-  updateUser = async (req: Request, res: Response) => {
-    const body: ISignupValidation = req.body
-    try {
-      const validate = validateSignupData(body)
-      const { error, value } = validate
-      if (error) {
-        return res.status(400).json(error.details[0])
-      }
+  // updateUser = async (req: Request, res: Response) => {
+  //   const body: ISignupValidation = req.body
+  //   try {
+  //     const validate = validateSignupData(body)
+  //     const { error, value } = validate
+  //     if (error) {
+  //       return res.status(400).json(error.details[0])
+  //     }
 
-      const user = req.user! as any
+  //     const user = req.user! as any
 
-      const selectedUser = await User.findById(user['_id'])
-      if(!selectedUser) {
-        return res.status(404).json({ message: 'User not found' })
-      }
+  //     const selectedUser = await User.findById(user['_id'])
+  //     if(!selectedUser) {
+  //       return res.status(404).json({ message: 'User not found' })
+  //     }
       
-      const userData = await User.findOneAndUpdate(
-        { _id: user['_id'] },
-        { ...value },
-        { new: true }
-      )
-      return res.status(HttpStatusCode.Ok).json({
-        message: 'success',
-        statusCode: 200,
-        data: userData,
-      })
-    } catch (error: any) {
-      res.status(500).send(error.message || 'Internal server error')
-    }
-  }
+  //     const userData = await User.findOneAndUpdate(
+  //       { _id: user['_id'] },
+  //       { ...value },
+  //       { new: true }
+  //     )
+  //     return res.status(HttpStatusCode.Ok).json({
+  //       message: 'success',
+  //       statusCode: 200,
+  //       data: userData,
+  //     })
+  //   } catch (error: any) {
+  //     res.status(500).send(error.message || 'Internal server error')
+  //   }
+  // }
 }
 
 let userController = new UserController()

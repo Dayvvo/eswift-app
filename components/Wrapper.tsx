@@ -1,5 +1,5 @@
 "use client";
-import { Box, Flex, Grid, Image, Img, Text } from "@chakra-ui/react";
+import { Box, Flex, Grid, Image as Image1,  Text } from "@chakra-ui/react";
 import Link from "next/link";
 import React, { ReactNode, useEffect, useState } from "react";
 import Divider from "./Divider";
@@ -12,6 +12,7 @@ import { NextRouter, useRouter } from "next/router";
 import useAuth from "@/hooks/useAuth";
 import useProfile from "@/hooks/useProfile";
 import { GiHamburgerMenu } from "react-icons/gi";
+import Image from 'next/image';
 // import { token } from "morgan";
 
 const Wrapper = ({
@@ -137,14 +138,14 @@ const Wrapper = ({
     setIsOpen((prevState) => !prevState);
   };
 
-  let finalImage = user?.avatar;
-  if (finalImage) {
-    if (!finalImage.startsWith("http") && !finalImage.startsWith("https")) {
-      finalImage = `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${user?.avatar}`;
-    } else {
-      finalImage = user?.avatar;
-    }
-  }
+  // let finalImage = user?.avatar;
+  // if (finalImage) {
+  //   if (!finalImage.startsWith("http") && !finalImage.startsWith("https")) {
+  //     finalImage = `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${user?.avatar}`;
+  //   } else {
+  //     finalImage = user?.avatar;
+  //   }
+  // }
 
   return (
     <Box
@@ -192,7 +193,7 @@ const Wrapper = ({
             <IoClose />
           </Box>
           <Link href={"/"}>
-            <Image src="/logo.svg" width="226px" height="40px" alt="logo" />
+            <Image1 src="/logo.svg" width="226px" height="40px" alt="logo" />
           </Link>
           <Box my="2rem">
             <Divider w="100%" color="#1A1D66" />
@@ -250,13 +251,17 @@ const Wrapper = ({
               w={"full"}
               rowGap={"20px"}
             >
-              <Img
-                src={finalImage ? finalImage : "/profile.png"}
+
+              <Box overflow={"hidden"} borderRadius={"50%"} h={"40px"} w={"40px"}>
+              <Image
+                src={user?.avatar ? user?.avatar : "/profile.png"}
                 alt={"profile"}
-                borderRadius={"50%"}
-                h={"30px"}
-                w={"50px"}
+                // borderRadius={"50%"}
+                style={{ borderRadius: "50%", objectFit: "cover", width: "100%", height: "100%" }}
+                height={100}
+                width={100}
               />
+              </Box>
               <Flex direction={"column"}>
                 <Text
                   color="#0E121B"

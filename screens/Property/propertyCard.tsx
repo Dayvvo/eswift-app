@@ -1,4 +1,4 @@
-import { Box, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { TbCurrencyNaira } from "react-icons/tb";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import Btn from "@/components/Btn";
@@ -6,6 +6,7 @@ import useToast from "@/hooks/useToast";
 import useProperty from "@/hooks/useProperty";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Image from "next/image";
 
 export type PropertyCardProps = {
   _id?: string;
@@ -63,17 +64,17 @@ export const PropertyCard = ({
     router.push("/listing/" + id);
   };
 
-  let finalImage = userImage;
+  // let finalImage = userImage;
 
-  if (finalImage) {
-    const isDataUrl = finalImage.startsWith("data:image");
-    const isFullUrl =
-      finalImage.startsWith("http") || finalImage.startsWith("https");
+  // if (finalImage) {
+  //   const isDataUrl = finalImage.startsWith("data:image");
+  //   const isFullUrl =
+  //     finalImage.startsWith("http") || finalImage.startsWith("https");
 
-    if (!isDataUrl && !isFullUrl) {
-      finalImage = `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${finalImage}`;
-    }
-  }
+  //   if (!isDataUrl && !isFullUrl) {
+  //     finalImage = `${process.env.NEXT_PUBLIC_BACKEND_URL}/uploads/${finalImage}`;
+  //   }
+  // }
 
   const data = {
     verification: "Verified",
@@ -158,10 +159,13 @@ export const PropertyCard = ({
           {verificationState}
         </Text>
         <Image
-          width={"100%"}
-          height={"100%"}
-          objectFit={"cover"}
-          src={`${image1}`}
+        src={image[0]}
+        width={1000}
+        height={1000}
+          // width={"100%"}
+          // height={"100%"}
+          // objectFit={"cover"}
+          // src={`${image1}`}
           alt={"property"}
         />
       </Flex>
@@ -223,18 +227,20 @@ export const PropertyCard = ({
             gap={"4px"}
             textColor={"#626871"}
             fontSize={"14px"}
+            mt={"8px"}
           >
             <Flex h={"18px"} gap={"8px"} alignItems={"center"}>
               <Box
-                w={"18px"}
-                h={"18px"}
+                w={"40px"}
+                h={"40px"}
                 borderRadius={"100px"}
                 overflow={"clip"}
               >
                 <Image
-                  width={18}
-                  height={18}
-                  src={`${finalImage || "/avatar1.png"}`}
+                    style={{ borderRadius: "50%", objectFit: "cover", width: "100%", height: "100%" }}
+                    height={100}
+                    width={100}
+                  src={`${userImage || "/avatar1.png"}`}
                   alt="/"
                 />
               </Box>
