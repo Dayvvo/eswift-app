@@ -114,7 +114,6 @@ export const ResetPasswordScreen = () => {
   
     try {
       const resp = await forgotPassword(input.email);
-      console.log(resp);
       localStorage.removeItem("token");
       localStorage.removeItem("userData");
       router.push("/admin");

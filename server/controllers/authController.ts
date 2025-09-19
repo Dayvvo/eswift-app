@@ -145,6 +145,7 @@ class AuthController {
         message: "Token sent to email"
       })
     } catch(error) {
+      console.log("token sent to email error",error);
       return res.status(500).json({ message: "An error occurred" });
     }
   }
