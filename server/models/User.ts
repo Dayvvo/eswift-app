@@ -128,12 +128,15 @@ UserSchema.method("matchPassword", async function (enteredPassword) {
 });
 
 UserSchema.pre("save", async function (next) {
-  if (!this.isModified("hash")) {
-    next();
+  if (this.isModified("hash")) {
+    this.hash = await argon.hash(this.hash as string);
   }
-  this.hash = await argon.hash(this.hash as string);
+ 
+  if (this.isNew) {
+    this.refCode = generateRefCode(8);
+  }
 
-  this.refCode = generateRefCode(8);
+  next();
 });
 
 export default model("user", UserSchema);
