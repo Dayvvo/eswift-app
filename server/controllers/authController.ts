@@ -79,6 +79,7 @@ class AuthController {
           .json({ statusCode: 401, message: "Wrong Email or Password" });
       }
     } catch (err) {
+      console.log("email login auth controller error",err);
       res.status(500).send("Internal Server Error");
     }
   };
