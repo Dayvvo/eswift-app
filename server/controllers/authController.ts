@@ -46,7 +46,13 @@ class AuthController {
       const { email, password } = body;
       const user = await User.findOne({ email });
 
-      if (user && user.matchPassword && (await user?.matchPassword(password))) {
+      if(!user) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
+
+      if (user.matchPassword && (await user?.matchPassword(password))) {
         res.json({
           statusCode: 200,
           message: "Successful",
@@ -140,6 +146,8 @@ class AuthController {
 
       const token = crypto.randomBytes(32).toString("hex");
       user.token = token;
+
+      console.log("token",token);
       await mailGenMails.forgotPassword(firstName, email, token, true)
       await user.save();
       return res.status(200).json({
