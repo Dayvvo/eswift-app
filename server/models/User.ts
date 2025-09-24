@@ -12,6 +12,7 @@ const UserSchema = new Schema<IUser>(
     email: {
       type: String,
       lowercase: true,
+      index: true,
     },
     avatar: {
       type: String,

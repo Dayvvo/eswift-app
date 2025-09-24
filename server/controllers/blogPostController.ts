@@ -23,7 +23,6 @@ class BlogPostController {
         message: "Blog post created",
       });
     } catch (error) {
-      console.log(error);
       res.status(500).send("Failed to create blog post");
     }
   };
@@ -72,7 +71,6 @@ class BlogPostController {
         data: blogPost,
       });
     } catch (error) {
-      console.log(error);
       res.status(500).send("Failed to update blog post");
     }
   };
@@ -124,7 +122,6 @@ class BlogPostController {
         lastPage: Math.ceil(totalPost / POST_PER_PAGE),
       });
     } catch (error) {
-      console.log(error);
       res.status(500).send("Failed to fetch blog posts");
     }
   };
@@ -153,7 +150,6 @@ class BlogPostController {
         statusCode: 200,
       });
     } catch (error) {
-      console.log(error);
       res.status(500).send("Failed to fetch blog post details");
     }
   };
@@ -179,7 +175,6 @@ class BlogPostController {
         data: deletedBlogpost,
       });
     } catch (error) {
-      console.log(error);
       res.status(500).send("Internal Server Error");
     }
   };

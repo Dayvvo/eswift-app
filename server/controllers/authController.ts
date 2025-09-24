@@ -85,7 +85,6 @@ class AuthController {
           .json({ statusCode: 401, message: "Wrong Email or Password" });
       }
     } catch (err) {
-      console.log("email login auth controller error",err);
       res.status(500).send("Internal Server Error");
     }
   };
@@ -146,20 +145,18 @@ class AuthController {
 
       const token = crypto.randomBytes(32).toString("hex");
       user.token = token;
-
-      console.log("token",token);
       await mailGenMails.forgotPassword(firstName, email, token, true)
       await user.save();
       return res.status(200).json({
         message: "Token sent to email"
       })
     } catch(error) {
-      console.log("token sent to email error",error);
       return res.status(500).json({ message: "An error occurred" + error });
     }
   }
   forgotPassword = async (req: Request, res: Response) => {
     const { token } = req.params;
+
     const { new_password } = req.body;
     try {
       const user = await User.findOne({ token });

@@ -47,47 +47,47 @@ class PropertyController {
         ...value,
       };
       const newProperty = new Property(propertydata);
-      const locateInterest: any = [];
-      const state = newProperty.state;
-      locateInterest.push(state);
-      let email;
-      if (!state && !locateInterest.length) {
-        email = [];
-      }
-      const query: any = {};
-      const orConditions: any[] = [];
-      if (state) {
-        orConditions.push({ state: { $regex: state, $options: "i" } });
-      }
-      if (locateInterest.length) {
-        orConditions.push({
-          locationInterest: {
-            $in: locateInterest.map(
-              (interest: string) => new RegExp(interest, "i")
-            ),
-          },
-        });
-      }
-      if (orConditions.length > 0) {
-        query.$or = orConditions;
-      }
-      const users = await User.find(query);
-      const emailData = users.map((user) => ({
-        email: user.email,
-        name: `${user.firstName} ${user.lastName}`,
-      }));
+      // const locateInterest: any = [];
+      // const state = newProperty.state;
+      // locateInterest.push(state);
+      // let email;
+      // if (!state && !locateInterest.length) {
+      //   email = [];
+      // }
+      // const query: any = {};
+      // const orConditions: any[] = [];
+      // if (state) {
+      //   orConditions.push({ state: { $regex: state, $options: "i" } });
+      // }
+      // if (locateInterest.length) {
+      //   orConditions.push({
+      //     locationInterest: {
+      //       $in: locateInterest.map(
+      //         (interest: string) => new RegExp(interest, "i")
+      //       ),
+      //     },
+      //   });
+      // }
+      // if (orConditions.length > 0) {
+      //   query.$or = orConditions;
+      // }
+      // const users = await User.find(query);
+      // const emailData = users.map((user) => ({
+      //   email: user.email,
+      //   name: `${user.firstName} ${user.lastName}`,
+      // }));
 
-      if (newProperty) {
-        await mailGenMails.propertyCreationEmail(
-          emailData,
-          newProperty.title,
-          newProperty._id.toString(),
-          true
-        );
-      }
+      // if (newProperty) {
+      //   await mailGenMails.propertyCreationEmail(
+      //     emailData,
+      //     newProperty.title,
+      //     newProperty._id.toString(),
+      //     true
+      //   );
+      // }
 
       await newProperty.save();
-      return res.status(HttpStatusCode.Created).json({
+      res.status(HttpStatusCode.Created).json({
         statusCode: 200,
         message: "Property created",
         data: newProperty,
