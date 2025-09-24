@@ -22,12 +22,15 @@ const PropertySchema = new mongoose.Schema<IProperty>(
   {
     title: {
       type: String,
+      index: true,
     },
     description: {
       type: String,
+      index: true,
     },
     category: {
       type: String,
+      index: true,
     },
     address: {
       type: String,
@@ -84,6 +87,10 @@ const PropertySchema = new mongoose.Schema<IProperty>(
   },
   { timestamps: true }
 );
+
+PropertySchema.index({title: 1})
+
+// PropertySchema.index({title: "text", description: "text", category: "text"})
 
 const Property = mongoose.model("property", PropertySchema);
 
