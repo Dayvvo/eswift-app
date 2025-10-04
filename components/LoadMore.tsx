@@ -2,7 +2,7 @@ import Btn from './Btn';
 
 type LoadMoreProps = {
   click: () => void;
-  isLoading: boolean;
+  isLoading?: boolean;
 };
 
 export const LoadMore = ({ click, isLoading }: LoadMoreProps) => {
