@@ -9,8 +9,10 @@ type SomeFunction = (func: (args?:unknown)=> unknown ) => void;
  * @returns The debounced function, which will run only if the debounced function has not been called in the last (delay) ms
  */
 
+
+
 export function useDebounce<Func extends SomeFunction>(
-  delay = 1500
+  delay = 500
 ) {
   const timer = useRef<Timer>();
 

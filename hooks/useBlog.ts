@@ -1,8 +1,8 @@
-import axios from "axios";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import httpClient, { useApiUrl } from "./useApi";
-import { R } from "@/utils/types";
-import useAuth from "./useAuth";
+import axios from 'axios';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import httpClient, { useApiUrl } from './useApi';
+import { R } from '@/utils/types';
+import useAuth from './useAuth';
 
 interface BlogObj {
   title: string;
@@ -25,12 +25,7 @@ interface MailType {
 const useBlog = () => {
   const { token } = useAuth();
 
-  const {
-    get: query,
-    post,
-    delete: deleteRequest,
-    put: putRequest,
-  } = useApiUrl();
+  const { get: query, post, delete: deleteRequest, put: putRequest } = useApiUrl();
 
   const addBlog = useCallback(
     async (data: BlogObj) => {
@@ -84,8 +79,9 @@ const useBlog = () => {
     [token]
   );
 
-  const getBlog = async (search?: string) =>
-    (await query(`/blog/post?keyword=${search}`)).data as R;
+  const getBlog = async (search?: string, page?: number) =>
+    (await query(`/blog/post?keyword=${search}&page=${page}`)).data as R;
+  const loadBlog = async (page?: number) => (await query(`/blog/post/load?page=${page}`)).data as R;
 
   const getBlogByID = async (id: string) => {
     try {
@@ -93,9 +89,9 @@ const useBlog = () => {
       return res.data as Record<string, unknown>;
     } catch (err: any) {
       // console.log("error", err);
-      console.log("err occured");
+      console.log('err occured');
       return {
-        message: "error",
+        message: 'error',
       };
     }
   };
@@ -104,6 +100,7 @@ const useBlog = () => {
     addBlog,
     deleteBlog,
     getBlog,
+    loadBlog,
     contactApi: contactUsFn,
     getBlogByID,
     updateBlog,

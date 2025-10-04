@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FaBackward, FaForward } from "react-icons/fa";
 import { IoCaretBack, IoCaretForwardOutline } from "react-icons/io5";
 import styled from "styled-components";
 
 type Props = {
-  rowsPerPage: number;
-  totalPostLength: number;
+  totalPost: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   currentPage: number;
+  totalPages: number;
 };
 
 const StyledPagination = styled.div`
@@ -44,35 +44,23 @@ const StyledPagination = styled.div`
 `;
 
 const Pagination = ({
-  rowsPerPage,
-  totalPostLength,
   setCurrentPage,
   currentPage,
+  totalPages,
 }: Props) => {
-  const [pages, setPages] = useState<number[]>([]);
-
-  useEffect(() => {
-    const page = [];
-    for (let i = 1; i <= Math.ceil(totalPostLength / rowsPerPage); i++) {
-      page.push(i);
-    }
-    setPages(page);
-  }, [totalPostLength, rowsPerPage]);
-
-  // const goToPage = (page: number) => {
-  //   setCurrentPage(page);
-  // };
 
   const goToPreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+    setCurrentPage((prevPage) => prevPage > 1 ? prevPage - 1 : 1);
   };
 
   const goToNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, pages.length));
+    setCurrentPage((prevPage) => {
+      return (prevPage < totalPages ? prevPage + 1 : prevPage)
+    });
   };
 
   const goToLastPage = () => {
-    setCurrentPage(pages.length);
+    setCurrentPage(totalPages);
   };
 
   const goToFirstPage = () => {
@@ -92,11 +80,11 @@ const Pagination = ({
         <IoCaretBack />
       </button>
       <div className="page-info">
-        Page {currentPage} of {pages.length}
+        Page {currentPage} of {totalPages}
       </div>
       <button
         onClick={goToNextPage}
-        disabled={currentPage === pages.length}
+        disabled={currentPage === totalPages}
         className="pagination-button"
       >
         <IoCaretForwardOutline />

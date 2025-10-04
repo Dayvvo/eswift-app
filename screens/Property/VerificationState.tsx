@@ -4,28 +4,28 @@ import { Box, Checkbox, Flex, Text } from "@chakra-ui/react";
 
 interface VerifyProps {
   toggleModal: () => void;
-  verifyPropertyFn: (status: string) => {};
-  isVerifying: boolean;
+  changeStateFxn: (status: string) => {};
+  isLoading: boolean;
 }
 // interface DeclineProps {
 //   toggleModal: () => void;
-//   verifyPropertyFn: (status: string) => {};
-//   isVerifying: boolean;
+//   changeStateFxn: (status: string) => {};
+//   isLoading: boolean;
 // }
 // interface SuspendProps {
 //   toggleModal: () => void;
-//   verifyPropertyFn: (status: string) => {};
-//   isVerifying: boolean;
+//   changeStateFxn: (status: string) => {};
+//   isLoading: boolean;
 // }
 interface DeleteProps {
   toggleModal: () => void;
   deletePropertyFn: () => void;
-  isVerifying: boolean;
+  isLoading: boolean;
 }
 export const VerifyState = ({
   toggleModal,
-  verifyPropertyFn,
-  isVerifying,
+  changeStateFxn,
+  isLoading,
 }: VerifyProps) => {
   return (
     <>
@@ -109,10 +109,12 @@ export const VerifyState = ({
                 bg: "#1A1D66",
                 textColor: "#FFF",
               }}
-              onClick={() => verifyPropertyFn("Verified")}
-              isLoading={isVerifying}
+              onClick={() => {
+                changeStateFxn("Verified");
+              }}
+              isLoading={isLoading}
               loadingText="Verifying"
-              disabled={isVerifying}
+              disabled={isLoading}
             >
               Yes, verify
             </Btn>
@@ -125,8 +127,8 @@ export const VerifyState = ({
 
 export const SoldState = ({
   toggleModal,
-  verifyPropertyFn,
-  isVerifying,
+  changeStateFxn,
+  isLoading,
 }: VerifyProps) => {
   return (
     <Box>
@@ -210,10 +212,10 @@ export const SoldState = ({
               bg: "#1A1D66",
               textColor: "#FFF",
               }}
-              onClick={() => verifyPropertyFn("Sold")}
-              isLoading={isVerifying}
+              onClick={() => changeStateFxn("Sold")}
+              isLoading={isLoading}
               loadingText="Selling..."
-              disabled={isVerifying}
+              disabled={isLoading}
           >
             Yes, Sold
           </Btn>
@@ -224,8 +226,8 @@ export const SoldState = ({
 };
 export const DeclineState = ({
   toggleModal,
-  verifyPropertyFn,
-  isVerifying,
+  changeStateFxn,
+  isLoading,
 }: VerifyProps) => {
   return (
     <Box>
@@ -309,10 +311,10 @@ export const DeclineState = ({
               bg: "#1A1D66",
               textColor: "#FFF",
             }}
-            onClick={() => verifyPropertyFn("Rejected")}
-            isLoading={isVerifying}
+            onClick={() => changeStateFxn("Rejected")}
+            isLoading={isLoading}
             loadingText="Submiting"
-            disabled={isVerifying}
+            disabled={isLoading}
           >
             Yes, Descline
           </Btn>
@@ -323,8 +325,8 @@ export const DeclineState = ({
 };
 export const SuspendState = ({
   toggleModal,
-  isVerifying,
-  verifyPropertyFn,
+  isLoading,
+  changeStateFxn,
 }: VerifyProps) => {
   return (
     <Box>
@@ -408,11 +410,11 @@ export const SuspendState = ({
               bg: "#1A1D66",
               textColor: "#FFF",
             }}
-            onClick={() => verifyPropertyFn("suspend")}
-            isLoading={isVerifying}
+            onClick={() => changeStateFxn("suspend")}
+            isLoading={isLoading}
             loadingText="Submiting"
-            disabled={isVerifying}
-            // onClick={verifyPropertyFn}
+            disabled={isLoading}
+            // onClick={changeStateFxn}
           >
             Yes, Suspend
           </Btn>
@@ -423,7 +425,7 @@ export const SuspendState = ({
 };
 export const DeleteProperty = ({
   toggleModal,
-  isVerifying,
+  isLoading,
   deletePropertyFn,
 }: DeleteProps) => {
   return (
@@ -509,10 +511,10 @@ export const DeleteProperty = ({
               textColor: "#FFF",
             }}
             onClick={deletePropertyFn}
-            isLoading={isVerifying}
+            isLoading={isLoading}
             loadingText="Deleting"
-            disabled={isVerifying}
-            // onClick={verifyPropertyFn}
+            disabled={isLoading}
+            // onClick={changeStateFxn}
           >
             Yes, Delete
           </Btn>
