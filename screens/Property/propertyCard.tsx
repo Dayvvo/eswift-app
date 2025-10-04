@@ -36,6 +36,14 @@ export type PropertyCardProps = {
   favoriteId?: string;
   propertyType?: string;
   isProject?: boolean;
+  ownerID?: {
+    role?: string;
+    avatar?: string;
+    email?: string;
+    firstName?: string;
+    lastName?: string;
+    phoneNumber?: string;
+  };
 };
 
 export const PropertyCard = ({

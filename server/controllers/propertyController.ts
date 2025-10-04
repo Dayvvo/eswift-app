@@ -1,23 +1,16 @@
-import { Request, Response } from "express";
-import {
-  ValidateAddProperty,
-  ValidateEditProperty,
-  validateLoginData,
-} from "../utils/validation/index";
-import Property from "../models/Property";
-import { IUser, IUserInRequest } from "../utils/interfaces";
-import { isValidObjectId, ObjectId } from "mongoose";
-import PropertyDocs from "../models/PropertyDocs";
-import Favourite from "../models/FavouriteProperty";
-
-import mongoose from "mongoose";
-import { HttpStatusCode } from "axios";
-import User from "../models/User";
-import { mailGenMails } from "../utils/mails/mailgen.mail";
-import path from "path";
-import fs from "fs";
-import { checkImageArray } from "../utils/helperFunctions/generateToken";
-import { PropertyType, PropertyVerification } from "../utils/interfaces/types";
+import { NextFunction, Request, Response } from 'express';
+import { ValidateAddProperty, ValidateEditProperty } from '../utils/validation/index';
+import Property from '../models/Property';
+import { IUser, IUserInRequest } from '../utils/interfaces';
+import { isValidObjectId, ObjectId } from 'mongoose';
+import PropertyDocs from '../models/PropertyDocs';
+import Favourite from '../models/FavouriteProperty';
+import { HttpStatusCode } from 'axios';
+import User from '../models/User';
+import { mailGenMails } from '../utils/mails/mailgen.mail';
+import path from 'path';
+import fs from 'fs';
+import { PropertyType, PropertyVerification } from '../utils/interfaces/types';
 
 type MapDocsType = { type: string; document: string; _id?: any };
 class PropertyController {
@@ -41,8 +34,8 @@ class PropertyController {
         isProject = true;
       }
       const propertydata = {
-        creatorID: user["_id"],
-        ownerID: user["_id"],
+        creatorID: user['_id'],
+        ownerID: user['_id'],
         isProject,
         ...value,
       };
@@ -89,12 +82,12 @@ class PropertyController {
       await newProperty.save();
       res.status(HttpStatusCode.Created).json({
         statusCode: 200,
-        message: "Property created",
+        message: 'Property created',
         data: newProperty,
       });
     } catch (error: any) {
-      console.log("error", error);
-      return res.status(500).send("An Error ocurred while retrieving data");
+      console.log('error', error);
+      return res.status(500).send('An Error ocurred while retrieving data');
     }
   };
 
@@ -104,7 +97,7 @@ class PropertyController {
     if (!isValidObjectId(id))
       return res.status(400).json({
         statusCode: 400,
-        message: "Invalid ObjectId",
+        message: 'Invalid ObjectId',
       });
     const validate = ValidateEditProperty(req.body);
     const { value, error } = validate;
@@ -116,7 +109,7 @@ class PropertyController {
     try {
       const user = req.user as any;
       const ownerID = user._id;
-      const property = await Property.findById(id);
+      const property = await Property.findById(id).lean();
       if (!property)
         return res.status(404).json({
           statusCode: 404,
@@ -128,24 +121,22 @@ class PropertyController {
       }
 
       const valueImages = value.images.map((img: string) => {
-        if (img.startsWith("http") || img.startsWith("https")) {
-          return img.replace(/^.*\/uploads\//, "");
+        if (img.startsWith('http') || img.startsWith('https')) {
+          return img.replace(/^.*\/uploads\//, '');
         } else {
           return img;
         }
       });
 
       const propertyImages = property.images.map((img: string) => {
-        if (img.startsWith("http") || img.startsWith("https")) {
-          return img.replace(/^.*\/uploads\//, "");
+        if (img.startsWith('http') || img.startsWith('https')) {
+          return img.replace(/^.*\/uploads\//, '');
         } else {
           return img;
         }
       });
 
-      const imagesNotInValue = propertyImages.filter(
-        (img: string) => !valueImages.includes(img)
-      );
+      const imagesNotInValue = propertyImages.filter((img: string) => !valueImages.includes(img));
 
       if (imagesNotInValue.length > 0) {
         imagesNotInValue.forEach((img: string) => {
@@ -154,20 +145,14 @@ class PropertyController {
       }
 
       const normalizeDocPath = (docPath: string) => {
-        return docPath.replace(/^.*\/uploads\//, "").replace(/^\/+/, "");
+        return docPath.replace(/^.*\/uploads\//, '').replace(/^\/+/, '');
       };
 
-      const valueDocuments = value.documents.map((doc: MapDocsType) =>
-        normalizeDocPath(doc.document)
-      );
+      const valueDocuments = value.documents.map((doc: MapDocsType) => normalizeDocPath(doc.document));
 
-      const propertyDocuments = property.documents.map((doc: MapDocsType) =>
-        normalizeDocPath(doc.document)
-      );
+      const propertyDocuments = property.documents.map((doc: MapDocsType) => normalizeDocPath(doc.document));
 
-      const documentsNotInValue = propertyDocuments.filter(
-        (doc: string) => !valueDocuments.includes(doc)
-      );
+      const documentsNotInValue = propertyDocuments.filter((doc: string) => !valueDocuments.includes(doc));
 
       if (documentsNotInValue.length > 0) {
         documentsNotInValue.forEach((docs: string) => {
@@ -175,67 +160,209 @@ class PropertyController {
         });
       }
 
-      const updatedProperty = await Property.findByIdAndUpdate(
-        id,
-        { ...value, ownerID: ownerID },
-        { new: true }
-      );
+      const updatedProperty = await Property.findByIdAndUpdate(id, { ...value, ownerID: ownerID }, { new: true });
 
       return res.status(HttpStatusCode.Created).json({
         statusCode: 200,
-        message: "Property updated",
+        message: 'Property updated',
         data: updatedProperty,
       });
     } catch (error: any) {
-      return res.status(500).send("An Error ocurred while retrieving data");
+      return res.status(500).send('An Error ocurred while retrieving data');
     }
   };
 
   adminGetAllProperties = async (req: Request, res: Response) => {
-    const pageSize = 60;
-    const page = Number(req.query.pageNumber) || 1;
-
+    const pageSize = 30;
+    const page = Number(req.query.page) || 1;
     const keyword = req.query.keyword as string;
-    const regex = new RegExp(keyword, "i");
+    const regex = new RegExp(keyword, 'i');
 
     const findQuery = {
       $or: [{ title: regex }, { description: regex }, { category: regex }],
     };
 
     try {
-      const count = await Property.countDocuments(findQuery).sort({
-        createdAt: -1,
-      });
+      const count = await Property.countDocuments(findQuery);
       const properties = await Property.find(findQuery)
-        .populate({ path: "ownerID", select: "role firstName lastName" })
+        .populate({ path: 'ownerID', select: 'role firstName lastName email avatar' })
         .limit(pageSize)
-        .skip(pageSize * (page - 1));
+        .skip(pageSize * (page - 1))
+        .lean();
 
       const modifiedProperties = properties.map((property) => {
-        if (process.env.NODE_ENV === "production") {
-          return { ...property.toObject() };
+        if (process.env.NODE_ENV === 'production') {
+          return { ...property };
         }
 
         return {
-          ...property.toObject(),
+          ...property,
           images: property.images
-            ? property.images.map((img) =>
-                img.startsWith("http")
-                  ? img
-                  : `${process.env.BACKEND_URL}/uploads/${img}`
-              )
+            ? property.images.map((img) => (img.startsWith('http') ? img : `${process.env.BACKEND_URL}/uploads/${img}`))
             : [],
         };
       });
 
       return res.status(200).json({
         statusCode: 200,
-        message: "Property List",
+        message: 'Property List',
         data: modifiedProperties,
-        pagination: { page, pages: Math.ceil(count / pageSize), count },
+        pagination: { page, pages: Math.ceil(count / pageSize), totalCount: count },
       });
     } catch (err: any) {
-      return res.status(500).send("An Error ocurred while retrieving data");
+      return res.status(500).send('An Error ocurred while retrieving data');
+    }
+  };
+
+  getFewAdminProperties = async (req: Request, res: Response, next: NextFunction) => {
+    const pageSize = 8;
+
+    try {
+      const properties = await Property.find()
+        .populate({ path: 'ownerID', select: 'role firstName lastName email avatar' })
+        .limit(pageSize)
+        .sort({ createdAt: -1 })
+        .lean();
+
+      const modifiedProperties = properties.map((property) => {
+        if (process.env.NODE_ENV === 'production') {
+          return { ...property };
+        }
+
+        return {
+          ...property,
+          images: property.images
+            ? property.images.map((img) => (img.startsWith('http') ? img : `${process.env.BACKEND_URL}/uploads/${img}`))
+            : [],
+        };
+      });
+
+      res.status(200).json({
+        statusCode: 200,
+        message: 'Property List',
+        data: modifiedProperties,
+      });
+    } catch (error) {
+      res.status(500).send('An Error ocurred while retrieving data');
+    }
+  };
+
+  getFewVerifiedProperties = async (req: Request, res: Response, next: NextFunction) => {
+    const pageSize = 8;
+    try {
+      const properties = await Property.find({ verification: PropertyVerification.Verified })
+        .populate({ path: 'ownerID', select: 'role firstName lastName email avatar' })
+        .limit(pageSize)
+        .sort({ createdAt: -1 })
+        .lean();
+
+      const modifiedProperties = properties.map((property) => {
+        if (process.env.NODE_ENV === 'production') {
+          return { ...property };
+        }
+
+        return {
+          ...property,
+          images: property.images
+            ? property.images.map((img) => (img.startsWith('http') ? img : `${process.env.BACKEND_URL}/uploads/${img}`))
+            : [],
+        };
+      });
+
+      res.status(200).json({
+        statusCode: 200,
+        message: 'Property List',
+        data: modifiedProperties,
+      });
+    } catch (error) {
+      res.status(500).send('An Error ocurred while retrieving data');
+    }
+  };
+
+  getVerifiedProperties = async (req: Request, res: Response, next: NextFunction) => {
+    const page = Number(req.query.page) || 1;
+    const keyword = req.query.keyword as string;
+    const regex = new RegExp(keyword, 'i');
+
+    const findQuery = {
+      $or: [{ title: regex, description: regex }],
+    };
+
+    const pageSize = 30;
+    try {
+      const count = await Property.countDocuments({ ...findQuery, verification: PropertyVerification.Verified });
+      const properties = await Property.find({ ...findQuery, verification: PropertyVerification.Verified })
+        .populate({ path: 'ownerID', select: 'role firstName lastName email avatar' })
+        .limit(pageSize)
+        .skip(pageSize * (page - 1))
+        .sort({ createdAt: -1 })
+        .lean();
+
+      const modifiedProperties = properties.map((property) => {
+        if (process.env.NODE_ENV === 'production') {
+          return { ...property };
+        }
+
+        return {
+          ...property,
+          images: property.images
+            ? property.images.map((img) => (img.startsWith('http') ? img : `${process.env.BACKEND_URL}/uploads/${img}`))
+            : [],
+        };
+      });
+
+      res.status(200).json({
+        statusCode: 200,
+        message: 'Property List',
+        data: modifiedProperties,
+        pagination: { page, pages: Math.ceil(count / pageSize), totalCount: count },
+      });
+    } catch (error) {
+      res.status(500).send('An Error ocurred while retrieving data');
+    }
+  };
+
+  getVerifiedProjects = async (req: Request, res: Response, next: NextFunction) => {
+    const page = Number(req.query.page) || 1;
+    const pageSize = 30;
+
+    try {
+      const count = await Property.countDocuments({
+        verification: PropertyVerification.Verified,
+        isProject: true,
+      });
+
+      const projects = await Property.find({
+        verification: PropertyVerification.Verified,
+        isProject: true,
+      })
+        .populate({ path: 'ownerID', select: 'role firstName lastName email avatar' })
+        .sort({ createdAt: -1 })
+        .skip(pageSize * (page - 1))
+        .limit(pageSize)
+        .lean();
+
+      const modifiedProject = projects.map((project) => {
+        if (process.env.NODE_ENV === 'production') {
+          return { ...project };
+        }
+
+        return {
+          ...project,
+          images: project.images
+            ? project.images.map((img) => (img.startsWith('http') ? img : `${process.env.BACKEND_URL}/uploads/${img}`))
+            : [],
+        };
+      });
+
+      res.status(200).json({
+        statusCode: 200,
+        message: 'Project List',
+        data: modifiedProject,
+        pagination: { page, pages: Math.ceil(count / pageSize), totalCount: count },
+      });
+    } catch (error) {
+      res.status(500).send('An Error ocurred while retrieving data');
     }
   };
 
@@ -245,7 +372,7 @@ class PropertyController {
     const page = Number(req.params.pageNumber) || 1;
 
     const keyword = req.query.keyword as string;
-    const regex = new RegExp(keyword, "i");
+    const regex = new RegExp(keyword, 'i');
 
     const findQuery = {
       $or: [{ title: regex }, { description: regex }, { category: regex }],
@@ -260,19 +387,12 @@ class PropertyController {
       const user = req?.user as IUser;
 
       // Fetch user's favorite properties (if logged in)
-      const matchingFavorites = await Favourite.find(
-        user ? { user: user._id } : {}
-      )
-        .select("property _id") // Get both `property` and `favoriteId`
+      const matchingFavorites = await Favourite.find(user ? { user: user._id } : {})
+        .select('property _id') // Get both `property` and `favoriteId`
         .lean();
 
       // Create a map of propertyId -> favoriteId
-      const favoriteMap = new Map(
-        matchingFavorites.map((fav) => [
-          fav.property.toString(),
-          fav._id.toString(),
-        ])
-      );
+      const favoriteMap = new Map(matchingFavorites.map((fav) => [fav.property.toString(), fav._id.toString()]));
 
       // Fetch properties with pagination
       const properties = await Property.find(findQuery)
@@ -284,12 +404,10 @@ class PropertyController {
       const modifiedProperties = properties.map((property) => ({
         ...property,
         images:
-          process.env.NODE_ENV === "production"
+          process.env.NODE_ENV === 'production'
             ? property.images
             : property.images.map((img) =>
-                img.startsWith("http")
-                  ? img
-                  : `${process.env.BACKEND_URL}/uploads/${img}`
+                img.startsWith('http') ? img : `${process.env.BACKEND_URL}/uploads/${img}`
               ),
         isInFavorites: favoriteMap.has(property._id.toString()), // Check if it's a favorite
         favoriteId: favoriteMap.get(property._id.toString()) || null, // Get favoriteId if available
@@ -297,13 +415,13 @@ class PropertyController {
 
       return res.status(200).json({
         statusCode: 200,
-        message: "Property List",
+        message: 'Property List',
         data: modifiedProperties,
         pagination: { page, pages: Math.ceil(count / pageSize), count },
       });
     } catch (err: any) {
       console.error(err?.message);
-      res.status(500).send("An Error occurred while retrieving data");
+      res.status(500).send('An Error occurred while retrieving data');
     }
   };
 
@@ -312,14 +430,16 @@ class PropertyController {
     if (!isValidObjectId(id))
       return res.status(400).json({
         statusCode: 400,
-        message: "Invalid ObjectId",
+        message: 'Invalid ObjectId',
       });
 
     const user = req.user as any;
     const userId = user?._id as string;
 
     try {
-      const property = await Property.findById(id).lean();
+      const property = await Property.findById(id)
+        .populate({ path: 'ownerID', select: 'role firstName lastName email avatar phoneNumber' })
+        .lean();
       if (!property)
         return res.status(404).json({
           statusCode: 404,
@@ -331,25 +451,23 @@ class PropertyController {
         user: userId,
         property: id,
       })
-        .select("_id")
+        .select('_id')
         .lean();
 
       const isInFavorites = !!favorite; // Convert to boolean
       const favoriteId = favorite?._id || null; // Get the favorite ID if it exists
 
-      if (process.env.NODE_ENV !== "production") {
+      if (process.env.NODE_ENV !== 'production') {
         if (property.images && Array.isArray(property.images)) {
           property.images = property.images.map((image) =>
-            image.startsWith("http")
-              ? image
-              : `${process.env.BACKEND_URL}/uploads/${image}`
+            image.startsWith('http') ? image : `${process.env.BACKEND_URL}/uploads/${image}`
           );
         }
 
         if (property.documents && Array.isArray(property.documents)) {
           property.documents = property.documents.map((docs) => ({
             ...docs,
-            document: docs.document.startsWith("http")
+            document: docs.document.startsWith('http')
               ? docs.document
               : `${process.env.BACKEND_URL}/uploads${docs.document}`,
           }));
@@ -357,11 +475,11 @@ class PropertyController {
       }
       return res.json({
         statusCode: 200,
-        message: "Successful",
+        message: 'Successful',
         data: { ...property, isInFavorites, favoriteId },
       });
     } catch (error: any) {
-      res.status(500).send("An Error occurred while retrieving data");
+      res.status(500).send('An Error occurred while retrieving data');
     }
   };
 
@@ -370,7 +488,7 @@ class PropertyController {
     if (!isValidObjectId(id))
       return res.status(400).json({
         statusCode: 400,
-        message: "Invalid ObjectId",
+        message: 'Invalid ObjectId',
       });
 
     try {
@@ -386,41 +504,35 @@ class PropertyController {
 
       return res.json({
         statusCode: 200,
-        message: `Property active switched from ${!newProperty.isActive} to ${
-          newProperty.isActive
-        }`,
+        message: `Property active switched from ${!newProperty.isActive} to ${newProperty.isActive}`,
       });
     } catch (error: any) {
-      res.status(500).send("An Error ocurred while updating data");
+      res.status(500).send('An Error ocurred while updating data');
     }
   };
 
   verifyProperty = async (req: Request, res: Response) => {
     const { id } = req.params;
     const { verification } = req.body;
-    const allowedVerificationStatuses = Object.values(PropertyVerification)
+    const allowedVerificationStatuses = Object.values(PropertyVerification);
     if (!allowedVerificationStatuses.includes(verification)) {
-      return res.status(400).json({ message: "Invalid verification status" });
+      return res.status(400).json({ message: 'Invalid verification status' });
     }
 
     try {
-      const verifyStatus = await Property.findOneAndUpdate(
-        { _id: id },
-        { verification },
-        { new: true }
-      );
+      const verifyStatus = await Property.findOneAndUpdate({ _id: id }, { verification }, { new: true });
 
       if (!verifyStatus) {
-        return res.status(404).json({ message: "Property not found" });
+        return res.status(404).json({ message: 'Property not found' });
       }
 
       res.status(201).json({
         statusCode: 201,
-        message: "Verification status updated successfully",
+        message: 'Verification status updated successfully',
         data: verifyStatus?.verification,
       });
     } catch (error) {
-      res.status(500).send("An error occured while validation property");
+      res.status(500).send('An error occured while validation property');
     }
   };
 
@@ -429,7 +541,7 @@ class PropertyController {
     if (!isValidObjectId(id))
       return res.status(400).json({
         statusCode: 400,
-        message: "Invalid ObjectId",
+        message: 'Invalid ObjectId',
       });
 
     try {
@@ -445,7 +557,7 @@ class PropertyController {
       if (!deleted.acknowledged)
         return res.status(500).json({
           statusCode: 500,
-          message: "Failed to delete property",
+          message: 'Failed to delete property',
         });
 
       if (property.images && property.images.length > 0) {
@@ -467,11 +579,11 @@ class PropertyController {
 
       return res.json({
         statusCode: 200,
-        message: "Successful",
+        message: 'Successful',
       });
     } catch (error: any) {
       console.error(error?.message);
-      res.status(500).send("An Error occurred while deleting the property");
+      res.status(500).send('An Error occurred while deleting the property');
     }
   };
 
@@ -479,12 +591,12 @@ class PropertyController {
     try {
       const propsDoc = await PropertyDocs.find();
       res.status(200).json({
-        message: "success",
+        message: 'success',
         data: propsDoc,
       });
     } catch (error) {
       console.error(error);
-      res.status(500).send("An Error ocurred while retrieving data");
+      res.status(500).send('An Error ocurred while retrieving data');
     }
   };
 
@@ -492,9 +604,9 @@ class PropertyController {
     if (!filepath) return;
 
     filepath =
-      process.env.NODE_ENV === "production"
+      process.env.NODE_ENV === 'production'
         ? `/mnt/volume/uploads/${filepath}`
-        : path.join(__dirname, "..", "uploads", filepath);
+        : path.join(__dirname, '..', 'uploads', filepath);
     fs.unlink(filepath, (err) => {
       console.log(err);
     });

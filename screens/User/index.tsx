@@ -35,6 +35,7 @@ import { Modal } from "@/components/modal";
 import useToast from "@/hooks/useToast";
 import { PropertyCardProps } from "../Property/propertyCard";
 import useProperty from "@/hooks/useProperty";
+import { useDebounce } from '@/hooks/useDebounce';
 
 const AddUser = ({
   close,
@@ -276,6 +277,7 @@ const UserScreen = () => {
 
   const { getUser, getUserById } = useUser();
   const { getAdminProperty } = useProperty();
+  const debounce = useDebounce();
   const getUserFn = async () => {
     setLoading(true);
     try {
@@ -308,7 +310,7 @@ const UserScreen = () => {
   };
 
   useEffect(() => {
-    getUserFn();
+    debounce(() => getUserFn());
     getPropertyFn();
   }, [search]);
 
@@ -326,7 +328,7 @@ const UserScreen = () => {
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      getUserFn();
+      debounce(() => getUserFn());
     }
   };
 

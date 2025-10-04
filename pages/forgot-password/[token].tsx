@@ -26,10 +26,6 @@ const ChangPassword = () => {
 
       const token = navigate.query.token as string;
 
-      console.log("token", token)
-
-    
-
       const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         if(name) {

@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["plus.unsplash.com", "res.cloudinary.com", "localhost", 'www.eswiftpropertymart.ng'], // Add the domain of the external images
+    domains: ["plus.unsplash.com", "res.cloudinary.com", "localhost", 'www.eswiftpropertymart.ng', "drive.google.com"], // Add the domain of the external images
   },
   // output: 'export',
   // images: {
